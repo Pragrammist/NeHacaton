@@ -1,11 +1,13 @@
-
 using System.Net;
 using System.Net.Http.Json;
-
+using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using FluentAssertions;
-using static Tests.HttpClientFactoryAndConstants;
+using static Tests.HttpStaticMethod;
 using static Tests.AllConstants;
+using static Tests.JsonStaticMethod;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Tests
 {
@@ -21,7 +23,7 @@ namespace Tests
 
 
 
-    public static class HttpClientFactoryAndConstants
+    public static class HttpStaticMethod
     {
        
 
@@ -42,6 +44,42 @@ namespace Tests
             client.AddHeaders(bearer_token);
             return client;
         }
+
+        public static async Task StatusIsOKOrThrowException(this HttpResponseMessage response, string authUri)// метод нужен, т.к. происходит работа с стороним api 
+            //и нужно знать почему ответ не пришел
+        {
+            if (!response.IsSuccessStatusCode) 
+            {
+                var jsonStringResponse = await response.Content.ReadAsStringAsync();
+                var jobj = JObject.Parse(jsonStringResponse);
+                var stringMessage = jobj.ToString();
+                throw new Exception($"Status code is {(int)response.StatusCode}" +
+                    $"({response.StatusCode})\nQuery: {authUri}\nmessage:\n{stringMessage}"); 
+                //показываем ошибку на замудеренность не обращать внимание - так надо
+            }
+        }
+
+        public static async Task<JObject> ReadAsJObject(this HttpContent content)
+        {
+            var readStirng = await content.ReadAsStringAsync();
+            var jsonObject = JObject.Parse(readStirng);
+            return jsonObject;
+
+        }
+    }
+
+
+    
+
+    public static class JsonStaticMethod
+    {
+        public static JsonSerializerOptions GetGlobalJsonSerializerOptions()
+        {
+            var options = new JsonSerializerOptions();
+            options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            //options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            return options;
+        }
     }
     #endregion
 
@@ -57,37 +95,33 @@ namespace Tests
     #endregion /
 
     #region inventory objs
-    public class InvetoryRequest
-    {
-        public string search { get; set; } = null!;
-        public string title { get; set; } = null!;
-        public string description { get; set; } = null!;
-        public string rent_number { get; set; } = null!;
-        public int state_id { get; set; }
-        public int limit { get; set; }
-        public int offset { get; set; }
-        public DiscountsRequest discounts { get; set; } = null!;
-    }
 
-
-    public class DiscountRequest
+    public class RequestDiscount
     {
         public int id { get; set; }
         public int title { get; set; }
         public int price { get; set; }
     }
 
-    public class DiscountsRequest
+    public class RequestDiscounts
     {
-        public DiscountRequest discount { get; set; } = null!;
+        public RequestDiscount discount { get; set; }
         public int discount_id { get; set; }
         public int resource_id { get; set; }
     }
 
-
-
-
-    public class InventoryItemResponse
+    public class RequestInventory
+    {
+        public string search { get; set; }
+        public string title { get; set; }
+        public string description { get; set; }
+        public string rent_number { get; set; }
+        public int state_id { get; set; }
+        public int limit { get; set; }
+        public int offset { get; set; }
+        public RequestDiscounts discounts { get; set; }
+    }
+    public class ResponseInventoryArray
     {
         public int id { get; set; }
         public int parent_id { get; set; }
@@ -98,29 +132,27 @@ namespace Tests
         public int buy_price { get; set; }
         public string buy_date { get; set; }
         public string option { get; set; }
-        public StateResponse state { get; set; }
-        public PointResponse point { get; set; }
-        public PriceResponse price { get; set; }
-        public DiscountsResponse discounts { get; set; }
+        public ResponseState state { get; set; }
+        public ResponsePoint point { get; set; }
+        public ResponsePrice price { get; set; }
+        public ResponseDiscounts discounts { get; set; }
     }
 
-
-
-    public class DiscountResponse
+    public class ResponseDiscount
     {
         public int id { get; set; }
         public int title { get; set; }
         public int price { get; set; }
     }
 
-    public class DiscountsResponse
+    public class ResponseDiscounts
     {
-        public DiscountResponse discount { get; set; }
+        public ResponseDiscount discount { get; set; }
         public int discount_id { get; set; }
         public int resource_id { get; set; }
     }
 
-    public class PermissionResponse
+    public class ResponsePermission
     {
         public int resource_id { get; set; }
         public bool delete { get; set; }
@@ -129,7 +161,7 @@ namespace Tests
         public bool right { get; set; }
     }
 
-    public class PlaceResponse
+    public class ResponsePlace
     {
         public int osm_id { get; set; }
         public string display_name { get; set; }
@@ -139,7 +171,7 @@ namespace Tests
         public string lat { get; set; }
     }
 
-    public class PointResponse
+    public class ResponsePoint
     {
         public int id { get; set; }
         public string title { get; set; }
@@ -149,24 +181,24 @@ namespace Tests
         public string phone { get; set; }
         public string place_text { get; set; }
         public int place_id { get; set; }
-        public PlaceResponse place { get; set; }
+        public ResponsePlace place { get; set; }
     }
 
-    public class PriceResponse
+    public class ResponsePrice
     {
         public string title { get; set; }
         public string price_logic_id { get; set; }
         public int point_id { get; set; }
     }
 
-    public class InventoryItemsPostResult
+    public class ResponseInventoryItemsResult
     {
-        public List<InventoryItemResponse> array { get; set; }
+        public List<ResponseInventoryArray> array { get; set; }
         public string message { get; set; }
-        public PermissionResponse permission { get; set; }
+        public ResponsePermission permission { get; set; }
     }
 
-    public class StateResponse
+    public class ResponseState
     {
         public int id { get; set; }
         public string title { get; set; }
@@ -176,7 +208,7 @@ namespace Tests
     }
 
     #endregion
-    #endregion
+    #endregion //
 
     #region apies
     public class AuthApi
@@ -191,18 +223,18 @@ namespace Tests
 
             
             var response = await client.PostAsJsonAsync(auth_uri, login_data); // делаем запрос
-            if (!response.IsSuccessStatusCode) // временный код для тестов если ответ не ОК
-            {
-                var mess = new { error = "" }; // сюда помещается сообщение
-                var jsonContent = await response.Content.ReadFromJsonAsync(mess.GetType());
-                throw new Exception($"Status code is {(int)response.StatusCode}" +
-                    $"({response.StatusCode})\nHeaders:\n{response?.RequestMessage?.Headers.ToString()}\nQuery:\n{auth_uri}\nmessage:\n{jsonContent}"); //показываем ошибку
-                //на замудеренность не обращать внимание - так надо
-            }
-            var res = await response.Content.ReadFromJsonAsync<AuthToken>() ?? throw new NullReferenceException(); // выбрасывает искл, чтобы компилятор не ругался на null тип.
+
+            await response.StatusIsOKOrThrowException(auth_uri);
+
+
+            var jsonOption = new JsonSerializerOptions();
+            jsonOption.NumberHandling = JsonNumberHandling.WriteAsString;
+
+
+            var result = await response.Content.ReadFromJsonAsync<AuthToken>(jsonOption) ?? throw new NullReferenceException(); // выбрасывает искл, чтобы компилятор не ругался на null тип.
             
 
-            return res;
+            return result;
             
         }
 
@@ -217,14 +249,24 @@ namespace Tests
 
     public class InventoryApi
     {
-        static readonly string get_invetory_url = APIURL + "/v1/inventory/items"; 
+        static readonly string get_invetory_url = APIURL + "/v1/inventory/items";
 
-        //public InvetoryRequest GetInvetory()
-        //{
-        //    var client = GetClientWithHeaders(APITOKEN);
+        public async Task<JObject> PostInvetoryItems(RequestInventory requestData = null, string token = APITOKEN)
+        {
+            var client = GetClientWithHeaders(token);
+            
+            var response = await client.PostAsJsonAsync(get_invetory_url, requestData);
 
-        //    client.
-        //}
+            await response.StatusIsOKOrThrowException(get_invetory_url);
+            var jsonOptions = GetGlobalJsonSerializerOptions();
+
+            //var result =  await response.Content.ReadFromJsonAsync<ResponseInventoryItemsResult>(jsonOptions) ?? throw new NullReferenceException("result of HttpContent.ReadFromJsonAsync is null");
+            var jobject = await response.Content.ReadAsJObject();
+            return jobject;
+        }
+
+
+        
     }
     #endregion
 
@@ -236,15 +278,28 @@ namespace Tests
         }
 
         AuthApi GetAuthApi() => new AuthApi();
+        InventoryApi GetInventoryApi() => new InventoryApi();
 
         [Test]
-        public async Task Auth_Test()
+        public async Task AuthTest()
         {
             var api = GetAuthApi();
 
-            var auth = await api.Login(login:"", password:"");
+            var auth = await api.Login(login:"vitalcik.kovalenko2019@gmail.com", password:"1231414");
             auth.Should().NotBeNull().And.Match<AuthToken>(d => d.token_type != null && d.access_token != null);
             Assert.Pass("token is {0}", auth.access_token);
+        }
+
+        [Test]
+        public async Task InventoryTest()
+        {
+            var api = GetInventoryApi();
+
+            var inventoriesRes = await api.PostInvetoryItems();
+            
+            
+
+            Assert.Pass("{0}", inventoriesRes.ToString());
         }
     }
 }
