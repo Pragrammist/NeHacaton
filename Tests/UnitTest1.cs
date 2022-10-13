@@ -16,9 +16,9 @@ namespace Tests
 
     public static class AllConstants
     {
-        public const string APITOKEN = ""; //токен от аккунта, можно получить из AuthApi.Login метода
+        public const string APITOKEN = ""; //token ot akaunta ego mozno vzat iz AuthApi.Login
 
-        public const string APIURL = @"https://api.rentinhand.ru"; // ссылка на главный сайт, чтобы ее соединять в
+        public const string APIURL = @"https://api.rentinhand.ru"; // uri for api
     }
 
 
@@ -26,40 +26,42 @@ namespace Tests
     public static class HttpStaticMethod
     {
        
-
+        //method nuzhen dlya dobavleniya tokena v zaprosi. takzhe nekotorih drugih nastroek
         public static void AddHeaders(this HttpClient client, string bearer_token) 
-        // метод нужен, чтобы каждый раз не писать рутинный код токеном
-        // и типом ответа(json, string и пр.)
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearer_token);// сам токен. п.с. не везде может быть нужуен,
-            // но все равно будет для удобства
-            // и чтобы 100500 методов не плодить
-            client.DefaultRequestHeaders.Add("X-CSRF-TOKEN", "pnsXw4CP4HIdF2eoWuPPCStqmPdKhWHLlJzoQMFJ");
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearer_token);// dobavlenia tokena
+           
+            client.DefaultRequestHeaders.Add("X-CSRF-TOKEN", "pnsXw4CP4HIdF2eoWuPPCStqmPdKhWHLlJzoQMFJ"); // eto ya prosto udivel v api, poetomu prosto dobavil
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json")); //for json
+            client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json"); //for json hotya eto ne rabotoent no est
         }
-        public static HttpClient GetClientWithHeaders(string bearer_token) // обвертка для верхнего метода если п
+        public static HttpClient GetClientWithHeaders(string bearer_token) // eto prosto obvertka dlya verhnego method
         {
             HttpClient client = new HttpClient();
             client.AddHeaders(bearer_token);
             return client;
         }
-
-        public static async Task StatusIsOKOrThrowException(this HttpResponseMessage response, string authUri)// метод нужен, т.к. происходит работа с стороним api 
-            //и нужно знать почему ответ не пришел
+        //dlya otobrazenia oshibok
+        public static async Task StatusIsOKOrThrowException(this HttpResponseMessage response, string authUri)
         {
             if (!response.IsSuccessStatusCode) 
             {
-                var jsonStringResponse = await response.Content.ReadAsStringAsync();
-                var jobj = JObject.Parse(jsonStringResponse);
-                var stringMessage = jobj.ToString();
-                throw new Exception($"Status code is {(int)response.StatusCode}" +
-                    $"({response.StatusCode})\nQuery: {authUri}\nmessage:\n{stringMessage}"); 
-                //показываем ошибку на замудеренность не обращать внимание - так надо
+                var jsonStringResponse = await response.Content.ReadAsStringAsync(); // chitaem ovet esli est
+
+
+                //zdec snachalo obvorachivaentsa v json a potom iz jsona polachaetsa stroka t.k. inache ne pravilno otobrazaet symbols
+                //tam budet unicode symbols no ne symbols
+                var jobj = JObject.Parse(jsonStringResponse); // poluchaem json kak object
+                var stringMessage = jobj.ToString();//prevrachaem v stroku
+
+                throw new Exception($"Status code is {(int)response.StatusCode}" + //perenos dly krasoti
+                    $"({response.StatusCode})\nQuery: {authUri}\nmessage:\n{stringMessage}"); //vivod oshibki
+                
             }
         }
 
-        public static async Task<JObject> ReadAsJObject(this HttpContent content)
+        public static async Task<JObject> ReadAsJObject(this HttpContent content) //nuzjen chotbi soderjimoe prevrachat d json object dly otobrojenia d testi
+        //eto vremeniy method, navenroye
         {
             var readStirng = await content.ReadAsStringAsync();
             var jsonObject = JObject.Parse(readStirng);
@@ -73,7 +75,7 @@ namespace Tests
 
     public static class JsonStaticMethod
     {
-        public static JsonSerializerOptions GetGlobalJsonSerializerOptions()
+        public static JsonSerializerOptions GetGlobalJsonSerializerOptions() // nastroyka serelizacii - tut nechego commentirovat
         {
             var options = new JsonSerializerOptions();
             options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
@@ -82,7 +84,7 @@ namespace Tests
         }
     }
     #endregion
-
+    //objects. commentirovat ne budu. commentarii est v documentation k api
     #region json objs
 
     #region user objs
@@ -211,28 +213,29 @@ namespace Tests
     #endregion //
 
     #region apies
+
+    //eto obolochki nad api chtobi kazdiy raz ne pisat http zaprosi
     public class AuthApi
     {
-        static string auth_uri = APIURL + "/v1/login"; // например с этим соединять
-        public async Task<AuthToken> Login(string login, string password) //делает запрос по пути post /v1/login с json запросом и json ответом
+        static string auth_uri = APIURL + "/v1/login"; //kuda delat zapros
+        public async Task<AuthToken> Login(string login, string password) //delaet zapros po puti /v1/login
         {
-            HttpClient client = GetClientWithHeaders(APITOKEN);
+            HttpClient client = GetClientWithHeaders(APITOKEN); // ta samaya nastroyka tokena, no zdec eto ne nuzhno eto prosto est. Zdec nuzna nastroyka X-CSRF-TOKEN
 
-            var login_data = new {login = login, password = password }; // данные аккаунта, чтобы сделать запрос.
-            // используется анонимный класс, чтобы не плодить еще класс в файлах
+            var login_data = new {login = login, password = password }; // accaunt
+            
 
             
-            var response = await client.PostAsJsonAsync(auth_uri, login_data); // делаем запрос
+            var response = await client.PostAsJsonAsync(auth_uri, login_data); // zapros - zdec ya ispolzuyu kak raz api
 
-            await response.StatusIsOKOrThrowException(auth_uri);
-
-
-            var jsonOption = new JsonSerializerOptions();
-            jsonOption.NumberHandling = JsonNumberHandling.WriteAsString;
+            await response.StatusIsOKOrThrowException(auth_uri); // esli ne OK to vidaet oshibku
 
 
-            var result = await response.Content.ReadFromJsonAsync<AuthToken>(jsonOption) ?? throw new NullReferenceException(); // выбрасывает искл, чтобы компилятор не ругался на null тип.
-            
+            var jsonOption = GetGlobalJsonSerializerOptions(); //dlya nastroyki serelizacii - prosto nado
+
+
+            var result = await response.Content.ReadFromJsonAsync<AuthToken>(jsonOption) ?? throw new NullReferenceException(); 
+            //zdec mi poluchaem c# object iz otveta
 
             return result;
             
@@ -243,30 +246,38 @@ namespace Tests
 
         public void Logout()
         {
-
+            //potom sdelayu
         }
     }
 
     public class InventoryApi
     {
-        static readonly string get_invetory_url = APIURL + "/v1/inventory/items";
-
-        public async Task<JObject> PostInvetoryItems(RequestInventory requestData = null, string token = APITOKEN)
+        static readonly string get_invetory_url = APIURL + "/v1/inventory/items"; // puty dlya poluchenia inventory
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requestData">soderzhit chto iskat</param>
+        /// <param name="token">token</param>
+        /// <returns></returns>
+        public async Task<JObject> PostInvetoryItems(RequestInventory? requestData = null, string token = APITOKEN)
         {
-            var client = GetClientWithHeaders(token);
+            var client = GetClientWithHeaders(token); // ne budu povtoryat
             
-            var response = await client.PostAsJsonAsync(get_invetory_url, requestData);
+            var response = await client.PostAsJsonAsync(get_invetory_url, requestData); // zapros
 
-            await response.StatusIsOKOrThrowException(get_invetory_url);
-            var jsonOptions = GetGlobalJsonSerializerOptions();
+            await response.StatusIsOKOrThrowException(get_invetory_url); //uze bilo
+            
 
             //var result =  await response.Content.ReadFromJsonAsync<ResponseInventoryItemsResult>(jsonOptions) ?? throw new NullReferenceException("result of HttpContent.ReadFromJsonAsync is null");
             var jobject = await response.Content.ReadAsJObject();
             return jobject;
+
+
+            // voobshe vmesto JObject dolzen bit ResponseInventoryItemsResult, no poka s etim problemi
         }
 
 
-        
+
     }
     #endregion
 
@@ -285,8 +296,8 @@ namespace Tests
         {
             var api = GetAuthApi();
 
-            var auth = await api.Login(login:"vitalcik.kovalenko2019@gmail.com", password:"1231414");
-            auth.Should().NotBeNull().And.Match<AuthToken>(d => d.token_type != null && d.access_token != null);
+            var auth = await api.Login(login:"", password:"");
+            auth.Should().NotBeNull().And.Match<AuthToken>(d => d.token_type != null && d.access_token != null); // eto proverka na pravilnost otveta
             Assert.Pass("token is {0}", auth.access_token);
         }
 
@@ -295,7 +306,7 @@ namespace Tests
         {
             var api = GetInventoryApi();
 
-            var inventoriesRes = await api.PostInvetoryItems();
+            var inventoriesRes = await api.PostInvetoryItems(); // otvet
             
             
 
