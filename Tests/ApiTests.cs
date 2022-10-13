@@ -61,7 +61,21 @@ namespace Tests
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
-            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputInventoriesDto, InputInventoryDto>(POST_INVENTORY_ITEMS, authToken.AccessToken, new InputInventoryDto {Search = "очки" });
+            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputInventoriesDto, InputInventoryDto>
+                (POST_INVENTORY_ITEMS, authToken.AccessToken, new InputInventoryDto {Search = "очки" });
+
+            var str = Serialize(invent);
+
+            Assert.Pass("response: {0}", str);
+        }
+
+        [Test]
+        public async Task NonCorrectDataTest()
+        {
+            var authToken = await AuthApi.Login(UserToLogin);
+
+            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputAuthTokenDto, InputInventoryDto>
+                (POST_INVENTORY_ITEMS, authToken.AccessToken, new InputInventoryDto { Search = "очки" });
 
             var str = Serialize(invent);
 
