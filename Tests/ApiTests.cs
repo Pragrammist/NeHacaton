@@ -16,7 +16,7 @@ namespace Tests
 
         InventoryRepositoryApi InventoryApi => new InventoryRepositoryApi();
 
-        InputLoginUserDto UserToLogin => new InputLoginUserDto { Login = "", Password = "" };
+        InputLoginUserDto UserToLogin => new InputLoginUserDto { Login = "0", Password = "0" };
 
 
         [SetUp]

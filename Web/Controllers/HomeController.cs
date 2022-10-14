@@ -19,9 +19,9 @@ namespace Web.Controllers
 
         public async Task <IActionResult> Index()
         {
-            var t = await _authIn.Login(new InputLoginUserDto { Login = "", Password = ""});
 
-            return new ObjectResult(t);
+            return View();
+            
         }
 
         public IActionResult Privacy()

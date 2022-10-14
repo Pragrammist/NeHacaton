@@ -7,12 +7,15 @@ namespace Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            var config = builder.Configuration;
             // Add services to the container.
             builder.Services.AddControllersWithViews().AddControllersAsServices();
             builder.Services
                 .AddRentInHendApiServices()
-                .AddModelVlidators();
+                .AddModelVlidators()
+                .AddNativeServices()
+                .AddDbContexts(config)
+                .ConfigAutoMapper();
 
            
             var app = builder.Build();

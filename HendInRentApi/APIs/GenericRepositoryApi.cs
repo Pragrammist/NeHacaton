@@ -17,7 +17,7 @@ namespace HendInRentApi
         /// <returns></returns>
         public async Task<TResult> MakePostJsonTypeRequest<TResult, TArg>(string relativePath, string token, TArg arg)
         {
-            var path = APIURL + relativePath;
+            var path = APIURL + relativePath; 
 
             var client = GetClientWithHeaders(token);
 

@@ -44,15 +44,17 @@ namespace Tests
             controller.Should().NotBeNull();
         }
         [Test]
-        public void TestUserValidation()
+        public async Task TestUserRegistration()
         {
             var controller = _serviceProvider.GetRequiredService<UserController>();
 
-            var res = controller.RegistrateUser(new UserRegistrationModel { });
+            var res = await controller.RegistrateUser(new UserRegistrationModel {Login = "vitalcik.kovalenko2019@gmail.com", Password = "1231414", City = "taganrog" });
 
-            var jsonRes = res.As<JsonResult>();
+            var jsonResult = res.As<JsonResult>();
 
-            Assert.Pass("json res:\n{0}",Serialize(jsonRes.Value));
+            Assert.Pass("json is\n{0}", Serialize(jsonResult.Value));
         }
+
+        
     }
 }
