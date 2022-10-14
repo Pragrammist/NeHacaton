@@ -1,3 +1,5 @@
+using Web.Helprers;
+
 namespace Web
 {
     public class Program
@@ -8,6 +10,7 @@ namespace Web
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddRentInHendApiServices();
 
             var app = builder.Build();
 

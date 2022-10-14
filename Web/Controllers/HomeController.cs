@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Web.Models;
+using HendInRentApi;
+
 
 namespace Web.Controllers
 {
@@ -8,14 +10,18 @@ namespace Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        AuthInRentInHendApi _authIn;
+        public HomeController(ILogger<HomeController> logger, AuthInRentInHendApi authIn)
         {
             _logger = logger;
+            _authIn = authIn; 
         }
 
-        public IActionResult Index()
+        public async Task <IActionResult> Index()
         {
-            return View();
+            var t = await _authIn.Login(new InputLoginUserDto { Login = "vitalcik.kovalenko2019@gmail.com", Password = "1231414"});
+
+            return new ObjectResult(t);
         }
 
         public IActionResult Privacy()
