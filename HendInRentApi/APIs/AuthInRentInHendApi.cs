@@ -10,7 +10,7 @@ namespace HendInRentApi
 
 
     //eto obolochki nad api chtobi kazdiy raz ne pisat http zaprosi
-    public class AuthInRentInHendApi
+    public class AuthRentInHendApi
     {
         static string auth_uri = APIURL + POST_AUTH_LOGIN; //kuda delat zapros
         public async Task<OutputAuthTokenDto> Login(InputLoginUserDto user) //delaet zapros po puti /v1/login

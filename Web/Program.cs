@@ -9,9 +9,12 @@ namespace Web
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddRentInHendApiServices();
+            builder.Services.AddControllersWithViews().AddControllersAsServices();
+            builder.Services
+                .AddRentInHendApiServices()
+                .AddModelVlidators();
 
+           
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

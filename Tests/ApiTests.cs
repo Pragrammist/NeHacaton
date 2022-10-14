@@ -10,7 +10,7 @@ namespace Tests
     public class ApiTests
     {
 
-        AuthInRentInHendApi AuthApi => new AuthInRentInHendApi();
+        AuthRentInHendApi AuthApi => new AuthRentInHendApi();
 
         GenericRepositoryApi UniversalApi => new GenericRepositoryApi();
 

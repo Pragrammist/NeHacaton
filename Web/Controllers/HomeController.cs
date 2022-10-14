@@ -10,8 +10,8 @@ namespace Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        AuthInRentInHendApi _authIn;
-        public HomeController(ILogger<HomeController> logger, AuthInRentInHendApi authIn)
+        AuthRentInHendApi _authIn;
+        public HomeController(ILogger<HomeController> logger, AuthRentInHendApi authIn)
         {
             _logger = logger;
             _authIn = authIn; 
