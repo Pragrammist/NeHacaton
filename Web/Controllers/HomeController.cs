@@ -19,7 +19,7 @@ namespace Web.Controllers
 
         public async Task <IActionResult> Index()
         {
-            var t = await _authIn.Login(new InputLoginUserDto { Login = "vitalcik.kovalenko2019@gmail.com", Password = "1231414"});
+            var t = await _authIn.Login(new InputLoginUserDto { Login = "", Password = ""});
 
             return new ObjectResult(t);
         }
