@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Json;
-using static HendInRentApi.AllConstants;
+using static HendInRentApi.Constants;
 
 namespace HendInRentApi
 {
@@ -10,7 +10,7 @@ namespace HendInRentApi
 
 
     //eto obolochki nad api chtobi kazdiy raz ne pisat http zaprosi
-    public class AuthApi
+    public class AuthInRentInHendApi
     {
         static string auth_uri = APIURL + POST_AUTH_LOGN; //kuda delat zapros
         public async Task<OutputAuthTokenDto> Login(InputLoginUserDto user) //delaet zapros po puti /v1/login

@@ -1,12 +1,8 @@
-using System.Net;
-using Newtonsoft.Json.Linq;
-using System.Net.Http.Headers;
 using FluentAssertions;
-using System;
 using HendInRentApi;
 using static Tests.Helper;
-using static HendInRentApi.AllConstants;
-using Microsoft.Extensions.Options;
+using static HendInRentApi.Constants;
+
 
 namespace Tests
 {
@@ -14,9 +10,11 @@ namespace Tests
     public class ApiTests
     {
 
-        AuthApi AuthApi => new AuthApi();
-        UniversalApi UniversalApi => new UniversalApi();
-        InventoryApi InventoryApi => new InventoryApi();
+        AuthInRentInHendApi AuthApi => new AuthInRentInHendApi();
+
+        GenericRepositoryApi UniversalApi => new GenericRepositoryApi();
+
+        InventoryRepositoryApi InventoryApi => new InventoryRepositoryApi();
 
         InputLoginUserDto UserToLogin => new InputLoginUserDto { Login = "", Password = "" };
 

@@ -1,10 +1,10 @@
 ﻿using System.Net.Http.Json;
-using static HendInRentApi.AllConstants;
+using static HendInRentApi.Constants;
 using static HendInRentApi.HttpStaticMethod;
 
 namespace HendInRentApi
 {
-    public class UniversalApi
+    public class GenericRepositoryApi
     {
         /// <summary>
         /// 

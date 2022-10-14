@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
-using System.Text.Json;
+
 
 namespace HendInRentApi
 {
@@ -37,8 +37,8 @@ namespace HendInRentApi
         {
             if (!response.IsSuccessStatusCode)
             {
-                var messageJobj = response.Content.ReadAsJObject(); 
-                throw new Exception($"Status code is {(int)response.StatusCode}" + //perenos dly krasoti
+                var messageJobj = await response.Content.ReadAsJObject(); 
+                throw new HttpRequestException($"Status code is {(int)response.StatusCode}" + //perenos dly krasoti
                 $"({response.StatusCode})\nQuery: {authUri}\nmessage:\n{messageJobj}"); //vivod oshibki
 
             }

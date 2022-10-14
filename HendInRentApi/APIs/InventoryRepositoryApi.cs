@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Json;
-using static HendInRentApi.AllConstants;
+using static HendInRentApi.Constants;
 using static HendInRentApi.HttpStaticMethod;
 
 
@@ -8,7 +8,7 @@ namespace HendInRentApi
 
 
 
-    public class InventoryApi
+    public class InventoryRepositoryApi
     {
         static readonly string get_invetory_url = APIURL + POST_INVENTORY_ITEMS; // puty dlya poluchenia inventory
         /// <summary>

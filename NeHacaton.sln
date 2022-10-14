@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{09D71A98-EB5B-4B9F-8A03-1B742A547FF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "Web\Web.csproj", "{09D71A98-EB5B-4B9F-8A03-1B742A547FF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{C444F371-8B32-453F-B585-893404EE9BF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{C444F371-8B32-453F-B585-893404EE9BF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HendInRentApi", "HendInRentApi\HendInRentApi.csproj", "{5DD0409F-37EA-4BDA-A334-675C5F7A5328}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HendInRentApi", "HendInRentApi\HendInRentApi.csproj", "{5DD0409F-37EA-4BDA-A334-675C5F7A5328}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
