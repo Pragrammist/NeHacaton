@@ -8,7 +8,7 @@ using static Tests.Helper;
 namespace Tests
 {
 
-    
+
 
     public class WebTests
     {
