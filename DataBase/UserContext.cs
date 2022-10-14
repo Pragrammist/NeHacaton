@@ -8,7 +8,7 @@ namespace DataBase
     public class UserContext : DbContext
     {
         public DbSet<User> Users { get; set; } = null!;
-
+        public DbSet<Token> Tokens { get; set; } = null!;
 
        
 

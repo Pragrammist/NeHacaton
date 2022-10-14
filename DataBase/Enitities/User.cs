@@ -7,7 +7,7 @@
         public string Password { get; set; } = null!;
         public string Telephone { get; set; } = null!;
         public string Login { get; set; } = null!;
-        public string TokenHash { get; set; } = null!;
+        public Token Token { get; set; } = null!;
         public string City { get; set; } = null!;
     }
 }
