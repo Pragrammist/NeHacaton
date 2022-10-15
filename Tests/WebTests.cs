@@ -4,9 +4,10 @@ using HendInRentApi;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http.Json;
 using Web;
 using Web.Controllers;
-using Web.HasingToken;
+using Web.Geolocation;
 using Web.Models;
 using static Tests.Helper;
 
@@ -27,47 +28,57 @@ namespace Tests
             _serviceProvider = _factory.Services.CreateScope().ServiceProvider;
         }
 
-        [Test]
-        public void TestAuthInRentInHendApiService()
-        {
-            var t =_factory.Services.GetService(typeof(AuthRentInHendApi)) as AuthRentInHendApi;
 
-            t.Should().NotBeNull();
-        }
-
-        [Test]
-        public void TestControllerIsNotNull()
-        {
-            var controller = _serviceProvider.GetRequiredService<IValidator<UserRegistrationModel>>();
-
-            
-
-            controller.Should().NotBeNull();
-        }
         [Test]
         public async Task TestUserRegistration()
         {
+            var user = new UserRegistrationModel { Login = "", Password = "", Lat = 55.878, 
+                Lon = 37.653, Email = "", Telephone = "" };
+
             var controller = _serviceProvider.GetRequiredService<UserController>();
 
-            var res = await controller.RegistrateUser(new UserRegistrationModel {Login = "vitalcik.kovalenko2019@gmail.com", Password = null, City = "taganrog", Email = "vitalcik.kovalenko2019@gmail.com", Telephone = "vitalcik.kovalenko2019@gmail.com" });
+            var res = await controller.RegistrateUser(user);
 
             var jsonResult = res.As<JsonResult>();
+
+           
 
             Assert.Pass("json is\n{0}", Serialize(jsonResult.Value));
         }
 
         [Test]
-        public async Task TestCryptography()
+        public async Task TestUserLogin()
         {
-            var service = _serviceProvider.GetRequiredService<TokenCryptographer>();
+            var controller = _serviceProvider.GetRequiredService<UserController>();
 
+            var res = await controller.LoginUser(new UserLoginModel { Login = "", Password = ""});
 
-            var str = "STR";
-            var encr = service.Encrypt(str);
-            var decr = service.Decrypt(encr);
+            var jsonRes = res.As<JsonResult>();
 
-            str.Should().Match(s => s == decr);
+            Assert.Pass(Serialize(jsonRes.Value));
         }
-        
+
+        [Test]
+        public async Task TestLoginUserRequest()
+        {
+            using (var client = _factory.CreateClient())
+            {
+                var response = await client.PostAsJsonAsync("/User/LoginUser", new { Login = "", Password = "" });
+
+                
+
+                var jobjectRes = await response.Content.ReadAsJObject();
+
+                Assert.Pass("json is\n{0}", jobjectRes.ToString());
+            }
+        }
+        [Test]
+        public async Task TestGeolocationApi()
+        {
+            var api = _serviceProvider.GetRequiredService<GeolocationRepository>();
+
+            var city = await api.GetUserLocationByLatLon(55.878, 37.653);
+            Assert.Pass(city.City);
+        }
     }
 }

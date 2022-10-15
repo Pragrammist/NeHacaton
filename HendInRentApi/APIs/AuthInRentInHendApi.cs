@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Json;
-using static HendInRentApi.Constants;
+using static HendInRentApi.RentInHendApiConstants;
 
 namespace HendInRentApi
 {
@@ -13,7 +13,7 @@ namespace HendInRentApi
     public class AuthRentInHendApi
     {
         static string auth_uri = APIURL + POST_AUTH_LOGIN; //kuda delat zapros
-        public async Task<OutputAuthTokenDto> Login(InputLoginUserDto user) //delaet zapros po puti /v1/login
+        public async Task<OutputAuthTokenDto> Login(InputLoginUserRentInHendDto user) //delaet zapros po puti /v1/login
         {
             HttpClient client = new HttpClient();
             client.AddHeadersWithoutBearer(); //Zdec nuzna nastroyka X-CSRF-TOKEN

@@ -2,7 +2,7 @@
 {
 
 
-    public class InputLoginUserDto
+    public class InputLoginUserRentInHendDto
     {
         public string Login { get; set; } = null!;
 

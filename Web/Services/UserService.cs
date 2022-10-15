@@ -2,9 +2,12 @@
 using DataBase;
 using DataBase.Entities;
 using HendInRentApi;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using Web.Dtos;
+using Web.Geolocation;
 using Web.HasingToken;
-
+using Web.PasswordHasher;
 namespace Web.Services
 {
     public class UserService
@@ -13,21 +16,67 @@ namespace Web.Services
         readonly IMapper _mapper;
         UserContext _userContext;
         TokenCryptographer _tokenCryptographer;
-        public UserService(AuthRentInHendApi authApi, IMapper mapper, UserContext userContext, TokenCryptographer tokenCryptographer)
+        IPasswordHasher _passwordHasher;
+        GeolocationRepository _geolocation;
+        public UserService(AuthRentInHendApi authApi, IMapper mapper, UserContext userContext, TokenCryptographer tokenCryptographer, 
+            IPasswordHasher passwordHasher, GeolocationRepository geolocation)
         {
+            _geolocation = geolocation;
             _mapper = mapper;
             _authApi = authApi;
             _userContext = userContext;
             _tokenCryptographer = tokenCryptographer;
+            _passwordHasher = passwordHasher;
         }
         /// <summary>
-        /// //user must be already validate
+        /// //inputUser must be already validate
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="inputUser"></param>
         /// <returns></returns>
-        public async Task RegistrateUser(InputUserRegistrationDto user)
+        public async Task<OutputUserDto> RegistrateUser(InputUserRegistrationDto inputUser)
         {
-            var toLoginDto = _mapper.Map<InputLoginUserDto>(user);
+            var token = await GetUserToken(inputUser);
+
+            var user = await GetUserEntity(inputUser, token);
+
+            
+
+            _userContext.Add(user);
+
+            await _userContext.SaveChangesAsync();
+
+            var outPutUser = _mapper.Map<OutputUserDto>(user);
+
+            return outPutUser;
+        }
+
+
+
+        #region help methods for reg
+        //incapsulate creating user entity
+        async Task<User> GetUserEntity(InputUserRegistrationDto inputUser, Token token)
+        {
+            var userToWriteInDb = _mapper.Map<User>(inputUser);
+
+            userToWriteInDb.Token = token;
+
+            userToWriteInDb.Password = _passwordHasher.Hash(inputUser.Password);
+
+            var location = await GetLocation(inputUser);
+
+            userToWriteInDb.City = location.City;
+
+            return userToWriteInDb;
+        }
+
+        async Task<OutputLocationDto> GetLocation(InputUserRegistrationDto user)
+        {
+            return await _geolocation.GetUserLocationByLatLon(user.Lat, user.Lon);
+        }
+
+        async Task<Token> GetUserToken(InputUserRegistrationDto inputUser)
+        {
+            var toLoginDto = _mapper.Map<InputLoginUserRentInHendDto>(inputUser);
 
             var authorizedUserTokenDto = await _authApi.Login(toLoginDto);
 
@@ -35,13 +84,20 @@ namespace Web.Services
 
             token.AccessTokenHash = _tokenCryptographer.Encrypt(authorizedUserTokenDto.AccessToken);
 
-            var userToWriteInDb = _mapper.Map<User>(user);
+            return token;
+        }
+        #endregion
 
-            userToWriteInDb.Token = token;
 
-            _userContext.Add(userToWriteInDb);
+        public async Task<OutputUserDto> LoginUser(InputLoginUserDto inputUserLoginDto)
+        {
+            var user = await _userContext.Users.Include(u => u.Token).FirstAsync(u => u.Email == inputUserLoginDto.Login ||
+            u.Login == inputUserLoginDto.Login ||
+            u.Telephone == inputUserLoginDto.Login);
 
-            await _userContext.SaveChangesAsync();
+            var outPutUser = _mapper.Map<OutputUserDto>(user);
+
+            return outPutUser;
         }
     }
 }

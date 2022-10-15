@@ -6,6 +6,8 @@ using Web.Services;
 using DataBase;
 using Microsoft.EntityFrameworkCore;
 using Web.HasingToken;
+using Web.PasswordHasher;
+using Web.Geolocation;
 
 namespace Web.Helprers
 {
@@ -21,12 +23,15 @@ namespace Web.Helprers
         public static IServiceCollection AddModelVlidators(this IServiceCollection services)
         {
             services.AddScoped<IValidator<UserRegistrationModel>, UserRegistrationModelValidator>();
+            services.AddScoped<IValidator<UserLoginModel>, UserLoginModelValidator>();
             return services;
         }
         public static IServiceCollection AddNativeServices(this IServiceCollection services)
         {
             services.AddScoped<UserService>();
             services.AddTransient<TokenCryptographer, TokenCryptographerImpl>();
+            services.AddTransient<IPasswordHasher, PasswordHasherImpl>();
+            services.AddTransient<GeolocationRepository>();
             return services;
         }
 

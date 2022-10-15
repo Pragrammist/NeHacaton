@@ -2,7 +2,7 @@
 {
     
 
-    public static class Constants
+    public static class RentInHendApiConstants
     {
         public const string APIURL = @"https://api.rentinhand.ru"; 
 

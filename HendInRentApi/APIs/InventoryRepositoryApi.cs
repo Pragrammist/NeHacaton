@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Json;
-using static HendInRentApi.Constants;
+using static HendInRentApi.RentInHendApiConstants;
 using static HendInRentApi.HttpStaticMethod;
 
 

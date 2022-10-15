@@ -1,7 +1,7 @@
 using FluentAssertions;
 using HendInRentApi;
 using static Tests.Helper;
-using static HendInRentApi.Constants;
+using static HendInRentApi.RentInHendApiConstants;
 
 
 namespace Tests
@@ -16,7 +16,7 @@ namespace Tests
 
         InventoryRepositoryApi InventoryApi => new InventoryRepositoryApi();
 
-        InputLoginUserDto UserToLogin => new InputLoginUserDto { Login = "0", Password = "0" };
+        InputLoginUserRentInHendDto UserToLogin => new InputLoginUserRentInHendDto { Login = "0", Password = "0" };
 
 
         [SetUp]
