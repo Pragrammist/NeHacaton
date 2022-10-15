@@ -37,7 +37,11 @@ namespace Tests
 
             var controller = _serviceProvider.GetRequiredService<UserController>();
 
+<<<<<<< HEAD
             var res = await controller.RegistrateUser(user);
+=======
+            var res = await controller.RegistrateUser(new UserRegistrationModel {Login = "", Password = null, City = "taganrog", Email = "", Telephone = "" });
+>>>>>>> 4314182c8c4521acde4ab4ed0930fd284d2a41ec
 
             var jsonResult = res.As<JsonResult>();
 
