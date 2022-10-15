@@ -30,7 +30,7 @@ namespace Web.Models.ModelValidators
                 .When(FieldsNotNullCondition);
         }
 
-        bool FieldsNotNullCondition(UserRegistrationModel m) => m.Telephone != null && m.Login != null && m.Email != null;
+        bool FieldsNotNullCondition(UserRegistrationModel m) => m.Telephone != null && m.Login != null && m.Email != null && m.Password != null;
 
 
         #region additional classes for validation
