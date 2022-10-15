@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Web;
 using Web.Controllers;
+using Web.HasingToken;
 using Web.Models;
 using static Tests.Helper;
 
@@ -48,13 +49,25 @@ namespace Tests
         {
             var controller = _serviceProvider.GetRequiredService<UserController>();
 
-            var res = await controller.RegistrateUser(new UserRegistrationModel {Login = "vitalcik.kovalenko2019@gmail.com", Password = "1231414", City = "taganrog" });
+            var res = await controller.RegistrateUser(new UserRegistrationModel {Login = "vitalcik.kovalenko2019@gmail.com", Password = "1231414", City = "taganrog", Email = "vitalcik.kovalenko2019@gmail.com", Telephone = "vitalcik.kovalenko2019@gmail.com" });
 
             var jsonResult = res.As<JsonResult>();
 
             Assert.Pass("json is\n{0}", Serialize(jsonResult.Value));
         }
 
+        [Test]
+        public async Task TestCryptography()
+        {
+            var service = _serviceProvider.GetRequiredService<TokenCryptographer>();
+
+
+            var str = "STR";
+            var encr = service.Encrypt(str);
+            var decr = service.Decrypt(encr);
+
+            str.Should().Match(s => s == decr);
+        }
         
     }
 }

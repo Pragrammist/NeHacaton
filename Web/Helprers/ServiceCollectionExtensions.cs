@@ -5,6 +5,7 @@ using Web.Models.ModelValidators;
 using Web.Services;
 using DataBase;
 using Microsoft.EntityFrameworkCore;
+using Web.HasingToken;
 
 namespace Web.Helprers
 {
@@ -25,6 +26,7 @@ namespace Web.Helprers
         public static IServiceCollection AddNativeServices(this IServiceCollection services)
         {
             services.AddScoped<UserService>();
+            services.AddTransient<TokenCryptographer, TokenCryptographerImpl>();
             return services;
         }
 

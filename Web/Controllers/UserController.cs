@@ -22,7 +22,7 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> RegistrateUser([FromBody]UserRegistrationModel user)
         {
-            var validationRes = _userRegistrationModelValidator.Validate(user);
+            var validationRes = await _userRegistrationModelValidator.ValidateAsync(user);
 
             if (!validationRes.IsValid)
                 return Json(validationRes.Errors);
@@ -30,6 +30,8 @@ namespace Web.Controllers
             var inputUser = _mapper.Map<InputUserRegistrationDto>(user);
 
             await _userService.RegistrateUser(inputUser);
+
+
 
             return Json(user);
         }
