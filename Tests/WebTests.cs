@@ -49,7 +49,7 @@ namespace Tests
         {
             var controller = _serviceProvider.GetRequiredService<UserController>();
 
-            var res = await controller.RegistrateUser(new UserRegistrationModel {Login = "vitalcik.kovalenko2019@gmail.com", Password = null, City = "taganrog", Email = "vitalcik.kovalenko2019@gmail.com", Telephone = "vitalcik.kovalenko2019@gmail.com" });
+            var res = await controller.RegistrateUser(new UserRegistrationModel {Login = "", Password = null, City = "taganrog", Email = "", Telephone = "" });
 
             var jsonResult = res.As<JsonResult>();
 
