@@ -16,7 +16,7 @@ namespace Tests
 
         InventoryRepositoryApi InventoryApi => new InventoryRepositoryApi();
 
-        InputLoginUserRentInHendDto UserToLogin => new InputLoginUserRentInHendDto { Login = "0", Password = "0" };
+        InputLoginUserRentInHendDto UserToLogin => GetLoginUserFromJsonFile<InputLoginUserRentInHendDto>();
 
 
         [SetUp]

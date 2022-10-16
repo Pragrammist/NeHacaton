@@ -4,7 +4,9 @@ using HendInRentApi;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 using System.Net.Http.Json;
+using System.Reflection;
 using Web;
 using Web.Controllers;
 using Web.Geolocation;
@@ -32,9 +34,7 @@ namespace Tests
         [Test]
         public async Task TestUserRegistration()
         {
-            var user = new UserRegistrationModel { Login = "", Password = "", Lat = 55.878, 
-                Lon = 37.653, Email = "", Telephone = ""
-            };
+            var user = GetRegistreUserFromJsonFile<UserRegistrationModel>();
 
             var controller = _serviceProvider.GetRequiredService<UserController>();
 
@@ -55,7 +55,9 @@ namespace Tests
         {
             var controller = _serviceProvider.GetRequiredService<UserController>();
 
-            var res = await controller.LoginUser(new UserLoginModel { Login = "", Password = ""});
+            var user = GetLoginUserFromJsonFile<UserLoginModel>();
+
+            var res = await controller.LoginUser(user);
 
             var jsonRes = res.As<JsonResult>();
 
@@ -70,6 +72,15 @@ namespace Tests
 
             var city = await api.GetUserLocationByLatLon(55.878, 37.653);
             Assert.Pass(city.City);
+        }
+
+        [Test]
+        public void TestJsonUser()
+        {
+            var userLogin = GetLoginUserFromJsonFile<UserLoginModel>();
+            var userReg = GetRegistreUserFromJsonFile<UserRegistrationModel>();
+
+            Assert.Pass("login:\n{0}\nregistration:\n{1}\n",Serialize(userLogin), Serialize(userReg));
         }
     }
 }
