@@ -12,7 +12,7 @@ namespace Web
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
             // Add services to the container.
-            builder.Services.AddControllers().AddControllersAsServices();
+            builder.Services.AddControllersWithViews().AddControllersAsServices();
             builder.Services.AddHttpClient(GEOLOCATION_HTTPCLIENT_NAME, client =>
             {
                 var geolocationApiKey = config.GetSection("Tokens")["GeolocationApi"];
@@ -52,7 +52,7 @@ namespace Web
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=User}/{action=Login}/{id?}");
 
             app.Run();
         }

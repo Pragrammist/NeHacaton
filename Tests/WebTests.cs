@@ -33,7 +33,8 @@ namespace Tests
         public async Task TestUserRegistration()
         {
             var user = new UserRegistrationModel { Login = "", Password = "", Lat = 55.878, 
-                Lon = 37.653, Email = "", Telephone = "" };
+                Lon = 37.653, Email = "", Telephone = ""
+            };
 
             var controller = _serviceProvider.GetRequiredService<UserController>();
 
@@ -59,20 +60,7 @@ namespace Tests
             Assert.Pass(Serialize(jsonRes.Value));
         }
 
-        [Test]
-        public async Task TestLoginUserRequest()
-        {
-            using (var client = _factory.CreateClient())
-            {
-                var response = await client.PostAsJsonAsync("/User/LoginUser", new { Login = "", Password = "" });
-
-                
-
-                var jobjectRes = await response.Content.ReadAsJObject();
-
-                Assert.Pass("json is\n{0}", jobjectRes.ToString());
-            }
-        }
+       
         [Test]
         public async Task TestGeolocationApi()
         {
