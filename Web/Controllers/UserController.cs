@@ -59,7 +59,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LoginUser([FromBody]UserLoginModel userLoginModel)
+        public async Task<IActionResult> LoginUser(UserLoginModel userLoginModel)
         {
             var valRes = await _userLoginValidator.ValidateAsync(userLoginModel);
 
@@ -85,8 +85,8 @@ namespace Web.Controllers
 
         async Task SignInAsync(OutputUserDto user)
         {
-            
-            
+            if (HttpContext == null)
+                return;
 
             var claims = new List<Claim>() { new Claim("hashedtoken", $"{user.Token.AccessTokenHash}"), new Claim(ClaimsIdentity.DefaultNameClaimType, $"{user.Login}") };
             var identity = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
@@ -99,6 +99,9 @@ namespace Web.Controllers
 
         async Task SignOutAsync()
         {
+            if (HttpContext == null)
+                return;
+
             await HttpContext.SignOutAsync();
         }
 
