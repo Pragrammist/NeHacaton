@@ -5,6 +5,7 @@ using DataBase.Entities;
 using HendInRentApi;
 using Web.Dtos;
 using Web.HasingToken;
+using Web.Helprers.AutoMapperProfiles;
 using Web.Models;
 
 namespace Web.Helprers
@@ -21,6 +22,8 @@ namespace Web.Helprers
 
         static void ConfigeMapper(IMapperConfigurationExpression cfg)
         {
+            cfg.AddProfile<UserSelfInfoProfile>();
+
             cfg.CreateMap<UserRegistrationModel, InputUserRegistrationDto>(); //model is validated, registration dto isn't.
             //It's just to pass UserService Reg method
 

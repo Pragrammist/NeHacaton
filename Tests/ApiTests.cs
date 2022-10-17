@@ -11,7 +11,12 @@ namespace Tests
         AuthRentInHendApi AuthApi => new AuthRentInHendApi();
         GenericRepositoryApi UniversalApi => new GenericRepositoryApi();
         InventoryRepositoryApi InventoryApi => new InventoryRepositoryApi();
+<<<<<<< HEAD
         InputLoginUserRentInHendDto UserToLogin => new InputLoginUserRentInHendDto { Login = "0", Password = "0" };
+=======
+
+        InputLoginUserRentInHendDto UserToLogin => GetLoginUserFromJsonFile<InputLoginUserRentInHendDto>();
+>>>>>>> 5904661c33575dbe909aa967fc86deaf9c409237
 
         [SetUp]
         public void Setup()

@@ -18,6 +18,9 @@ namespace Web.Models.ModelValidators
             RuleFor(u => u.Password).NotNull();
             RuleFor(u => u.Login).NotNull();
             RuleFor(u => u).CustomAsync(CheckExistsUserInDb).When(u => u.Login != null && u.Password != null);
+            RuleFor(u => u.Password).NotNull().NotEmpty();
+            RuleFor(u => u.Login).NotNull().NotEmpty();
+            RuleFor(u => u).CustomAsync(CheckExistsUserInDb).When(u => !string.IsNullOrEmpty(u.Login) && !string.IsNullOrEmpty(u.Password));
         }
 
         async Task CheckExistsUserInDb(UserLoginModel model, ValidationContext<UserLoginModel> validationContext, CancellationToken cancellationToken)
