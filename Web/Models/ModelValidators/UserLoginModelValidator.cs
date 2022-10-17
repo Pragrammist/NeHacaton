@@ -14,9 +14,9 @@ namespace Web.Models.ModelValidators
             _userContext = userContext;
             _passwordHasher = passwordHasher;
 
-            RuleFor(u => u.Password).NotNull();
-            RuleFor(u => u.Login).NotNull();
-            RuleFor(u => u).CustomAsync(CheckExistsUserInDb).When(u => u.Login != null && u.Password != null);
+            RuleFor(u => u.Password).NotNull().NotEmpty();
+            RuleFor(u => u.Login).NotNull().NotEmpty();
+            RuleFor(u => u).CustomAsync(CheckExistsUserInDb).When(u => !string.IsNullOrEmpty(u.Login) && !string.IsNullOrEmpty(u.Password));
             
 
         }

@@ -76,6 +76,8 @@ namespace Web.Controllers
 
         }
 
+        
+
         public async Task<IActionResult> SignOutUser()
         {
             await SignOutAsync();

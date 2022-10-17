@@ -14,12 +14,12 @@ namespace Web.Models.ModelValidators
             var notRegistratedValidator = new UserIsNotRegistratedInMarketplace(userContext);
             RuleFor(u => u).NotNull().ChildRules(validator => 
             {
-                validator.RuleFor(t => t.Password).NotNull().WithErrorCode("422").WithMessage("cannot be null"); 
-                validator.RuleFor(t => t.Login).NotNull().WithErrorCode("422").WithMessage("cannot be null");
+                validator.RuleFor(t => t.Password).NotNull().NotEmpty().WithErrorCode("422").WithMessage("cannot be null"); 
+                validator.RuleFor(t => t.Login).NotNull().NotEmpty().WithErrorCode("422").WithMessage("cannot be null");
                 validator.RuleFor(t => t.Lat).InclusiveBetween(-180, 180);
                 validator.RuleFor(t => t.Lon).InclusiveBetween(-180, 180);
-                validator.RuleFor(t => t.Email).NotNull().WithErrorCode("422").WithMessage("cannot be null");
-                validator.RuleFor(t => t.Telephone).NotNull().WithErrorCode("422").WithMessage("cannot be null");
+                validator.RuleFor(t => t.Email).NotNull().NotEmpty().WithErrorCode("422").WithMessage("cannot be null");
+                validator.RuleFor(t => t.Telephone).NotNull().NotEmpty().WithErrorCode("422").WithMessage("cannot be null");
             }).WithMessage("user cannot be null").WithName("user").WithErrorCode("422");
 
 
@@ -30,7 +30,7 @@ namespace Web.Models.ModelValidators
                 .When(FieldsNotNullCondition);
         }
 
-        bool FieldsNotNullCondition(UserRegistrationModel m) => m.Telephone != null && m.Login != null && m.Email != null && m.Password != null;
+        bool FieldsNotNullCondition(UserRegistrationModel m) => !string.IsNullOrEmpty(m.Telephone) && !string.IsNullOrEmpty(m.Login) && !string.IsNullOrEmpty(m.Email) && !string.IsNullOrEmpty(m.Password);
 
 
         #region additional classes for validation

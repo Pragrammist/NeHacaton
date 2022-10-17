@@ -9,6 +9,8 @@ using Web.HasingToken;
 using Web.PasswordHasher;
 using Web.Geolocation;
 
+
+
 namespace Web.Helprers
 {
     public static class ServiceCollectionExtensions
@@ -29,6 +31,7 @@ namespace Web.Helprers
         public static IServiceCollection AddNativeServices(this IServiceCollection services)
         {
             services.AddScoped<UserService>();
+            services.AddScoped<SelfInfoService>();
             services.AddTransient<TokenCryptographer, TokenCryptographerImpl>();
             services.AddTransient<IPasswordHasher, PasswordHasherImpl>();
             services.AddTransient<GeolocationRepository>();
