@@ -7,9 +7,7 @@ namespace Tests
 {
     public class DbTests
     {
-
         DbContextOptions<UserContext> GetDbOptions() => new DbContextOptionsBuilder<UserContext>().UseSqlite("Data source= testdbusers.db").Options;
-
         UserContext GetTestContext(bool isEnsureCreated = true) => new UserContext(GetDbOptions(), isEnsureCreated);
 
         [Test]

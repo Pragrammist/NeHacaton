@@ -6,28 +6,17 @@ using static HendInRentApi.RentInHendApiConstants;
 
 namespace Tests
 {
-
     public class ApiTests
     {
-
         AuthRentInHendApi AuthApi => new AuthRentInHendApi();
-
         GenericRepositoryApi UniversalApi => new GenericRepositoryApi();
-
         InventoryRepositoryApi InventoryApi => new InventoryRepositoryApi();
-
         InputLoginUserRentInHendDto UserToLogin => new InputLoginUserRentInHendDto { Login = "0", Password = "0" };
-
 
         [SetUp]
         public void Setup()
-        {
-            
-
-            
-        }
-
-       
+        {            
+        }       
 
         [Test]
         public async Task AuthTest()
@@ -52,7 +41,6 @@ namespace Tests
             var str = Serialize(invent);
             Assert.Pass("response: {0}", str);
         }
-
 
         [Test]
         public async Task UniverseApiTest()

@@ -2,15 +2,11 @@
 using static HendInRentApi.RentInHendApiConstants;
 using static HendInRentApi.HttpStaticMethod;
 
-
 namespace HendInRentApi
 {
-
-
-
     public class InventoryRepositoryApi
     {
-        static readonly string get_invetory_url = APIURL + POST_INVENTORY_ITEMS; // puty dlya poluchenia inventory
+        private static readonly string get_invetory_url = API_URL + POST_INVENTORY_ITEMS; // puty dlya poluchenia inventory
         /// <summary>
         /// 
         /// </summary>
@@ -25,18 +21,9 @@ namespace HendInRentApi
 
             await response.StatusIsOKOrThrowException(get_invetory_url); //uze bilo
 
-            //var jsonOptions = GetGlobalJsonSerializerOptions();
-
             var result = await response.Content.ReadJsonByNewtonsoft<OutputInventoriesDto>() ?? throw new NullReferenceException("result of HttpContent.ReadFromJsonAsync is null");
 
             return result;
-
-
         }
-
-
-
     }
-
-
 }

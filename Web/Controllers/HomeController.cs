@@ -11,6 +11,7 @@ namespace Web.Controllers
         private readonly ILogger<HomeController> _logger;
 
         AuthRentInHendApi _authIn;
+
         public HomeController(ILogger<HomeController> logger, AuthRentInHendApi authIn)
         {
             _logger = logger;
@@ -19,9 +20,7 @@ namespace Web.Controllers
 
         public async Task <IActionResult> Index()
         {
-
-            return View();
-            
+            return View();   
         }
 
         public IActionResult Privacy()

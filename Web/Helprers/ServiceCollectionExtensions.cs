@@ -29,7 +29,7 @@ namespace Web.Helprers
         public static IServiceCollection AddNativeServices(this IServiceCollection services)
         {
             services.AddScoped<UserService>();
-            services.AddTransient<TokenCryptographer, TokenCryptographerImpl>();
+            services.AddTransient<ITokenCryptographer, TokenCryptographerImpl>();
             services.AddTransient<IPasswordHasher, PasswordHasherImpl>();
             services.AddTransient<GeolocationRepository>();
             return services;

@@ -7,19 +7,17 @@ namespace Web.Geolocation
 {
     public class GeolocationRepository
     {
-
         string ParseJsonObjectToFindCity(JObject res)
         {
             return res["suggestions"][0]["data"]["city"].ToString();
         }
 
-
         IHttpClientFactory _clientFactory;
+
         public GeolocationRepository(IHttpClientFactory clientFactory)
         {
             _clientFactory = clientFactory;
         }
-
 
         public async Task<OutputLocationDto> GetUserLocationByLatLon(double lat, double lon)
         {

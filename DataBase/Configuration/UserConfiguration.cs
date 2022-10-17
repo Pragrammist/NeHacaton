@@ -9,9 +9,7 @@ namespace DataBase.Configuration
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            BuildIndexes(builder);
-            
-            
+            BuildIndexes(builder);            
         }
 
         void BuildIndexes(EntityTypeBuilder<User> builder)
@@ -19,7 +17,6 @@ namespace DataBase.Configuration
             builder.HasIndex(e => e.Login).IsUnique();
             builder.HasIndex(e => e.Telephone).IsUnique();
             builder.HasIndex(e => e.Email).IsUnique();
-        }
-        
+        }        
     }
 }
