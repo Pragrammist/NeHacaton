@@ -41,8 +41,6 @@ namespace Tests
 
             var res = await controller.RegistrateUser(user);
 
-
-
             var jsonResult = res.As<JsonResult>();
 
            
