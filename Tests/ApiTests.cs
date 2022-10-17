@@ -2,7 +2,7 @@ using FluentAssertions;
 using HendInRentApi;
 using static Tests.Helper;
 using static HendInRentApi.RentInHendApiConstants;
-
+using Web.Dtos.UserSelfInfoDto.Profile;
 
 namespace Tests
 {

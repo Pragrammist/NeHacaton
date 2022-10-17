@@ -1,4 +1,4 @@
-﻿namespace Web.Dtos.UserSelfInfoDto
+﻿namespace Web.Dtos.UserSelfInfoDto.Rent
 {
     public class OutputPointDto
     {

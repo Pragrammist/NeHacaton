@@ -63,14 +63,22 @@ namespace HendInRentApi
             jsonSettings.NullValueHandling = NullValueHandling.Ignore;
 
 
-            var serealizer = Newtonsoft.Json.JsonSerializer.Create(jsonSettings);
+            var serealizer = JsonSerializer.Create(jsonSettings);
 
-
-            var obj = serealizer.Deserialize<T>(reader);
-
-            textReader.Dispose();
-
-            return obj;
+            try
+            {
+                var obj = serealizer.Deserialize<T>(reader);
+                return obj;
+            }
+            catch(Exception ex)
+            {
+                throw new InvalidOperationException(ex.Message + $"\nwith content:\n{stringContent}");
+            }
+            finally
+            {
+                textReader.Dispose();
+            }
+            
         }
     }
 

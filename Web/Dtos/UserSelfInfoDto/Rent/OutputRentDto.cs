@@ -1,6 +1,6 @@
-﻿namespace Web.Dtos.UserSelfInfoDto
+﻿namespace Web.Dtos.UserSelfInfoDto.Rent
 {
-    public class OutputRentDto   
+    public class OutputRentDto
     {
         public int Id { get; set; }
         public OutputClientDto Client { get; set; }

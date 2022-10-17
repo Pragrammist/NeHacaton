@@ -1,6 +1,6 @@
-﻿namespace Web.Dtos.UserSelfInfoDto
+﻿namespace Web.Dtos.UserSelfInfoDto.Profile
 {
-    public class OutputPermissionDto
+    public class OutputPermissionSelfInfoDto
     {
         public bool Delete { get; set; }
         public bool Read { get; set; }

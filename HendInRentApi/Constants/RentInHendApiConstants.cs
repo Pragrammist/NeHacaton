@@ -11,6 +11,9 @@
 
 
         public const string POST_AUTH_LOGIN = "/v1/login";
+
+
+        public const string POST_PROFILE = "/v1/my/profile/item/";
     }
 
 

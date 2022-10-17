@@ -1,6 +1,6 @@
-﻿namespace Web.Dtos.UserSelfInfoDto
+﻿namespace Web.Dtos.UserSelfInfoDto.Profile
 {
-    public class OutputAdditionalServiceDto
+    public class OutputDiscountSelfInfoDto
     {
         public int Id { get; set; }
         public int Title { get; set; }

@@ -14,9 +14,21 @@ namespace Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Get()
+        public IActionResult GetSelfInfo()
         {
-            return View();
+            return View(); //all info
+        }
+
+        [Authorize]
+        public IActionResult RentSelfInfo()
+        {
+            return PartialView(); //loaded from GetSelfInfo
+        }
+
+        [Authorize]
+        public IActionResult ProfileSelfInfo()
+        {
+            return PartialView(); //loaded from GetSelfInfo
         }
     }
 }

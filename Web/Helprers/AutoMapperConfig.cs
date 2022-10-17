@@ -37,7 +37,7 @@ namespace Web.Helprers
             cfg.CreateMap<InputUserRegistrationDto, User>().ForMember(t => t.Password, cfg => cfg.Ignore());
             //from dto model in UserService to user entity
 
-            //cfg.CreateMap<User>
+            //cfg.CreateMap<OutputUserProfileDto>
 
             cfg.CreateMap<UserLoginModel, InputLoginUserDto>();
 
