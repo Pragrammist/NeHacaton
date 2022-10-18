@@ -5,16 +5,16 @@ namespace Web.PasswordHasher
 {
     public class PasswordHasherImpl : IPasswordHasher
     {
-        readonly Encoding encoding = Encoding.UTF8;
+        readonly string _key;
+        public PasswordHasherImpl(IConfiguration configuration)
+        {
+            _key = configuration.GetSection("Cryptography")["HashKey"];
+        }
+
+
         public string Hash(string password)
         {
-            var passwordBytes = encoding.GetBytes(password);
-
-            var hashBytes = MD5.HashData(passwordBytes);
-
-            var hash = encoding.GetString(hashBytes);
-
-            return hash;
+            return HashAlgorithm.Encrypt(password, _key);
         }
     }
 }

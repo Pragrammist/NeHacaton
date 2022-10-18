@@ -8,17 +8,20 @@ using Web.Dtos;
 using Web.Geolocation;
 using Web.HasingToken;
 using Web.PasswordHasher;
+
 namespace Web.Services
 {
     public class UserService
     {
         readonly AuthRentInHendApi _authApi;
         readonly IMapper _mapper;
-        UserContext _userContext;
-        TokenCryptographer _tokenCryptographer;
-        IPasswordHasher _passwordHasher;
-        GeolocationRepository _geolocation;
-        public UserService(AuthRentInHendApi authApi, IMapper mapper, UserContext userContext, TokenCryptographer tokenCryptographer, 
+
+        readonly UserContext _userContext;
+        readonly ITokenCryptographer _tokenCryptographer;
+        readonly IPasswordHasher _passwordHasher;
+        readonly GeolocationRepository _geolocation;
+
+        public UserService(AuthRentInHendApi authApi, IMapper mapper, UserContext userContext, ITokenCryptographer tokenCryptographer, 
             IPasswordHasher passwordHasher, GeolocationRepository geolocation)
         {
             _geolocation = geolocation;
@@ -38,8 +41,6 @@ namespace Web.Services
             var token = await GetUserToken(inputUser);
 
             var user = await GetUserEntity(inputUser, token);
-
-            
 
             _userContext.Add(user);
 

@@ -15,9 +15,6 @@ using static Tests.Helper;
 
 namespace Tests
 {
-
-
-
     public class WebTests
     {
         WebApplicationFactory<Program> _factory;
@@ -30,7 +27,6 @@ namespace Tests
             _serviceProvider = _factory.Services.CreateScope().ServiceProvider;
         }
 
-
         [Test]
         public async Task TestUserRegistration()
         {
@@ -38,14 +34,9 @@ namespace Tests
 
             var controller = _serviceProvider.GetRequiredService<UserController>();
 
-
             var res = await controller.RegistrateUser(user);
 
-
-
             var jsonResult = res.As<JsonResult>();
-
-           
 
             Assert.Pass("json is\n{0}", Serialize(jsonResult.Value));
         }

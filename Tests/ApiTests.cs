@@ -2,32 +2,21 @@ using FluentAssertions;
 using HendInRentApi;
 using static Tests.Helper;
 using static HendInRentApi.RentInHendApiConstants;
-using Web.Dtos.UserSelfInfoDto.Profile;
 
 namespace Tests
 {
-
     public class ApiTests
     {
-
         AuthRentInHendApi AuthApi => new AuthRentInHendApi();
-
         GenericRepositoryApi UniversalApi => new GenericRepositoryApi();
-
         InventoryRepositoryApi InventoryApi => new InventoryRepositoryApi();
-
         InputLoginUserRentInHendDto UserToLogin => GetLoginUserFromJsonFile<InputLoginUserRentInHendDto>();
 
 
         [SetUp]
         public void Setup()
-        {
-            
-
-            
-        }
-
-       
+        {            
+        }       
 
         [Test]
         public async Task AuthTest()
@@ -52,7 +41,6 @@ namespace Tests
             var str = Serialize(invent);
             Assert.Pass("response: {0}", str);
         }
-
 
         [Test]
         public async Task UniverseApiTest()
