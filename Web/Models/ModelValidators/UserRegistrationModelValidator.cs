@@ -32,9 +32,7 @@ namespace Web.Models.ModelValidators
 
         bool FieldsNotNullCondition(UserRegistrationModel m) => !string.IsNullOrEmpty(m.Telephone) && !string.IsNullOrEmpty(m.Login) && !string.IsNullOrEmpty(m.Email) && !string.IsNullOrEmpty(m.Password);
 
-
         #region additional classes for validation
-
         class UserExistsInRendInHendValidator
         {
             AuthRentInHendApi _api;

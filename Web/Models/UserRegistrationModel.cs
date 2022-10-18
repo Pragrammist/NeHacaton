@@ -8,6 +8,5 @@
         public string Login { get; set; } = null!;
         public double Lat { get; set; }
         public double Lon { get; set; }
-
     }
 }

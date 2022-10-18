@@ -2,15 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using DataBase.Configuration;
 
-
 namespace DataBase
 {
     public class UserContext : DbContext
     {
         public DbSet<User> Users { get; set; } = null!;
-        public DbSet<Token> Tokens { get; set; } = null!;
-
-       
+        public DbSet<Token> Tokens { get; set; } = null!;       
 
         public UserContext(DbContextOptions<UserContext> options, bool isEnsureCreted = true) : base(options)
         {
@@ -22,9 +19,6 @@ namespace DataBase
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new UserConfiguration());
-
-
         }
-
     }
 }

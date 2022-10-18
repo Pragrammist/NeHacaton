@@ -37,18 +37,11 @@ namespace Web.Helprers
             cfg.CreateMap<InputUserRegistrationDto, User>().ForMember(t => t.Password, cfg => cfg.Ignore());
             //from dto model in UserService to user entity
 
-            //cfg.CreateMap<User>
-
             cfg.CreateMap<UserLoginModel, InputLoginUserDto>();
-
 
             cfg.CreateMap<Token, OutputTokenDto>();
 
             cfg.CreateMap<User, OutputUserDto>();
-        }
-
-        
-
-        
+        }        
     }
 }

@@ -3,24 +3,18 @@ using System.Text;
 
 namespace Web.HasingToken
 {
-    public class TokenCryptographerImpl : TokenCryptographer
+    public class TokenCryptographerImpl : ITokenCryptographer
     {
-        
         readonly string _key;
-        
-        
+         
         public TokenCryptographerImpl(IConfiguration configuration)
-        {
-            
-            _key = configuration.GetSection("Cryptography")["TokenCryptographyKey"];
-            
-           
+        {       
+            _key = configuration.GetSection("Cryptography")["TokenCryptographyKey"];  
         }
 
         
         public string Decrypt(string hashedToken)
         {
-
             return DecryptString(_key, hashedToken);
         }
 
@@ -28,6 +22,7 @@ namespace Web.HasingToken
         {
             return EncryptString(_key, token);
         }
+
         string EncryptString(string key, string plainText)
         {
             byte[] iv = new byte[16];

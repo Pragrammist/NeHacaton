@@ -2,14 +2,11 @@
 using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 
-
 namespace HendInRentApi
 {
     public static class HttpStaticMethod
     {
-
         //method nuzhen dlya dobavleniya tokena v zaprosi. takzhe nekotorih drugih nastroek
-
         public static void AddHeadersWithoutBearer(this HttpClient client)
         {
             client.DefaultRequestHeaders.Add("X-CSRF-TOKEN", "pnsXw4CP4HIdF2eoWuPPCStqmPdKhWHLlJzoQMFJ"); // eto ya prosto udivel v api, poetomu prosto dobavil
@@ -50,7 +47,6 @@ namespace HendInRentApi
             var readStirng = await content.ReadAsStringAsync();
             var jsonObject = JObject.Parse(readStirng);
             return jsonObject;
-
         }
 
         public static async Task<T> ReadJsonByNewtonsoft<T>(this HttpContent content)
@@ -65,7 +61,6 @@ namespace HendInRentApi
 
             var serealizer = Newtonsoft.Json.JsonSerializer.Create(jsonSettings);
 
-
             var obj = serealizer.Deserialize<T>(reader);
 
             textReader.Dispose();
@@ -73,6 +68,4 @@ namespace HendInRentApi
             return obj;
         }
     }
-
-
 }

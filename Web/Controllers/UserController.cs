@@ -16,6 +16,7 @@ namespace Web.Controllers
         UserService _userService;
         IMapper _mapper;
         IValidator<UserLoginModel> _userLoginValidator;
+
         public UserController(
             IValidator<UserRegistrationModel> userRegistrationModelValidator, 
             UserService userService, 
