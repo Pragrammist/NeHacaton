@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace HendInRentApi.Dto.Inventory
+namespace Web.Dtos.Sales.Inventory
 {
     public class InputInventoryDto
     {

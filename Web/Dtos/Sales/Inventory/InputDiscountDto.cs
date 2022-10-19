@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace HendInRentApi.Dto.Inventory
+namespace Web.Dtos.Sales.Inventory
 {
     public class InputDiscountDto
     {

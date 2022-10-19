@@ -4,6 +4,7 @@ using static Tests.Helper;
 using static HendInRentApi.RentInHendApiConstants;
 using HendInRentApi.Dto.SelfInfo.Profile;
 using HendInRentApi.Dto.SelfInfo.Rent;
+using HendInRentApi.Dto.Inventory;
 
 namespace Tests
 {
@@ -11,7 +12,6 @@ namespace Tests
     {
         AuthRentInHendApi AuthApi => new AuthRentInHendApi();
         GenericRepositoryApi UniversalApi => new GenericRepositoryApi();
-        InventoryRepositoryApi InventoryApi => new InventoryRepositoryApi();
         InputLoginUserRentInHendDto UserToLogin => GetLoginUserFromJsonFile<InputLoginUserRentInHendDto>();
 
 

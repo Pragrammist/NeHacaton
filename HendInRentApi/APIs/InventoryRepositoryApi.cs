@@ -1,6 +1,8 @@
 ﻿using System.Net.Http.Json;
 using static HendInRentApi.RentInHendApiConstants;
 using static HendInRentApi.HttpStaticMethod;
+using HendInRentApi.Dto.Inventory;
+
 
 namespace HendInRentApi
 {

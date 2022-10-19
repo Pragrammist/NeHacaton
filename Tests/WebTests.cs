@@ -99,5 +99,14 @@ namespace Tests
 
             Assert.Pass("rent:\n{0}", Serialize(res));
         }
+
+        [Test]
+        public async Task SaleServiceTest()
+        {
+            var serv = _serviceProvider.GetRequiredService<SaleService>();
+            var token = await GetRentInHendTokenForTesting(_authRentInHend);
+            var res = await serv.GetInventory(token);
+            Assert.Pass("rent:\n{0}", Serialize(res));
+        }
     }
 }
