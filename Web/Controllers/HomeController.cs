@@ -3,7 +3,6 @@ using System.Diagnostics;
 using Web.Models;
 using HendInRentApi;
 
-
 namespace Web.Controllers
 {
     public class HomeController : Controller

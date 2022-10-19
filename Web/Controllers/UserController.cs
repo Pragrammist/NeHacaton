@@ -7,6 +7,7 @@ using System.Security.Claims;
 using Web.Dtos;
 using Web.Models;
 using Web.Services;
+using static Web.Constants.ClaimConstants;
 
 namespace Web.Controllers
 {
@@ -91,7 +92,7 @@ namespace Web.Controllers
             if (HttpContext == null)
                 return;
 
-            var claims = new List<Claim>() { new Claim("hashedtoken", $"{user.Token.AccessTokenHash}"), new Claim(ClaimsIdentity.DefaultNameClaimType, $"{user.Login}") };
+            var claims = new List<Claim>() { new Claim(RENTINHEND_API_TOKEN_CLAIM, $"{user.Token.AccessTokenHash}"), new Claim(ClaimsIdentity.DefaultNameClaimType, $"{user.Login}") };
             var identity = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             
             var claimPrincipal = new ClaimsPrincipal(identity);

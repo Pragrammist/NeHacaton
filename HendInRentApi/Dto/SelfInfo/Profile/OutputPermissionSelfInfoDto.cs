@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
 
-namespace Web.Dtos.UserSelfInfoDto.Profile
+namespace HendInRentApi.Dto.SelfInfo.Profile
 {
     public class OutputPermissionSelfInfoDto
     {
+        [JsonProperty("resource_id")]
         public int ResourceId { get; set; }
         public bool Read { get; set; }
         public bool Write { get; set; }

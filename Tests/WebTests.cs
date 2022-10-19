@@ -11,6 +11,7 @@ using Web;
 using Web.Controllers;
 using Web.Geolocation;
 using Web.Models;
+using Web.Services;
 using static Tests.Helper;
 
 namespace Tests
@@ -19,12 +20,18 @@ namespace Tests
     {
         WebApplicationFactory<Program> _factory;
         IServiceProvider _serviceProvider;
+        AuthRentInHendApi _authRentInHend;
+
+
+
+
 
         [SetUp]
         public void SetUp()
         {
             _factory = new WebApplicationFactory<Program>();
             _serviceProvider = _factory.Services.CreateScope().ServiceProvider;
+            _authRentInHend = _serviceProvider.GetRequiredService<AuthRentInHendApi>(); 
         }
 
         [Test]
@@ -73,5 +80,19 @@ namespace Tests
 
             Assert.Pass("login:\n{0}\nregistration:\n{1}\n",Serialize(userLogin), Serialize(userReg));
         }
+        [Test]
+        public async Task TestProfileService()
+        {
+            var profileServise = _serviceProvider.GetRequiredService<SelfInfoService>();
+            var token = await GetRentInHendTokenForTesting(_authRentInHend);
+
+            var res = await profileServise.GetUserProfileSelfInfo(token);
+
+            var strRes = Serialize(res);
+
+            Assert.Pass("profile:\n{0}", strRes);
+        }
+
+        
     }
 }

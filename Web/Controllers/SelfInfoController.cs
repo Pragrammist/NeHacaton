@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Services;
+using static Web.Constants.ClaimConstants;
 
 namespace Web.Controllers
 {
@@ -26,9 +27,15 @@ namespace Web.Controllers
         }
 
         [Authorize]
-        public IActionResult ProfileSelfInfo()
+        public async Task<IActionResult> ProfileSelfInfo()
         {
-            return PartialView(); //loaded from GetSelfInfo
+            var res = await _selfInfoService.GetUserProfileSelfInfo(Token);
+
+            return PartialView(res); 
         }
+
+
+
+        string Token => User.Claims.First(t => t.ValueType == RENTINHEND_API_TOKEN_CLAIM).Value;
     }
 }

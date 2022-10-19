@@ -2,6 +2,8 @@ using FluentAssertions;
 using HendInRentApi;
 using static Tests.Helper;
 using static HendInRentApi.RentInHendApiConstants;
+using HendInRentApi.Dto.SelfInfo;
+using HendInRentApi.Dto.SelfInfo.Profile;
 
 namespace Tests
 {
@@ -66,6 +68,17 @@ namespace Tests
             var str = Serialize(invent);
 
             Assert.Pass("response: {0}", str);
+        }
+        [Test]
+        public async Task ProfileDataApiTest()
+        {
+            var authToken = await AuthApi.Login(UserToLogin);
+
+            var profile = await UniversalApi.MakePostJsonTypeRequest<OutputSelfInfoProfileApiResultDto>(POST_PROFILE, authToken.AccessToken);
+
+            var str = Serialize(profile);
+
+            Assert.Pass("response:\n{0}", str);
         }
     }
 }

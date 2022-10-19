@@ -32,7 +32,6 @@ namespace Web.Helprers
             services.AddScoped<UserService>();
             services.AddTransient<ITokenCryptographer, TokenCryptographerImpl>();
             services.AddScoped<SelfInfoService>();
-            services.AddTransient<TokenCryptographer, TokenCryptographerImpl>();
             services.AddTransient<IPasswordHasher, PasswordHasherImpl>();
             services.AddTransient<GeolocationRepository>();
             return services;

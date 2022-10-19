@@ -1,5 +1,5 @@
-﻿using Web.Dtos.UserSelfInfoDto; 
-
+﻿using ApiProfile = HendInRentApi.Dto.SelfInfo.Profile;
+using WebProfile = Web.Dtos.UserSelfInfoDto.Profile;
 
 using AutoMapper;
 
@@ -9,7 +9,9 @@ namespace Web.Helprers.AutoMapperProfiles
     {
         public UserSelfInfoProfile()
         {
-
+            CreateMap<ApiProfile.OutputPermissionSelfInfoDto, WebProfile.OutputPermissionSelfInfoDto>();
+            CreateMap<ApiProfile.OutputProfileSelfIonfoDto, WebProfile.OutputProfileSelfIonfoDto>();
+            CreateMap<ApiProfile.OutputSelfInfoProfileApiResultDto, WebProfile.OutputSelfInfoProfileResultDto>();
         }
     }
 }

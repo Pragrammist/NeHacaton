@@ -1,6 +1,9 @@
 ﻿using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
+using HendInRentApi;
+using Newtonsoft.Json.Linq;
+using Web.Dtos;
 using static Tests.Constants;
 
 namespace Tests
@@ -30,5 +33,15 @@ namespace Tests
             var res = JsonSerializer.Deserialize<T>(json) ?? throw new NullReferenceException("serializer of user got null");
             return res;
         }
+
+        public static async Task<string> GetRentInHendTokenForTesting(AuthRentInHendApi api)
+        {
+            var userForAuth = GetLoginUserFromJsonFile<InputLoginUserRentInHendDto>();
+            var user = await api.Login(userForAuth);
+            return user.AccessToken;
+        }
+
+
+        
     }
 }
