@@ -21,9 +21,11 @@ namespace Web.Controllers
         }
 
         [Authorize]
-        public IActionResult RentSelfInfo()
+        public async Task<IActionResult> RentSelfInfo()
         {
-            return PartialView(); //loaded from GetSelfInfo
+            var res = await _selfInfoService.GetUserRentSelfInfo(Token);
+
+            return PartialView(res); 
         }
 
         [Authorize]

@@ -1,12 +1,9 @@
 ﻿using FluentAssertions;
-using FluentValidation;
 using HendInRentApi;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using System.IO;
-using System.Net.Http.Json;
-using System.Reflection;
+using Web.Dtos.UserSelfInfoDto.Rent;
 using Web;
 using Web.Controllers;
 using Web.Geolocation;
@@ -93,6 +90,14 @@ namespace Tests
             Assert.Pass("profile:\n{0}", strRes);
         }
 
-        
+        [Test]
+        public async Task RentSelfInfoServiceTest()
+        {
+            var serv = _serviceProvider.GetRequiredService<SelfInfoService>();
+            var token = await GetRentInHendTokenForTesting(_authRentInHend);
+            var res = await serv.GetUserRentSelfInfo(token);
+
+            Assert.Pass("rent:\n{0}", Serialize(res));
+        }
     }
 }

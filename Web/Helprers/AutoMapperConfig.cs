@@ -23,6 +23,7 @@ namespace Web.Helprers
         static void ConfigeMapper(IMapperConfigurationExpression cfg)
         {
             cfg.AddProfile<UserSelfInfoProfile>();
+            cfg.AddProfile<RentSelfInfoProfile>();
 
             cfg.CreateMap<UserRegistrationModel, InputUserRegistrationDto>(); //model is validated, registration dto isn't.
             //It's just to pass UserService Reg method

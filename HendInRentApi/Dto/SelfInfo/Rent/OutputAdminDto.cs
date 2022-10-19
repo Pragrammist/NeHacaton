@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Web.Dtos.UserSelfInfoDto.Rent
+namespace HendInRentApi.Dto.SelfInfo.Rent
 {
     public class OutputAdminDto
     {

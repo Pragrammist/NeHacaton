@@ -15,7 +15,7 @@ namespace HendInRentApi
         /// <param name="arg"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<TResult> MakePostJsonTypeRequest<TResult, TArg>(string relativePath, string token, TArg arg)
+        public async Task<TResult> MakePostJsonTypeRequest<TResult, TArg>(string relativePath, string token, TArg? arg)
         {
             var path = API_URL + relativePath; 
 

@@ -2,8 +2,8 @@ using FluentAssertions;
 using HendInRentApi;
 using static Tests.Helper;
 using static HendInRentApi.RentInHendApiConstants;
-using HendInRentApi.Dto.SelfInfo;
 using HendInRentApi.Dto.SelfInfo.Profile;
+using HendInRentApi.Dto.SelfInfo.Rent;
 
 namespace Tests
 {
@@ -35,10 +35,12 @@ namespace Tests
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
-            var inputDto = new InputInventoryDto { };
+            var inputDto = new InputInventoryDto {Search = "лыжи" };
 
 
-            var invent = await InventoryApi.PostInvetoryItems(authToken.AccessToken, inputDto);
+            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputInventoriesDto, InputInventoryDto>(POST_INVENTORY_ITEMS, authToken.AccessToken, inputDto);
+
+            //var invent = await InventoryApi.PostInvetoryItems(authToken.AccessToken, inputDto);
 
             var str = Serialize(invent);
             Assert.Pass("response: {0}", str);
@@ -79,6 +81,16 @@ namespace Tests
             var str = Serialize(profile);
 
             Assert.Pass("response:\n{0}", str);
+        }
+        [Test]
+        public async Task RentDataTest()
+        {
+            var authToken = await AuthApi.Login(UserToLogin);
+            var input = new InputRentSearchDto();
+
+            var data = await UniversalApi.MakePostJsonTypeRequest<OutputRentResultDto>(POST_RENT, authToken.AccessToken);
+
+            Assert.Pass("res:\n{0}",Serialize(data));
         }
     }
 }

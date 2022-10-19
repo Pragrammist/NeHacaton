@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Web.Dtos.UserSelfInfoDto.Rent
+namespace HendInRentApi.Dto.SelfInfo.Rent
 {
     public class OutputRentStateDto
     {
