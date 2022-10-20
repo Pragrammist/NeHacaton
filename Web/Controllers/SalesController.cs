@@ -10,12 +10,12 @@ namespace Web.Controllers
         {
             _saleService = saleService;
         }
-        public IActionResult Inventory()
+        public async Task<IActionResult> Inventory()
         {
             
+            var invents = await _saleService.GetInventories();
 
-
-            return View();
+            return Json(invents);
         }
     }
 }

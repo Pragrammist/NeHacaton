@@ -9,10 +9,10 @@ namespace Web.PasswordHasher {
         }
 
         private static string Hasher(string input, string key, bool encipher)
-        {
+        {			
 	        for (int i = 0; i < key.Length; ++i)
 		        if (!char.IsLetter(key[i]))
-			        return null; // Error
+			        throw new InvalidOperationException($"{key[i]} is not from unicode"); 
 
 	        string output = string.Empty;
 	        int nonAlphaCharCount = 0;

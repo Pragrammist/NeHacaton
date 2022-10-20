@@ -10,6 +10,7 @@ using Web.Geolocation;
 using Web.Models;
 using Web.Services;
 using static Tests.Helper;
+using Web.PasswordHasher;
 
 namespace Tests
 {
@@ -107,6 +108,29 @@ namespace Tests
             var token = await GetRentInHendTokenForTesting(_authRentInHend);
             var res = await serv.GetInventory(token);
             Assert.Pass("rent:\n{0}", Serialize(res));
+        }
+
+        [Test]
+        public async Task SaleServiceGetInventoryGet()
+        {
+            var serv = _serviceProvider.GetRequiredService<SaleService>();
+
+            var envent = await serv.GetInventories();
+
+            foreach (var env in envent)
+            {
+                Assert.Pass(Serialize(env));
+            }
+        }
+        [Test]
+        public void HasherTest()
+        {
+            var password = "EQWEQWE";
+            var hasher = _serviceProvider.GetRequiredService<IPasswordHasher>();
+            var hash = hasher.Hash(password);
+
+            hash.Should().NotBeNull();
+            Assert.Pass("password:\n{0}\nhash:\n{1}", password, hash);
         }
     }
 }
