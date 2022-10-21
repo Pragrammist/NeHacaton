@@ -2,29 +2,16 @@
 
 namespace Web.Dtos.Sales.Inventory
 {
-    public class InputInventoryDto
+    public class InputSearchInventoryDto
     {
-        [JsonProperty("search")]
-        public string? Search { get; set; }
-
-        [JsonProperty("title")]
+        public string? Search { get; set; }   
+        public string[]? Tags {get; set; }
         public string? Title { get; set; }
-        
-        [JsonProperty("description")]
         public string? Description { get; set; }
-        
-        [JsonProperty("rent_number")]
         public string? RentNumber { get; set; }
-        
-        [JsonProperty("state_id")]
         public int? StateId { get; set; }
-
-        [JsonProperty("limit")]
         public int? Limit { get; set; }
-
-        [JsonProperty("offset")]
         public int? Offset { get; set; }
-
         public InputDiscountsDto? Discounts { get; set; }
     }
 }

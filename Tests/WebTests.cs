@@ -11,6 +11,7 @@ using Web.Models;
 using Web.Services;
 using static Tests.Helper;
 using Web.PasswordHasher;
+using Web.Search.Inventory;
 
 namespace Tests
 {
@@ -100,6 +101,17 @@ namespace Tests
 
             Assert.Pass("rent:\n{0}", Serialize(res));
         }
+        [Test]
+        public async Task RentSelfInfoServiceTestViewJustOneObject()
+        {
+            var serv = _serviceProvider.GetRequiredService<SelfInfoService>();
+            var token = await GetRentInHendTokenForTesting(_authRentInHend);
+            var resService = await serv.GetUserRentSelfInfo(token);
+            var res = resService.Array.First();
+
+            Assert.Pass("rent:\n{0}", Serialize(res));
+        }
+
 
         [Test]
         public async Task SaleServiceTest()
@@ -111,11 +123,11 @@ namespace Tests
         }
 
         [Test]
-        public async Task SaleServiceGetInventoryGet()
+        public async Task SaleServiceGetInventory()
         {
             var serv = _serviceProvider.GetRequiredService<SaleService>();
 
-            var envent = await serv.GetInventories();
+            var envent = await serv.GetInventories(new Web.Dtos.Sales.Inventory.InputSearchInventoryDto { Tags = null, Search=null });
 
             foreach (var env in envent)
             {
@@ -131,6 +143,26 @@ namespace Tests
 
             hash.Should().NotBeNull();
             Assert.Pass("password:\n{0}\nhash:\n{1}", password, hash);
+        }
+
+        [Test]
+        public void TagSearcher()
+        {
+            var searcher = _serviceProvider.GetRequiredService<InventoryTagSearcher>();
+
+            var isContained= searcher.TagsIsContained(new string[] {"лыжи"}, "Лыжи на прокат");
+
+            isContained.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task SaleControllerTest()
+        {
+            var contr = _serviceProvider.GetRequiredService<SalesController>();
+
+            var res = (await contr.GetInventory(new Web.Models.Inventory.InventorySearchModel { Search = null, Tags = new string[] {"лыжи" } })).As<JsonResult>();
+            res.Should().NotBeNull();
+            Assert.Pass(Serialize(res.Value));
         }
     }
 }

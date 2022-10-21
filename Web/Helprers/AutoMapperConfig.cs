@@ -4,9 +4,11 @@ using AutoMapper;
 using DataBase.Entities;
 using HendInRentApi;
 using Web.Dtos;
+using Web.Dtos.Sales.Inventory;
 using Web.HasingToken;
 using Web.Helprers.AutoMapperProfiles;
 using Web.Models;
+using Web.Models.Inventory;
 
 namespace Web.Helprers
 {
@@ -43,6 +45,8 @@ namespace Web.Helprers
             cfg.CreateMap<Token, OutputTokenDto>();
 
             cfg.CreateMap<User, OutputUserDto>();
+
+            cfg.CreateMap<InventorySearchModel, InputSearchInventoryDto>();
         }        
     }
 }

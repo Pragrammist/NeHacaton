@@ -7,6 +7,8 @@ using DataBase;
 using Microsoft.EntityFrameworkCore;
 using Web.HasingToken;
 using System.Linq;
+using Web.Search.Inventory;
+using HendInRentApi.Dto.Inventory;
 
 namespace Web.Services
 {
@@ -16,58 +18,77 @@ namespace Web.Services
         IMapper _mapper;
         UserContext _userContext;
         ITokenCryptographer _cryptographer;
-        public SaleService(GenericRepositoryApi genericRepositoryApi, IMapper mapper, UserContext userContext, ITokenCryptographer cryptographer)
+        InventoryTagSearcher _searcher;
+        public SaleService(GenericRepositoryApi genericRepositoryApi, IMapper mapper, UserContext userContext, ITokenCryptographer cryptographer, InventoryTagSearcher searcher)
         {
             _genericRepositoryApi = genericRepositoryApi;
             _mapper = mapper;
             _userContext = userContext;
             _cryptographer = cryptographer;
+            _searcher = searcher;
         }
 
 
-        public async Task<OutputInventoriesDto> GetInventory(string token, InputInventoryDto? input = null)
-        {
-            return await GetInventoryPrivate(token, input);
-        }
-        private async Task<OutputInventoriesDto> GetInventoryPrivate(string token, InputInventoryDto? input = null) // it's tempory method. In future it will deleted
+        public async Task<OutputInventoriesDto> GetInventory(string token, InputSearchInventoryDto? input = null)
         {
             var inp = _mapper.Map<apiInventoryDto.InputInventoryDto>(input);
 
-            var apiResult = await _genericRepositoryApi.MakePostJsonTypeRequest<apiInventoryDto.OutputInventoriesDto, apiInventoryDto.InputInventoryDto>(POST_INVENTORY_ITEMS, token, inp);
+            var apiResult = await _genericRepositoryApi.MakePostJsonTypeRequest<apiInventoryDto.OutputInventoriesResultDto, apiInventoryDto.InputInventoryDto>(POST_INVENTORY_ITEMS, token, inp);
 
             var res = _mapper.Map<OutputInventoriesDto>(apiResult);
             return res;
         }
 
-        public async Task<IEnumerable<OutputInventoriesDto>> GetInventories(InputInventoryDto? input = null)
+        public async Task<IEnumerable<OutputInventoriesDto>> GetInventories(InputSearchInventoryDto? input = null)
         {
-            LinkedList<OutputInventoriesDto> res = new LinkedList<OutputInventoriesDto>();
-            var tokens = DecryptedTokens();
-            var mapInput = _mapper.Map<apiInventoryDto.InputInventoryDto>(input);
+            var outInventories = new LinkedList<OutputInventoriesDto>();
+            var mapedInput = _mapper.Map<InputInventoryDto>(input);
 
-            foreach (var token in tokens)
+            foreach (var token in DecryptedTokens())
             {
-                var inventories = await _genericRepositoryApi.MakePostJsonTypeRequest
-                    <apiInventoryDto.OutputInventoriesDto, apiInventoryDto.InputInventoryDto>
-                    (POST_INVENTORY_ITEMS, token, mapInput);
-
-                if (inventories.Array != null && inventories.Array.Count > 0)
-                {
-                    var mapInventories = _mapper.Map<OutputInventoriesDto>(inventories);
-                    res.AddLast(mapInventories);
-                }
+                await FillInventoryList(input, outInventories, mapedInput, token);
             }
 
-            return res;            
+            return outInventories;            
         }
 
-        IEnumerable<string> DecryptedTokens()
+
+
+        #region help methods for GetInventories
+        private async Task FillInventoryList(InputSearchInventoryDto? input, LinkedList<OutputInventoriesDto> inventoryList, InputInventoryDto mapedInput, string token)
         {
-            var decryptedTokens = _userContext.Tokens.Select(t => _cryptographer.Decrypt(t.AccessTokenHash));
-            return decryptedTokens;
+            try
+            {
+                var inventoriesResult = await _genericRepositoryApi.MakePostJsonTypeRequest
+                    <OutputInventoriesResultDto, InputInventoryDto>(POST_INVENTORY_ITEMS, token, mapedInput);
+                AddInventoriesResultToList(inventoryList, inventoriesResult, input?.Tags);
+            }
+            catch
+            {
+
+            }
+        }
+        private void AddInventoriesResultToList(LinkedList<OutputInventoriesDto> list, OutputInventoriesResultDto inventories, string[]? tags)
+        {
+            if (inventories.Array != null && inventories.Array.Count > 0)
+            {
+                var mapInventories = _mapper.Map<OutputInventoriesDto>(inventories);
+                SelectInventoriesByTags(tags, mapInventories);
+                list.AddLast(mapInventories);
+            }
         }
 
-       
+        void SelectInventoriesByTags(string[]? tags, OutputInventoriesDto inventories)
+        {
+            if (tags != null)
+                inventories.Array = inventories.Array.Where(i => _searcher.TagsIsContained(tags, i.Description) 
+                || _searcher.TagsIsContained(tags, i.Title)).ToList();
+        }
+
+        IEnumerable<string> DecryptedTokens() => _userContext.Tokens.Select(t => _cryptographer.Decrypt(t.AccessTokenHash));
+        #endregion
+
+
 
     }
 }

@@ -11,8 +11,8 @@ namespace Web.Helprers.AutoMapperProfiles
         {
             CreateMap<WebDto.InputDiscountDto, ApiDto.InputDiscountDto>();
             CreateMap<WebDto.InputDiscountsDto, ApiDto.InputDiscountsDto>();
-            CreateMap<WebDto.InputInventoryDto, ApiDto.InputInventoryDto>();
-            CreateMap<ApiDto.OutputInventoriesDto, WebDto.OutputInventoriesDto>();
+            CreateMap<WebDto.InputSearchInventoryDto, ApiDto.InputInventoryDto>();
+            CreateMap<ApiDto.OutputInventoriesResultDto, WebDto.OutputInventoriesDto>();
             CreateMap<ApiDto.OutputInventoryDto, WebDto.OutputInventoryDto>();
             CreateMap<ApiDto.OutputOptionDto, WebDto.OutputOptionDto>();
             CreateMap<ApiDto.OutputPermissionDto, WebDto.OutputPermissionDto>();

@@ -1,6 +1,6 @@
 ﻿namespace HendInRentApi.Dto.Inventory   
 {
-    public class OutputInventoriesDto
+    public class OutputInventoriesResultDto
     {
         public List<OutputInventoryDto> Array { get; set; }
         public string Message { get; set; }

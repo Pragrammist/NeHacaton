@@ -38,7 +38,7 @@ namespace Tests
             var inputDto = new InputInventoryDto {Search = "лыжи" };
 
 
-            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputInventoriesDto, InputInventoryDto>(POST_INVENTORY_ITEMS, authToken.AccessToken, inputDto);
+            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputInventoriesResultDto, InputInventoryDto>(POST_INVENTORY_ITEMS, authToken.AccessToken, inputDto);
 
             //var invent = await InventoryApi.PostInvetoryItems(authToken.AccessToken, inputDto);
 
@@ -51,7 +51,7 @@ namespace Tests
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
-            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputInventoriesDto, InputInventoryDto>
+            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputInventoriesResultDto, InputInventoryDto>
                 (POST_INVENTORY_ITEMS, authToken.AccessToken, new InputInventoryDto {Search = "очки" });
 
             var str = Serialize(invent);

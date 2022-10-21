@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Web.Dtos.Sales.Inventory;
+using Web.Models.Inventory;
 using Web.Services;
 
 namespace Web.Controllers
@@ -6,14 +9,18 @@ namespace Web.Controllers
     public class SalesController : Controller
     {
         SaleService _saleService;
-        public SalesController(SaleService saleService)
+        IMapper _mapper;
+        public SalesController(SaleService saleService, IMapper mapper)
         {
+            _mapper = mapper;
             _saleService = saleService;
         }
-        public async Task<IActionResult> Inventory()
+        [HttpGet]
+        public async Task<IActionResult> GetInventory([FromBody]InventorySearchModel? search = null)
         {
+            var inputData = _mapper.Map<InputSearchInventoryDto>(search);
+            var invents = await _saleService.GetInventories(inputData);
             
-            var invents = await _saleService.GetInventories();
 
             return Json(invents);
         }

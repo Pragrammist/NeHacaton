@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Web.HasingToken;
 using Web.PasswordHasher;
 using Web.Geolocation;
+using Web.Search.Inventory;
 
 namespace Web.Helprers
 {
@@ -35,6 +36,7 @@ namespace Web.Helprers
             services.AddScoped<SaleService>();
             services.AddTransient<IPasswordHasher, PasswordHasherImpl>();
             services.AddTransient<GeolocationRepository>();
+            services.AddTransient<InventoryTagSearcher, InventoryTagSearcherImpl>();
             return services;
         }
 
