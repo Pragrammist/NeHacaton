@@ -21,10 +21,5 @@ namespace HendInRentApi
         
             return result;
         }
-
-        public void Logout()
-        {
-            //: TODO Implement logic
-        }
     }
 }
