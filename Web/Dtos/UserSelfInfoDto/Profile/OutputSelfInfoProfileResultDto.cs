@@ -2,8 +2,8 @@
 {
     public class OutputSelfInfoProfileResultDto
     {
-        public List<OutputProfileSelfIonfoDto> Array { get; set; }
-        public string Message { get; set; }
-        public OutputPermissionSelfInfoDto Permission { get; set; }
+        public List<OutputProfileSelfIonfoDto> Array { get; set; } = new List<OutputProfileSelfIonfoDto>();
+        public string? Message { get; set; }
+        public OutputPermissionSelfInfoDto Permission { get; set; } = null!;
     }
 }

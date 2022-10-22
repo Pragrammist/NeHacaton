@@ -12,6 +12,7 @@ using Web.Services;
 using static Tests.Helper;
 using Web.PasswordHasher;
 using Web.Search.Inventory;
+using Web.HasingToken;
 
 namespace Tests
 {
@@ -107,28 +108,38 @@ namespace Tests
             var serv = _serviceProvider.GetRequiredService<SelfInfoService>();
             var token = await GetRentInHendTokenForTesting(_authRentInHend);
             var resService = await serv.GetUserRentSelfInfo(token);
-            var res = resService.Array.First();
+            var res = resService.Array.FirstOrDefault();
 
             Assert.Pass("rent:\n{0}", Serialize(res));
         }
 
 
         [Test]
-        public async Task SaleServiceTest()
+        public async Task SaleServiceGetInventoryTest()
         {
             var serv = _serviceProvider.GetRequiredService<SaleService>();
             var token = await GetRentInHendTokenForTesting(_authRentInHend);
             var res = await serv.GetInventory(token);
             Assert.Pass("rent:\n{0}", Serialize(res));
         }
+        [Test]
+        public void DecryptTest()
+        {
+            var serv = _serviceProvider.GetRequiredService<ITokenCryptographer>();
+            var token = "eqwe";
+            var encrToken = serv.Encrypt(token);
+            var decrToken = serv.Decrypt(encrToken);
+            Assert.That(token == decrToken);
+        }
 
         [Test]
-        public async Task SaleServiceGetInventory()
+        public async Task SaleServiceGetInventories()
         {
             var serv = _serviceProvider.GetRequiredService<SaleService>();
 
-            var envent = await serv.GetInventories(new Web.Dtos.Sales.Inventory.InputSearchInventoryDto { Tags = null, Search=null });
+            var envent = await serv.GetInventories(new Web.Dtos.Sales.Inventory.InputSearchInventoryDto { Tags = new string[] { "INVENTORY" } });
 
+            
             foreach (var env in envent)
             {
                 Assert.Pass(Serialize(env));
@@ -150,7 +161,7 @@ namespace Tests
         {
             var searcher = _serviceProvider.GetRequiredService<InventoryTagSearcher>();
 
-            var isContained= searcher.TagsIsContained(new string[] {"лыжи"}, "Лыжи на прокат");
+            var isContained= searcher.TagsAreContained(new string[] {"лыжи"}, "Лыжи на прокат");
 
             isContained.Should().BeTrue();
         }

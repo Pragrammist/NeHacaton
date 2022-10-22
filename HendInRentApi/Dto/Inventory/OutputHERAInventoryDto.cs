@@ -32,7 +32,6 @@ namespace HendInRentApi.Dto.Inventory
         public int AmountRentCount { get; set; }
         [JsonProperty("expense_sum")]
         public int ExpenseSum { get; set; }
-        //public object cash_deposit { get; set; }
         public string Avatar { get; set; } = null!;
         public List<OutputHERAPriceDto> Prices { get; set; } = new List<OutputHERAPriceDto>();
         [JsonProperty("is_group")]

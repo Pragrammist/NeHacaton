@@ -41,8 +41,6 @@ namespace HendInRentApi.Dto.SelfInfo.Rent
         [JsonProperty("kit_number")]
         public int KitNumber { get; set; }
         public OutputHERAInnerInventoryDto Inventory { get; set; } = null!;
-        //public List<object> Services { get; set; } TODO
-        //public List<object> Brokens { get; set; } TODO
         public OutputHERAPriceDto Price { get; set; } = null!;
     }
 }

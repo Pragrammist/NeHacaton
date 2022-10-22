@@ -8,7 +8,7 @@ namespace HendInRentApi.Dto.SelfInfo.Profile
         public string Guid { get; set; } = null!;
         public string Surname { get; set; } = null!;
         public string Name { get; set; } = null!;
-        public string Patro { get; set; } = null!;
+        public string? Patro { get; set; }
         [JsonProperty("user_id")]
         public int UserId { get; set; }
         public int Male { get; set; }

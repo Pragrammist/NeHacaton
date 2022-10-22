@@ -5,7 +5,7 @@ using Web.Dtos.UserSelfInfoDto.Profile;
 using Web.Dtos.UserSelfInfoDto.Rent;
 using static HendInRentApi.RentInHendApiConstants;
 using RentApi = HendInRentApi.Dto.SelfInfo.Rent;
-
+using HendInRentApi.Dto.SelfInfo.Rent;
 namespace Web.Services
 {
     public class SelfInfoService
@@ -17,11 +17,11 @@ namespace Web.Services
             _repositoryApi = repositoryApi;
             _mapper = mapper;
         }
-        public async Task<OutputRentResultDto> GetUserRentSelfInfo(string token, InputRentSearchDto inputRentSerchDto = null)
+        public async Task<OutputRentResultDto> GetUserRentSelfInfo(string token, InputRentSearchDto? inputRentSerchDto = null)
         {
-            var inp = _mapper.Map<RentApi.InputHERARentSearchDto>(inputRentSerchDto);
+            var HEARInput = _mapper.Map<InputHERARentSearchDto>(inputRentSerchDto);
 
-            var apiRes = await _repositoryApi.MakePostJsonTypeRequest<RentApi.OutputHERARentsResultDto,RentApi.InputHERARentSearchDto>(POST_RENT,token, inp);
+            var apiRes = await _repositoryApi.MakePostJsonTypeRequest<OutputHERARentsResultDto,InputHERARentSearchDto>(POST_RENT,token, HEARInput);
             var res = _mapper.Map<OutputRentResultDto>(apiRes);
             return res;
         }

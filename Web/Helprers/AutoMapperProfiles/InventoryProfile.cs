@@ -12,7 +12,7 @@ namespace Web.Helprers.AutoMapperProfiles
             CreateMap<WebDto.InputDiscountDto, ApiDto.InputHERADiscountDto>();
             CreateMap<WebDto.InputDiscountsDto, ApiDto.InputHERADiscountsDto>();
             CreateMap<WebDto.InputSearchInventoryDto, ApiDto.InputHERAInventoryDto>();
-            CreateMap<ApiDto.OutputHERAInventoriesResultDto, WebDto.OutputInventoriesDto>();
+            CreateMap<ApiDto.OutputHERAInventoriesResultDto, WebDto.OutputInventoriesResultDto>();
             CreateMap<ApiDto.OutputHERAInventoryDto, WebDto.OutputInventoryDto>();
             CreateMap<ApiDto.OutputHERAOptionDto, WebDto.OutputOptionDto>();
             CreateMap<ApiDto.OutputHERAPermissionDto, WebDto.OutputPermissionDto>();

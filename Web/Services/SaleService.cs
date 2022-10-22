@@ -29,60 +29,59 @@ namespace Web.Services
         }
 
 
-        public async Task<OutputInventoriesDto> GetInventory(string token, InputSearchInventoryDto? input = null)
+        public async Task<OutputInventoriesResultDto> GetInventory(string token, InputSearchInventoryDto? input = null)
         {
-            var inp = _mapper.Map<apiInventoryDto.InputHERAInventoryDto>(input);
+            var HERAInput = _mapper.Map<InputHERAInventoryDto>(input);
 
-            var apiResult = await _genericRepositoryApi.MakePostJsonTypeRequest<apiInventoryDto.OutputHERAInventoriesResultDto, apiInventoryDto.InputHERAInventoryDto>(POST_INVENTORY_ITEMS, token, inp);
+            var apiResult = await _genericRepositoryApi.MakePostJsonTypeRequest<OutputHERAInventoriesResultDto,InputHERAInventoryDto>(POST_INVENTORY_ITEMS, token, HERAInput);
 
-            var res = _mapper.Map<OutputInventoriesDto>(apiResult);
+            var res = _mapper.Map<OutputInventoriesResultDto>(apiResult);
             return res;
         }
 
-        public async Task<IEnumerable<OutputInventoriesDto>> GetInventories(InputSearchInventoryDto? input = null)
+        public async Task<IEnumerable<OutputInventoriesResultDto>> GetInventories(InputSearchInventoryDto? input = null)
         {
-            var outInventories = new LinkedList<OutputInventoriesDto>();
-            var mapedInput = _mapper.Map<InputHERAInventoryDto>(input);
+            var inventories = new LinkedList<OutputInventoriesResultDto>();
+            var HERAInput = _mapper.Map<InputHERAInventoryDto>(input);
 
             foreach (var token in DecryptedTokens())
             {
-                await FillInventoryList(input, outInventories, mapedInput, token);
+                await FillInventoryList(input, inventories, HERAInput, token);
             }
 
-            return outInventories;            
+            return inventories;            
         }
 
 
 
         #region help methods for GetInventories
-        private async Task FillInventoryList(InputSearchInventoryDto? input, LinkedList<OutputInventoriesDto> inventoryList, InputHERAInventoryDto mapedInput, string token)
+        async Task FillInventoryList(InputSearchInventoryDto? input, LinkedList<OutputInventoriesResultDto> list, InputHERAInventoryDto? HERAInput, string token)
         {
             try
             {
-                var inventoriesResult = await _genericRepositoryApi.MakePostJsonTypeRequest
-                    <OutputHERAInventoriesResultDto, InputHERAInventoryDto>(POST_INVENTORY_ITEMS, token, mapedInput);
-                AddInventoriesResultToList(inventoryList, inventoriesResult, input?.Tags);
+                var HERAInventoriesResult = await _genericRepositoryApi.MakePostJsonTypeRequest
+                    <OutputHERAInventoriesResultDto, InputHERAInventoryDto>(POST_INVENTORY_ITEMS, token, HERAInput);
+                AddInventoriesResultToList(list, HERAInventoriesResult, input?.Tags);
             }
             catch
             {
 
             }
         }
-        private void AddInventoriesResultToList(LinkedList<OutputInventoriesDto> list, OutputHERAInventoriesResultDto inventories, string[]? tags)
+        void AddInventoriesResultToList(LinkedList<OutputInventoriesResultDto> list, OutputHERAInventoriesResultDto HERAInventories, string[]? tags)
         {
-            if (inventories.Array != null && inventories.Array.Count > 0)
+            if (HERAInventories.Array != null && HERAInventories.Array.Count > 0)
             {
-                var mapInventories = _mapper.Map<OutputInventoriesDto>(inventories);
-                SelectInventoriesByTags(tags, mapInventories);
-                list.AddLast(mapInventories);
+                var inventories = _mapper.Map<OutputInventoriesResultDto>(HERAInventories);
+                SelectInventoriesByTags(tags, inventories);
+                list.AddLast(inventories);
             }
         }
 
-        void SelectInventoriesByTags(string[]? tags, OutputInventoriesDto inventories)
+        void SelectInventoriesByTags(string[]? tags, OutputInventoriesResultDto inventories)
         {
             if (tags != null)
-                inventories.Array = inventories.Array.Where(i => _searcher.TagsIsContained(tags, i.Description) 
-                || _searcher.TagsIsContained(tags, i.Title)).ToList();
+                inventories.Array = _searcher.TagsIsContained(tags, inventories.Array).ToList();
         }
 
         IEnumerable<string> DecryptedTokens() => _userContext.Tokens.Select(t => _cryptographer.Decrypt(t.AccessTokenHash));
