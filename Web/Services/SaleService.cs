@@ -70,6 +70,7 @@ namespace Web.Services
 
             }
         }
+
         void AddInventoriesResultToList(LinkedList<OutputInventoriesResultDto> list, OutputHIRAInventoriesResultDto HIRAInventories, string[]? tags)
         {
             if (HIRAInventories.Array != null && HIRAInventories.Array.Count > 0)

@@ -87,9 +87,12 @@ namespace Web.Services
 
         public async Task<OutputUserDto> LoginUser(InputLoginUserDto inputUserLoginDto)
         {
-            var user = await _userContext.Users.Include(u => u.Token).FirstAsync(u => u.Email == inputUserLoginDto.Login ||
-            u.Login == inputUserLoginDto.Login ||
-            u.Telephone == inputUserLoginDto.Login);
+            var user = await _userContext.Users.Include(u => u.Token).FirstAsync(
+                u => 
+                u.Email == inputUserLoginDto.Login ||
+                u.Login == inputUserLoginDto.Login ||
+                u.Telephone == inputUserLoginDto.Login
+            );
 
             var outPutUser = _mapper.Map<OutputUserDto>(user);
 
