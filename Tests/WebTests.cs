@@ -20,7 +20,7 @@ namespace Tests
     {
         WebApplicationFactory<Program> _factory;
         IServiceProvider _serviceProvider;
-        AuthRentInHendApi _authRentInHend;
+        HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto> _authRentInHend;
 
 
 
@@ -31,7 +31,7 @@ namespace Tests
         {
             _factory = new WebApplicationFactory<Program>();
             _serviceProvider = _factory.Services.CreateScope().ServiceProvider;
-            _authRentInHend = _serviceProvider.GetRequiredService<AuthRentInHendApi>(); 
+            _authRentInHend = _serviceProvider.GetRequiredService<HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto>>(); 
         }
 
         [Test]

@@ -9,9 +9,9 @@ namespace Web.Helprers.AutoMapperProfiles
     {
         public UserSelfInfoProfile()
         {
-            CreateMap<ApiProfile.OutputHERAPermissionSelfInfoDto, WebProfile.OutputPermissionSelfInfoDto>();
-            CreateMap<ApiProfile.OutputHERAProfileSelfIonfoDto, WebProfile.OutputProfileSelfIonfoDto>();
-            CreateMap<ApiProfile.OutputHERAProfileSelfInfoResultDto, WebProfile.OutputSelfInfoProfileResultDto>();
+            CreateMap<ApiProfile.OutputHIRAPermissionSelfInfoDto, WebProfile.OutputPermissionSelfInfoDto>();
+            CreateMap<ApiProfile.OutputHIRAProfileSelfIonfoDto, WebProfile.OutputProfileSelfIonfoDto>();
+            CreateMap<ApiProfile.OutputHIRAProfileSelfInfoResultDto, WebProfile.OutputSelfInfoProfileResultDto>();
         }
     }
 }

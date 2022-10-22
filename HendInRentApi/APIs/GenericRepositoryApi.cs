@@ -1,11 +1,7 @@
-﻿using System.Net.Http.Json;
-using static HendInRentApi.RentInHendApiConstants;
-using static HendInRentApi.HttpStaticMethod;
-using HendInRentApi.APIs;
-
-namespace HendInRentApi
+﻿namespace HendInRentApi
 {
-    public class GenericRepositoryApi
+
+    public class GenericRepositoryApi<TResult, TArg> : BaseRepository, HIRARepository<TResult, TArg>
     {
         /// <summary>
         /// 
@@ -16,48 +12,43 @@ namespace HendInRentApi
         /// <param name="arg"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<TResult> MakePostJsonTypeRequest<TResult, TArg>(string relativePath, string token, TArg? arg)
+        /// 
+        public async Task<TResult> MakePostJsonTypeRequest(string relativePath, string token, TArg? arg)
         {
-            var path = API_URL + relativePath; 
-
-            var client = GetClientWithHeaders(token);
-
-            var response = await client.PostAsJsonAsync(path, arg);
-
-            await response.StatusIsOKOrThrowException(path);
-
-            var result = await response.Content.ReadJsonByNewtonsoft<TResult>() ?? throw new NullReferenceException();
-
-            return result;
+            return await base.MakePostJsonTypeRequest<TResult, TArg>(relativePath, token, arg);
         }
 
-        public async Task<TResult> MakePostJsonTypeRequest<TResult>(string relativePath, string token)
+       
+
+        public async Task<TResult> MakePutJsonTypeRequest(string relativePath, string token, TArg? arg)
         {
-            var dummy = new { }; //chtobi vizvat method
-            return await MakePostJsonTypeRequest<TResult, object>(relativePath, token, dummy);
-        }
-
-        public async Task<TResult> MakePutJsonTypeRequest<TResult, TDtoArg>(string relativePath, string token, TDtoArg arg)
-        {
-            var path = API_URL + relativePath;
-
-            var client = GetClientWithHeaders(token);
-
-            var response = await client.PutAsJsonAsync(path, arg);
-
-            await response.StatusIsOKOrThrowException(path);
-
-            var result = await response.Content.ReadJsonByNewtonsoft<TResult>() ?? throw new NullReferenceException();
-
-            return result;
-        }
-
-        public async Task<TResult> MakePutJsonTypeRequest<TResult>(string relativePath, string token)
-        {
-            var dummy = new { }; //chtobi vizvat method
-            return await MakePutJsonTypeRequest<TResult, object>(relativePath, token, dummy);
+            return await base.MakePutJsonTypeRequest<TResult, TArg>(relativePath, token, arg);
         }
     }
 
+    public class GenericRepositoryApi<TResult> : BaseRepository, HIRARepository<TResult>
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TArg"></typeparam>
+        /// <param name="relativePath">start with '/'</param>
+        /// <param name="arg"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        /// 
 
+        public async Task<TResult> MakePostJsonTypeRequest(string relativePath, string token)
+        {
+            return await base.MakePostJsonTypeRequest<TResult,object>(relativePath, token, new {});
+        }
+
+        public async Task<TResult> MakePutJsonTypeRequest(string relativePath, string token)
+        {
+            return await base.MakePutJsonTypeRequest<TResult, object>(relativePath, token, new {});
+        }
+
+        
+    }
 }

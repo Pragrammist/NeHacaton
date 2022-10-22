@@ -23,6 +23,7 @@ namespace Web
                 .AddRentInHendApiServices()
                 .AddModelVlidators()
                 .AddNativeServices()
+                .AddApiRepositrories()
                 .AddDbContexts(config)
                 .ConfigAutoMapper()
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>

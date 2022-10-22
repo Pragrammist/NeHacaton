@@ -11,8 +11,8 @@ namespace Tests
     public class ApiTests
     {
         AuthRentInHendApi AuthApi => new AuthRentInHendApi();
-        GenericRepositoryApi UniversalApi => new GenericRepositoryApi();
-        InputHERALoginUserRentInHendDto UserToLogin => GetLoginUserFromJsonFile<InputHERALoginUserRentInHendDto>();
+        BaseRepository UniversalApi => new BaseRepository();
+        InputHIRALoginUserDto UserToLogin => GetLoginUserFromJsonFile<InputHIRALoginUserDto>();
 
 
         [SetUp]
@@ -25,7 +25,7 @@ namespace Tests
         {
             var res = await AuthApi.Login(UserToLogin);
 
-            res.Should().NotBeNull().And.Match<OutputHEARAuthTokenDto>(u => u.AccessToken != null);
+            res.Should().NotBeNull().And.Match<OutputHIRAAuthTokenDto>(u => u.AccessToken != null);
             var str = Serialize(res);
             Assert.Pass("user:\n{0}", str);
         }
@@ -35,10 +35,10 @@ namespace Tests
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
-            var inputDto = new InputHERAInventoryDto {Search = "лыжи" };
+            var inputDto = new InputHIRAInventoryDto {Search = "лыжи" };
 
 
-            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputHERAInventoriesResultDto, InputHERAInventoryDto>(POST_INVENTORY_ITEMS, authToken.AccessToken, inputDto);
+            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto>(POST_INVENTORY_ITEMS, authToken.AccessToken, inputDto);
 
             //var invent = await InventoryApi.PostInvetoryItems(authToken.AccessToken, inputDto);
 
@@ -51,8 +51,8 @@ namespace Tests
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
-            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputHERAInventoriesResultDto, InputHERAInventoryDto>
-                (POST_INVENTORY_ITEMS, authToken.AccessToken, new InputHERAInventoryDto {Search = "очки" });
+            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto>
+                (POST_INVENTORY_ITEMS, authToken.AccessToken, new InputHIRAInventoryDto {Search = "очки" });
 
             var str = Serialize(invent);
 
@@ -64,8 +64,8 @@ namespace Tests
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
-            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputHEARAuthTokenDto, InputHERAInventoryDto>
-                (POST_INVENTORY_ITEMS, authToken.AccessToken, new InputHERAInventoryDto { Search = "очки" });
+            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputHIRAAuthTokenDto, InputHIRAInventoryDto>
+                (POST_INVENTORY_ITEMS, authToken.AccessToken, new InputHIRAInventoryDto { Search = "очки" });
 
             var str = Serialize(invent);
 
@@ -76,7 +76,7 @@ namespace Tests
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
-            var profile = await UniversalApi.MakePostJsonTypeRequest<OutputHERAProfileSelfInfoResultDto>(POST_PROFILE, authToken.AccessToken);
+            var profile = await UniversalApi.MakePostJsonTypeRequest<OutputHIRAProfileSelfInfoResultDto, object>(POST_PROFILE, authToken.AccessToken, null);
 
             var str = Serialize(profile);
 
@@ -86,9 +86,9 @@ namespace Tests
         public async Task RentDataTest()
         {
             var authToken = await AuthApi.Login(UserToLogin);
-            var input = new InputHERARentSearchDto();
+            var input = new InputHIRARentSearchDto();
 
-            var data = await UniversalApi.MakePostJsonTypeRequest<OutputHERARentsResultDto>(POST_RENT, authToken.AccessToken);
+            var data = await UniversalApi.MakePostJsonTypeRequest<OutputHIRARentsResultDto, object>(POST_RENT, authToken.AccessToken, null);
 
             Assert.Pass("res:\n{0}",Serialize(data));
         }

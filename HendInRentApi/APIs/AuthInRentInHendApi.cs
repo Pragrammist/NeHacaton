@@ -4,11 +4,11 @@ using static HendInRentApi.RentInHendApiConstants;
 namespace HendInRentApi
 {
     //eto obolochki nad api chtobi kazdiy raz ne pisat http zaprosi
-    public class AuthRentInHendApi
+    public class AuthRentInHendApi : HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto>
     {
         private static string auth_uri = API_URL + POST_AUTH_LOGIN; //kuda delat zapros
         
-        public async Task<OutputHEARAuthTokenDto> Login(InputHERALoginUserRentInHendDto user) //delaet zapros po puti /v1/login
+        public async Task<OutputHIRAAuthTokenDto> Login(InputHIRALoginUserDto user) //delaet zapros po puti /v1/login
         {
             HttpClient client = new HttpClient();
             client.AddHeadersWithoutBearer(); //Zdec nuzna nastroyka X-CSRF-TOKEN
@@ -17,7 +17,7 @@ namespace HendInRentApi
 
             await response.StatusIsOKOrThrowException(auth_uri); // esli ne OK to vidaet oshibku
 
-            var result = await response.Content.ReadJsonByNewtonsoft<OutputHEARAuthTokenDto>() ?? throw new NullReferenceException();
+            var result = await response.Content.ReadJsonByNewtonsoft<OutputHIRAAuthTokenDto>() ?? throw new NullReferenceException();
         
             return result;
         }

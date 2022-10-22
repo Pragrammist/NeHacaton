@@ -9,18 +9,18 @@ namespace Web.Helprers.AutoMapperProfiles
     {
         public InventoryProfile()
         {
-            CreateMap<WebDto.InputDiscountDto, ApiDto.InputHERADiscountDto>();
-            CreateMap<WebDto.InputDiscountsDto, ApiDto.InputHERADiscountsDto>();
-            CreateMap<WebDto.InputSearchInventoryDto, ApiDto.InputHERAInventoryDto>();
-            CreateMap<ApiDto.OutputHERAInventoriesResultDto, WebDto.OutputInventoriesResultDto>();
-            CreateMap<ApiDto.OutputHERAInventoryDto, WebDto.OutputInventoryDto>();
-            CreateMap<ApiDto.OutputHERAOptionDto, WebDto.OutputOptionDto>();
-            CreateMap<ApiDto.OutputHERAPermissionDto, WebDto.OutputPermissionDto>();
-            CreateMap<ApiDto.OutputHERAPointDto, WebDto.OutputPointDto>();
-            CreateMap<ApiDto.OutputHERAPriceDto, WebDto.OutputPriceDto>();
-            CreateMap<ApiDto.OutputHERAResourceDto, WebDto.OutputResourceDto>();
-            CreateMap<ApiDto.OutputHERAStateDto, WebDto.OutputStateDto>();
-            CreateMap<ApiDto.OutputHERAValueDto, WebDto.OutputValueDto>();
+            CreateMap<WebDto.InputDiscountDto, ApiDto.InputHIRADiscountDto>();
+            CreateMap<WebDto.InputDiscountsDto, ApiDto.InputHIRADiscountsDto>();
+            CreateMap<WebDto.InputSearchInventoryDto, ApiDto.InputHIRAInventoryDto>();
+            CreateMap<ApiDto.OutputHIRAInventoriesResultDto, WebDto.OutputInventoriesResultDto>();
+            CreateMap<ApiDto.OutputHIRAInventoryDto, WebDto.OutputInventoryDto>();
+            CreateMap<ApiDto.OutputHIRAOptionDto, WebDto.OutputOptionDto>();
+            CreateMap<ApiDto.OutputHIRAPermissionDto, WebDto.OutputPermissionDto>();
+            CreateMap<ApiDto.OutputHIRAPointDto, WebDto.OutputPointDto>();
+            CreateMap<ApiDto.OutputHIRAPriceDto, WebDto.OutputPriceDto>();
+            CreateMap<ApiDto.OutputHIRAResourceDto, WebDto.OutputResourceDto>();
+            CreateMap<ApiDto.OutputHIRAStateDto, WebDto.OutputStateDto>();
+            CreateMap<ApiDto.OutputHIRAValueDto, WebDto.OutputValueDto>();
         }
     }
 }

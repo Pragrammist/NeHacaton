@@ -31,10 +31,10 @@ namespace Web.Helprers
             //It's just to pass UserService Reg method
 
 
-            cfg.CreateMap<InputUserRegistrationDto, InputHERALoginUserRentInHendDto>();  //why is reg becoming login?
+            cfg.CreateMap<InputUserRegistrationDto, InputHIRALoginUserDto>();  //why is reg becoming login?
             //when users registrate here they login in RentInHend.
 
-            cfg.CreateMap<OutputHEARAuthTokenDto, Token>().ForMember(t => t.AccessTokenHash, cfg => cfg.Ignore());
+            cfg.CreateMap<OutputHIRAAuthTokenDto, Token>().ForMember(t => t.AccessTokenHash, cfg => cfg.Ignore());
             //token from api to db token
 
             cfg.CreateMap<InputUserRegistrationDto, User>().ForMember(t => t.Password, cfg => cfg.Ignore());

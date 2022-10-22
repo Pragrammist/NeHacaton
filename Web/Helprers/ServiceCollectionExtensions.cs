@@ -9,6 +9,9 @@ using Web.HasingToken;
 using Web.PasswordHasher;
 using Web.Geolocation;
 using Web.Search.Inventory;
+using HendInRentApi.Dto.Inventory;
+using HendInRentApi.Dto.SelfInfo.Rent;
+using HendInRentApi.Dto.SelfInfo.Profile;
 
 namespace Web.Helprers
 {
@@ -16,8 +19,7 @@ namespace Web.Helprers
     {
         public static IServiceCollection AddRentInHendApiServices(this IServiceCollection services)
         {
-            services.AddTransient<AuthRentInHendApi>();
-            services.AddTransient<GenericRepositoryApi>();
+            services.AddTransient<HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto>, AuthRentInHendApi>();
             return services;
         }
 
@@ -44,6 +46,20 @@ namespace Web.Helprers
         {
             var strCon = configuration.GetConnectionString("Sqlite");
             services.AddDbContext<UserContext>(cfg => cfg.UseSqlite(strCon));
+            return services;
+        }
+
+        public static IServiceCollection AddApiRepositrories(this IServiceCollection services)
+        {
+            services.AddTransient<
+                HIRARepository<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto>, 
+                GenericRepositoryApi<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto>>();
+
+            services.AddTransient<
+                HIRARepository<OutputHIRARentsResultDto, InputHIRARentSearchDto>, 
+                GenericRepositoryApi<OutputHIRARentsResultDto, InputHIRARentSearchDto>>();
+
+            services.AddTransient<HIRARepository<OutputHIRAProfileSelfInfoResultDto>, GenericRepositoryApi<OutputHIRAProfileSelfInfoResultDto>>();
             return services;
         }
     }

@@ -14,14 +14,17 @@ namespace Web.Services
 {
     public class SaleService 
     {
-        GenericRepositoryApi _genericRepositoryApi;
+        HIRARepository<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto> _inventoryRepo;
         IMapper _mapper;
         UserContext _userContext;
         ITokenCryptographer _cryptographer;
         InventoryTagSearcher _searcher;
-        public SaleService(GenericRepositoryApi genericRepositoryApi, IMapper mapper, UserContext userContext, ITokenCryptographer cryptographer, InventoryTagSearcher searcher)
+        public SaleService(HIRARepository<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto> inventoryRepo,
+            IMapper mapper, 
+            UserContext userContext, ITokenCryptographer cryptographer, 
+            InventoryTagSearcher searcher)
         {
-            _genericRepositoryApi = genericRepositoryApi;
+            _inventoryRepo = inventoryRepo;
             _mapper = mapper;
             _userContext = userContext;
             _cryptographer = cryptographer;
@@ -31,9 +34,9 @@ namespace Web.Services
 
         public async Task<OutputInventoriesResultDto> GetInventory(string token, InputSearchInventoryDto? input = null)
         {
-            var HERAInput = _mapper.Map<InputHERAInventoryDto>(input);
+            var HERAInput = _mapper.Map<InputHIRAInventoryDto>(input);
 
-            var apiResult = await _genericRepositoryApi.MakePostJsonTypeRequest<OutputHERAInventoriesResultDto,InputHERAInventoryDto>(POST_INVENTORY_ITEMS, token, HERAInput);
+            var apiResult = await _inventoryRepo.MakePostJsonTypeRequest(POST_INVENTORY_ITEMS, token, HERAInput);
 
             var res = _mapper.Map<OutputInventoriesResultDto>(apiResult);
             return res;
@@ -42,11 +45,11 @@ namespace Web.Services
         public async Task<IEnumerable<OutputInventoriesResultDto>> GetInventories(InputSearchInventoryDto? input = null)
         {
             var inventories = new LinkedList<OutputInventoriesResultDto>();
-            var HERAInput = _mapper.Map<InputHERAInventoryDto>(input);
+            var HIRAInput = _mapper.Map<InputHIRAInventoryDto>(input);
 
             foreach (var token in DecryptedTokens())
             {
-                await FillInventoryList(input, inventories, HERAInput, token);
+                await FillInventoryList(input, inventories, HIRAInput, token);
             }
 
             return inventories;            
@@ -55,24 +58,23 @@ namespace Web.Services
 
 
         #region help methods for GetInventories
-        async Task FillInventoryList(InputSearchInventoryDto? input, LinkedList<OutputInventoriesResultDto> list, InputHERAInventoryDto? HERAInput, string token)
+        async Task FillInventoryList(InputSearchInventoryDto? input, LinkedList<OutputInventoriesResultDto> list, InputHIRAInventoryDto? HIRAInput, string token)
         {
             try
             {
-                var HERAInventoriesResult = await _genericRepositoryApi.MakePostJsonTypeRequest
-                    <OutputHERAInventoriesResultDto, InputHERAInventoryDto>(POST_INVENTORY_ITEMS, token, HERAInput);
-                AddInventoriesResultToList(list, HERAInventoriesResult, input?.Tags);
+                var HIRAInventoriesResult = await _inventoryRepo.MakePostJsonTypeRequest(POST_INVENTORY_ITEMS, token, HIRAInput);
+                AddInventoriesResultToList(list, HIRAInventoriesResult, input?.Tags);
             }
             catch
             {
 
             }
         }
-        void AddInventoriesResultToList(LinkedList<OutputInventoriesResultDto> list, OutputHERAInventoriesResultDto HERAInventories, string[]? tags)
+        void AddInventoriesResultToList(LinkedList<OutputInventoriesResultDto> list, OutputHIRAInventoriesResultDto HIRAInventories, string[]? tags)
         {
-            if (HERAInventories.Array != null && HERAInventories.Array.Count > 0)
+            if (HIRAInventories.Array != null && HIRAInventories.Array.Count > 0)
             {
-                var inventories = _mapper.Map<OutputInventoriesResultDto>(HERAInventories);
+                var inventories = _mapper.Map<OutputInventoriesResultDto>(HIRAInventories);
                 SelectInventoriesByTags(tags, inventories);
                 list.AddLast(inventories);
             }

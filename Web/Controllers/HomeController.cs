@@ -9,12 +9,12 @@ namespace Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        AuthRentInHendApi _authIn;
+       
 
-        public HomeController(ILogger<HomeController> logger, AuthRentInHendApi authIn)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _authIn = authIn; 
+
         }
 
         public async Task <IActionResult> Index()

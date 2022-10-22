@@ -13,34 +13,31 @@ namespace Web.Services
 {
     public class UserService
     {
-        readonly AuthRentInHendApi _authApi;
         readonly IMapper _mapper;
 
         readonly UserContext _userContext;
         readonly ITokenCryptographer _tokenCryptographer;
         readonly IPasswordHasher _passwordHasher;
         readonly GeolocationRepository _geolocation;
-
-        public UserService(AuthRentInHendApi authApi, IMapper mapper, UserContext userContext, ITokenCryptographer tokenCryptographer, 
+        readonly HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto> _loginHIRA;
+        public UserService(HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto> loginHIRA, IMapper mapper, UserContext userContext, ITokenCryptographer tokenCryptographer, 
             IPasswordHasher passwordHasher, GeolocationRepository geolocation)
         {
             _geolocation = geolocation;
             _mapper = mapper;
-            _authApi = authApi;
+            _loginHIRA = loginHIRA;
             _userContext = userContext;
             _tokenCryptographer = tokenCryptographer;
             _passwordHasher = passwordHasher;
         }
         /// <summary>
-        /// //inputUser must be already validate
+        /// //regUser must be already validate
         /// </summary>
         /// <param name="inputUser"></param>
         /// <returns></returns>
         public async Task<OutputUserDto> RegistrateUser(InputUserRegistrationDto inputUser)
         {
-            var token = await GetUserToken(inputUser);
-
-            var user = await GetUserEntity(inputUser, token);
+            var user = await CreateUserEntity(inputUser);
 
             _userContext.Add(user);
 
@@ -55,35 +52,33 @@ namespace Web.Services
 
         #region help methods for reg
         //incapsulate creating user entity
-        async Task<User> GetUserEntity(InputUserRegistrationDto inputUser, Token token)
+        async Task<User> CreateUserEntity(InputUserRegistrationDto regUser)
         {
-            var userToWriteInDb = _mapper.Map<User>(inputUser);
+            var user = _mapper.Map<User>(regUser);
 
-            userToWriteInDb.Token = token;
+            user.Token = await GetUserToken(regUser);
 
-            userToWriteInDb.Password = _passwordHasher.Hash(inputUser.Password);
+            user.Password = _passwordHasher.Hash(regUser.Password);
 
-            var location = await GetLocation(inputUser);
+            user.City = await GetLocationCity(regUser);
 
-            userToWriteInDb.City = location.City;
-
-            return userToWriteInDb;
+            return user;
         }
 
-        async Task<OutputLocationDto> GetLocation(InputUserRegistrationDto user)
+        async Task<string> GetLocationCity(InputUserRegistrationDto user)
         {
-            return await _geolocation.GetUserLocationByLatLon(user.Lat, user.Lon);
+            return (await _geolocation.GetUserLocationByLatLon(user.Lat, user.Lon)).City;
         }
 
         async Task<Token> GetUserToken(InputUserRegistrationDto inputUser)
         {
-            var toLoginDto = _mapper.Map<InputHERALoginUserRentInHendDto>(inputUser);
+            var HIRALogin = _mapper.Map<InputHIRALoginUserDto>(inputUser);
 
-            var authorizedUserTokenDto = await _authApi.Login(toLoginDto);
+            var HIRAToken = await _loginHIRA.Login(HIRALogin);
 
-            var token = _mapper.Map<Token>(authorizedUserTokenDto);
+            var token = _mapper.Map<Token>(HIRAToken);
 
-            token.AccessTokenHash = _tokenCryptographer.Encrypt(authorizedUserTokenDto.AccessToken);
+            token.AccessTokenHash = _tokenCryptographer.Encrypt(HIRAToken.AccessToken);
 
             return token;
         }

@@ -8,7 +8,7 @@ namespace Web.Models.ModelValidators
 {
     public class UserRegistrationModelValidator : AbstractValidator<UserRegistrationModel>
     {
-        public UserRegistrationModelValidator(AuthRentInHendApi api, UserContext userContext)
+        public UserRegistrationModelValidator(HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto> api, UserContext userContext)
         {
             var rendInHendValidator = new UserExistsInRendInHendValidator(api);
             var notRegistratedValidator = new UserIsNotRegistratedInMarketplace(userContext);
@@ -35,13 +35,14 @@ namespace Web.Models.ModelValidators
         #region additional classes for validation
         class UserExistsInRendInHendValidator
         {
-            AuthRentInHendApi _api;
+            HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto> _api;
 
             
-            public UserExistsInRendInHendValidator(AuthRentInHendApi api)
+            public UserExistsInRendInHendValidator(HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto> loginHIRA)
             {
-                _api = api;
-                
+                _api = loginHIRA;
+
+
             }
 
             
@@ -73,7 +74,7 @@ namespace Web.Models.ModelValidators
                 string message = String.Empty;
                 try
                 {
-                    var inpUser = new InputHERALoginUserRentInHendDto { Login = login, Password = password };
+                    var inpUser = new InputHIRALoginUserDto { Login = login, Password = password };
                     await _api.Login(inpUser);
                 }
                 catch (HttpRequestException ex)

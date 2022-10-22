@@ -34,9 +34,9 @@ namespace Tests
             return res;
         }
 
-        public static async Task<string> GetRentInHendTokenForTesting(AuthRentInHendApi api)
+        public static async Task<string> GetRentInHendTokenForTesting(HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto> api)
         {
-            var userForAuth = GetLoginUserFromJsonFile<InputHERALoginUserRentInHendDto>();
+            var userForAuth = GetLoginUserFromJsonFile<InputHIRALoginUserDto>();
             var user = await api.Login(userForAuth);
             return user.AccessToken;
         }
