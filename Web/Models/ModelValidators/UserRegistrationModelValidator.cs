@@ -73,7 +73,7 @@ namespace Web.Models.ModelValidators
                 string message = String.Empty;
                 try
                 {
-                    var inpUser = new InputLoginUserRentInHendDto { Login = login, Password = password };
+                    var inpUser = new InputHERALoginUserRentInHendDto { Login = login, Password = password };
                     await _api.Login(inpUser);
                 }
                 catch (HttpRequestException ex)

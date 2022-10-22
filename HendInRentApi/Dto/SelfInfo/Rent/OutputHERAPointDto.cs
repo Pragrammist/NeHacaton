@@ -1,20 +1,13 @@
-﻿using Newtonsoft.Json;
-
-namespace Web.Dtos.Sales.Inventory
+﻿namespace HendInRentApi.Dto.SelfInfo.Rent
 {
-
-   
-
-    public class OutputPointDto
+    public class OutputHERAPointDto
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
         public string? Email { get; set; }
         public string? Website { get; set; }
         public string? Phone { get; set; }
-        public string? PlaceText { get; set; }
         public int PlaceId { get; set; }
+        public int PlaceText { get; set; }
     }
-
-
 }

@@ -9,21 +9,20 @@ namespace Web.Helprers.AutoMapperProfiles
     {
         public RentSelfInfoProfile()
         {
-            CreateMap<Service.InputRentSearchDto, Api.InputRentSearchDto>();
-            CreateMap<Api.OutputAdminDto, Service.OutputAdminDto>();
-            CreateMap<Api.OutputDiscountDto, Service.OutputDiscountDto>();
-            CreateMap<Api.OutputInnerInventoryDto, Service.OutputInnerInventoryDto>();
-            CreateMap<Api.OutputInventoryDto, Service.OutputInventoryDto>();
-            CreateMap<Api.OutputOptionDto, Service.OutputOptionDto>();
-            CreateMap<Api.OutputPermissionDto, Service.OutputPermissionDto>();
-            CreateMap<Api.OutputPointDto, Service.OutputPointDto>();
-            CreateMap<Api.OutputPriceDto, Service.OutputPriceDto>();
-            CreateMap<Api.OutputRentDto, Service.OutputRentDto>();
-            CreateMap<Api.OutputRentResultDto, Service.OutputRentResultDto>();
-            CreateMap<Api.OutputRentStateDto, Service.OutputRentStateDto>();
-            CreateMap<Api.OutputResourceDto, Service.OutputResourceDto>();
-            CreateMap<Api.OutputStateDto, Service.OutputStateDto>();
-            CreateMap<Api.OutputValueDto, Service.OutputValueDto>();
+            CreateMap<Service.InputRentSearchDto, Api.InputHERARentSearchDto>();
+            CreateMap<Api.OutputHERAAdminDto, Service.OutputAdminDto>();
+            CreateMap<Api.OutputHERAInnerInventoryDto, Service.OutputInnerInventoryDto>();
+            CreateMap<Api.OutputHERAInventoryDto, Service.OutputInventoryDto>();
+            CreateMap<Api.OutputHERAOptionDto, Service.OutputOptionDto>();
+            CreateMap<Api.OutputHERAPermissionDto, Service.OutputPermissionDto>();
+            CreateMap<Api.OutputHERAPointDto, Service.OutputPointDto>();
+            CreateMap<Api.OutputHERAPriceDto, Service.OutputPriceDto>();
+            CreateMap<Api.OutputHERARentDto, Service.OutputRentDto>();
+            CreateMap<Api.OutputHERARentsResultDto, Service.OutputRentResultDto>();
+            CreateMap<Api.OutputHERARentStateDto, Service.OutputRentStateDto>();
+            CreateMap<Api.OutputHERAResourceDto, Service.OutputResourceDto>();
+            CreateMap<Api.OutputHERAStateDto, Service.OutputStateDto>();
+            CreateMap<Api.OutputHERAValueDto, Service.OutputValueDto>();
         }
     }
 }

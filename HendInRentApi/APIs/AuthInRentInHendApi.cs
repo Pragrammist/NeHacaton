@@ -8,7 +8,7 @@ namespace HendInRentApi
     {
         private static string auth_uri = API_URL + POST_AUTH_LOGIN; //kuda delat zapros
         
-        public async Task<OutputAuthTokenDto> Login(InputLoginUserRentInHendDto user) //delaet zapros po puti /v1/login
+        public async Task<OutputHEARAuthTokenDto> Login(InputHERALoginUserRentInHendDto user) //delaet zapros po puti /v1/login
         {
             HttpClient client = new HttpClient();
             client.AddHeadersWithoutBearer(); //Zdec nuzna nastroyka X-CSRF-TOKEN
@@ -17,7 +17,7 @@ namespace HendInRentApi
 
             await response.StatusIsOKOrThrowException(auth_uri); // esli ne OK to vidaet oshibku
 
-            var result = await response.Content.ReadJsonByNewtonsoft<OutputAuthTokenDto>() ?? throw new NullReferenceException();
+            var result = await response.Content.ReadJsonByNewtonsoft<OutputHEARAuthTokenDto>() ?? throw new NullReferenceException();
         
             return result;
         }

@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
-namespace Web.Dtos.Sales.Inventory
+namespace HendInRentApi.Dto.Inventory
 { 
     
 
-    public class OutputPermissionDto
+    public class OutputHERAPermissionDto
     {
+        [JsonPropertyName("resource_id")]
         public int ResourceId { get; set; }
         public bool Delete { get; set; }
         public bool Read { get; set; }

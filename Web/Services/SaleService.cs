@@ -31,9 +31,9 @@ namespace Web.Services
 
         public async Task<OutputInventoriesDto> GetInventory(string token, InputSearchInventoryDto? input = null)
         {
-            var inp = _mapper.Map<apiInventoryDto.InputInventoryDto>(input);
+            var inp = _mapper.Map<apiInventoryDto.InputHERAInventoryDto>(input);
 
-            var apiResult = await _genericRepositoryApi.MakePostJsonTypeRequest<apiInventoryDto.OutputInventoriesResultDto, apiInventoryDto.InputInventoryDto>(POST_INVENTORY_ITEMS, token, inp);
+            var apiResult = await _genericRepositoryApi.MakePostJsonTypeRequest<apiInventoryDto.OutputHERAInventoriesResultDto, apiInventoryDto.InputHERAInventoryDto>(POST_INVENTORY_ITEMS, token, inp);
 
             var res = _mapper.Map<OutputInventoriesDto>(apiResult);
             return res;
@@ -42,7 +42,7 @@ namespace Web.Services
         public async Task<IEnumerable<OutputInventoriesDto>> GetInventories(InputSearchInventoryDto? input = null)
         {
             var outInventories = new LinkedList<OutputInventoriesDto>();
-            var mapedInput = _mapper.Map<InputInventoryDto>(input);
+            var mapedInput = _mapper.Map<InputHERAInventoryDto>(input);
 
             foreach (var token in DecryptedTokens())
             {
@@ -55,12 +55,12 @@ namespace Web.Services
 
 
         #region help methods for GetInventories
-        private async Task FillInventoryList(InputSearchInventoryDto? input, LinkedList<OutputInventoriesDto> inventoryList, InputInventoryDto mapedInput, string token)
+        private async Task FillInventoryList(InputSearchInventoryDto? input, LinkedList<OutputInventoriesDto> inventoryList, InputHERAInventoryDto mapedInput, string token)
         {
             try
             {
                 var inventoriesResult = await _genericRepositoryApi.MakePostJsonTypeRequest
-                    <OutputInventoriesResultDto, InputInventoryDto>(POST_INVENTORY_ITEMS, token, mapedInput);
+                    <OutputHERAInventoriesResultDto, InputHERAInventoryDto>(POST_INVENTORY_ITEMS, token, mapedInput);
                 AddInventoriesResultToList(inventoryList, inventoriesResult, input?.Tags);
             }
             catch
@@ -68,7 +68,7 @@ namespace Web.Services
 
             }
         }
-        private void AddInventoriesResultToList(LinkedList<OutputInventoriesDto> list, OutputInventoriesResultDto inventories, string[]? tags)
+        private void AddInventoriesResultToList(LinkedList<OutputInventoriesDto> list, OutputHERAInventoriesResultDto inventories, string[]? tags)
         {
             if (inventories.Array != null && inventories.Array.Count > 0)
             {

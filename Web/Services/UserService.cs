@@ -77,7 +77,7 @@ namespace Web.Services
 
         async Task<Token> GetUserToken(InputUserRegistrationDto inputUser)
         {
-            var toLoginDto = _mapper.Map<InputLoginUserRentInHendDto>(inputUser);
+            var toLoginDto = _mapper.Map<InputHERALoginUserRentInHendDto>(inputUser);
 
             var authorizedUserTokenDto = await _authApi.Login(toLoginDto);
 

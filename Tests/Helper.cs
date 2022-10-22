@@ -36,7 +36,7 @@ namespace Tests
 
         public static async Task<string> GetRentInHendTokenForTesting(AuthRentInHendApi api)
         {
-            var userForAuth = GetLoginUserFromJsonFile<InputLoginUserRentInHendDto>();
+            var userForAuth = GetLoginUserFromJsonFile<InputHERALoginUserRentInHendDto>();
             var user = await api.Login(userForAuth);
             return user.AccessToken;
         }

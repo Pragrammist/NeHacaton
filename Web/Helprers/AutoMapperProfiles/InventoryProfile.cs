@@ -9,18 +9,18 @@ namespace Web.Helprers.AutoMapperProfiles
     {
         public InventoryProfile()
         {
-            CreateMap<WebDto.InputDiscountDto, ApiDto.InputDiscountDto>();
-            CreateMap<WebDto.InputDiscountsDto, ApiDto.InputDiscountsDto>();
-            CreateMap<WebDto.InputSearchInventoryDto, ApiDto.InputInventoryDto>();
-            CreateMap<ApiDto.OutputInventoriesResultDto, WebDto.OutputInventoriesDto>();
-            CreateMap<ApiDto.OutputInventoryDto, WebDto.OutputInventoryDto>();
-            CreateMap<ApiDto.OutputOptionDto, WebDto.OutputOptionDto>();
-            CreateMap<ApiDto.OutputPermissionDto, WebDto.OutputPermissionDto>();
-            CreateMap<ApiDto.OutputPointDto, WebDto.OutputPointDto>();
-            CreateMap<ApiDto.OutputPriceDto, WebDto.OutputPriceDto>();
-            CreateMap<ApiDto.OutputResourceDto, WebDto.OutputResourceDto>();
-            CreateMap<ApiDto.OutputStateDto, WebDto.OutputStateDto>();
-            CreateMap<ApiDto.OutputValueDto, WebDto.OutputValueDto>();
+            CreateMap<WebDto.InputDiscountDto, ApiDto.InputHERADiscountDto>();
+            CreateMap<WebDto.InputDiscountsDto, ApiDto.InputHERADiscountsDto>();
+            CreateMap<WebDto.InputSearchInventoryDto, ApiDto.InputHERAInventoryDto>();
+            CreateMap<ApiDto.OutputHERAInventoriesResultDto, WebDto.OutputInventoriesDto>();
+            CreateMap<ApiDto.OutputHERAInventoryDto, WebDto.OutputInventoryDto>();
+            CreateMap<ApiDto.OutputHERAOptionDto, WebDto.OutputOptionDto>();
+            CreateMap<ApiDto.OutputHERAPermissionDto, WebDto.OutputPermissionDto>();
+            CreateMap<ApiDto.OutputHERAPointDto, WebDto.OutputPointDto>();
+            CreateMap<ApiDto.OutputHERAPriceDto, WebDto.OutputPriceDto>();
+            CreateMap<ApiDto.OutputHERAResourceDto, WebDto.OutputResourceDto>();
+            CreateMap<ApiDto.OutputHERAStateDto, WebDto.OutputStateDto>();
+            CreateMap<ApiDto.OutputHERAValueDto, WebDto.OutputValueDto>();
         }
     }
 }

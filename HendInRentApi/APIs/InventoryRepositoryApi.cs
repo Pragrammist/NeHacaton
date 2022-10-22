@@ -15,7 +15,7 @@ namespace HendInRentApi
         /// <param name="requestData">soderzhit chto iskat</param>
         /// <param name="token">token</param>
         /// <returns></returns>
-        public async Task<OutputInventoriesResultDto> PostInvetoryItems(string token, InputInventoryDto? requestData = null)
+        public async Task<OutputHERAInventoriesResultDto> PostInvetoryItems(string token, InputHERAInventoryDto? requestData = null)
         {
             var client = GetClientWithHeaders(token); // ne budu povtoryat
 
@@ -23,7 +23,7 @@ namespace HendInRentApi
 
             await response.StatusIsOKOrThrowException(get_invetory_url); //uze bilo
 
-            var result = await response.Content.ReadJsonByNewtonsoft<OutputInventoriesResultDto>() ?? throw new NullReferenceException("result of HttpContent.ReadFromJsonAsync is null");
+            var result = await response.Content.ReadJsonByNewtonsoft<OutputHERAInventoriesResultDto>() ?? throw new NullReferenceException("result of HttpContent.ReadFromJsonAsync is null");
 
             return result;
         }

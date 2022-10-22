@@ -19,16 +19,16 @@ namespace Web.Services
         }
         public async Task<OutputRentResultDto> GetUserRentSelfInfo(string token, InputRentSearchDto inputRentSerchDto = null)
         {
-            var inp = _mapper.Map<RentApi.InputRentSearchDto>(inputRentSerchDto);
+            var inp = _mapper.Map<RentApi.InputHERARentSearchDto>(inputRentSerchDto);
 
-            var apiRes = await _repositoryApi.MakePostJsonTypeRequest<RentApi.OutputRentResultDto,RentApi.InputRentSearchDto>(POST_RENT,token, inp);
+            var apiRes = await _repositoryApi.MakePostJsonTypeRequest<RentApi.OutputHERARentsResultDto,RentApi.InputHERARentSearchDto>(POST_RENT,token, inp);
             var res = _mapper.Map<OutputRentResultDto>(apiRes);
             return res;
         }
 
         public async Task<OutputSelfInfoProfileResultDto> GetUserProfileSelfInfo(string token)
         {
-            var selfInfoApiResult = await _repositoryApi.MakePostJsonTypeRequest<OutputSelfInfoProfileApiResultDto>(POST_PROFILE, token);
+            var selfInfoApiResult = await _repositoryApi.MakePostJsonTypeRequest<OutputHERAProfileSelfInfoResultDto>(POST_PROFILE, token);
 
             var res = _mapper.Map<OutputSelfInfoProfileResultDto>(selfInfoApiResult);
 
