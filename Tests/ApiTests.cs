@@ -11,7 +11,7 @@ namespace Tests
     public class ApiTests
     {
         AuthRentInHendApi AuthApi => new AuthRentInHendApi();
-        BaseRepository BaseApi => new BaseRepository();
+        BaseRepositoryApi BaseApi => new BaseRepositoryApi();
         InputHIRALoginUserDto UserToLogin => GetLoginUserFromJsonFile<InputHIRALoginUserDto>();
 
 

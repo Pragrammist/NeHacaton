@@ -4,7 +4,7 @@ using static HendInRentApi.HttpStaticMethod;
 
 namespace HendInRentApi
 {
-    public class BaseRepository
+    public class BaseRepositoryApi
     {
         public virtual async Task<TResult> MakePostJsonTypeRequest<TResult, TArg>(string relativePath, string token, TArg? arg)
         {

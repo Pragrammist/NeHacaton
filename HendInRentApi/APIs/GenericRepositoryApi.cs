@@ -1,7 +1,7 @@
 ﻿namespace HendInRentApi
 {
 
-    public class GenericRepositoryApi<TResult, TArg> : BaseRepository, HIRARepository<TResult, TArg>
+    public class GenericRepositoryApi<TResult, TArg> : BaseRepositoryApi, HIRARepository<TResult, TArg>
     {
         public async Task<TResult> MakePostJsonTypeRequest(string relativePath, string token, TArg? arg)
         {
@@ -13,7 +13,7 @@
         }
     }
 
-    public class GenericRepositoryApi<TResult> : BaseRepository, HIRARepository<TResult>
+    public class GenericRepositoryApi<TResult> : BaseRepositoryApi, HIRARepository<TResult>
     {
         public async Task<TResult> MakePostJsonTypeRequest(string relativePath, string token)
         {
