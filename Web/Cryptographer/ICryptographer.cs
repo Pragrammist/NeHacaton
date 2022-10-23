@@ -1,6 +1,6 @@
-﻿namespace Web.HasingToken
+﻿namespace Web.Cryptographer
 {
-    public interface ITokenCryptographer
+    public interface ICryptographer
     {
         public string Encrypt(string token);
         public string Decrypt(string hashedToken);

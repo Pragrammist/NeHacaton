@@ -12,7 +12,7 @@ using Web.Services;
 using static Tests.Helper;
 using Web.PasswordHasher;
 using Web.Search.Inventory;
-using Web.HasingToken;
+using Web.Cryptographer;
 
 namespace Tests
 {
@@ -125,7 +125,7 @@ namespace Tests
         [Test]
         public void DecryptTest()
         {
-            var serv = _serviceProvider.GetRequiredService<ITokenCryptographer>();
+            var serv = _serviceProvider.GetRequiredService<ICryptographer>();
             var token = "eqwe";
             var encrToken = serv.Encrypt(token);
             var decrToken = serv.Decrypt(encrToken);
@@ -137,10 +137,10 @@ namespace Tests
         {
             var serv = _serviceProvider.GetRequiredService<SaleService>();
 
-            var envent = await serv.GetInventories(new Web.Dtos.Sales.Inventory.InputSearchInventoryDto { Tags = new string[] { "INVENTORY" } });
+            var envent = serv.GetInventories(new Web.Dtos.Sales.Inventory.InputSearchInventoryDto {  });
 
             
-            foreach (var env in envent)
+            await foreach (var env in envent)
             {
                 Assert.Pass(Serialize(env));
             }
@@ -171,7 +171,7 @@ namespace Tests
         {
             var contr = _serviceProvider.GetRequiredService<SalesController>();
 
-            var res = (await contr.GetInventory(new Web.Models.Inventory.InventorySearchModel { Search = null, Tags = new string[] {"лыжи" } })).As<JsonResult>();
+            var res = (await contr.GetInventories(new Web.Models.Inventory.InventorySearchModel { Search = null, Tags = new string[] {"лыжи" } })).As<JsonResult>();
             res.Should().NotBeNull();
             Assert.Pass(Serialize(res.Value));
         }

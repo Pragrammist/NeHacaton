@@ -1,13 +1,13 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Web.HasingToken
+namespace Web.Cryptographer
 {
-    public class TokenCryptographerImpl : ITokenCryptographer
+    public class CryptographerImpl : ICryptographer
     {
         readonly string _key;
          
-        public TokenCryptographerImpl(IConfiguration configuration)
+        public CryptographerImpl(IConfiguration configuration)
         {       
             _key = configuration.GetSection("Cryptography")["TokenCryptographyKey"];  
         }

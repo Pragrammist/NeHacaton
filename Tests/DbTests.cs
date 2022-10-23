@@ -32,7 +32,7 @@ namespace Tests
                 userContext.Database.EnsureCreated();
 
                 userContext.Users.Add(
-                    new User { City = "some city", Email = "some email", Login = "some login", Password = "passhash", Telephone = "21321", Token = new Token {AccessTokenHash = "some token has2h", ExpiresIn = 123, TokenType = "token type" } });
+                    new User { City = "some city", Email = "some email", Login = "some login", Password = "passhash", Telephone = "21321" });
                 userContext.SaveChanges();
             }
         }

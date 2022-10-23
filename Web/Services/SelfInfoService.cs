@@ -12,7 +12,9 @@ namespace Web.Services
         HIRARepository<OutputHIRAProfileSelfInfoResultDto> _profileRepo;
         HIRARepository<OutputHIRARentsResultDto, InputHIRARentSearchDto> _rentRepo;
         IMapper _mapper;
-        public SelfInfoService(IMapper mapper, HIRARepository<OutputHIRAProfileSelfInfoResultDto> profileRepo, HIRARepository<OutputHIRARentsResultDto, InputHIRARentSearchDto> rentRepo)
+        public SelfInfoService(IMapper mapper, 
+            HIRARepository<OutputHIRAProfileSelfInfoResultDto> profileRepo, 
+            HIRARepository<OutputHIRARentsResultDto, InputHIRARentSearchDto> rentRepo)
         {
             _mapper = mapper;
             _profileRepo = profileRepo;
@@ -21,7 +23,6 @@ namespace Web.Services
         public async Task<OutputRentResultDto> GetUserRentSelfInfo(string token, InputRentSearchDto? inputRentSerchDto = null)
         {
             var HEARInput = _mapper.Map<InputHIRARentSearchDto>(inputRentSerchDto);
-
             var apiRes = await _rentRepo.MakePostJsonTypeRequest(POST_RENT,token, HEARInput);
             var res = _mapper.Map<OutputRentResultDto>(apiRes);
             return res;

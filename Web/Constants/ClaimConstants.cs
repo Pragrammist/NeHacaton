@@ -2,6 +2,6 @@
 {
     public static class ClaimConstants
     {
-        public const string RENTINHEND_API_TOKEN_CLAIM = "hashedtoken";
+        public const string CLAIM_PASSWORD = "password";
     }
 }

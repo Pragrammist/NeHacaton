@@ -5,13 +5,14 @@ using Web.Models.ModelValidators;
 using Web.Services;
 using DataBase;
 using Microsoft.EntityFrameworkCore;
-using Web.HasingToken;
+using Web.Cryptographer;
 using Web.PasswordHasher;
 using Web.Geolocation;
 using Web.Search.Inventory;
 using HendInRentApi.Dto.Inventory;
 using HendInRentApi.Dto.SelfInfo.Rent;
 using HendInRentApi.Dto.SelfInfo.Profile;
+
 
 namespace Web.Helprers
 {
@@ -33,12 +34,13 @@ namespace Web.Helprers
         public static IServiceCollection AddNativeServices(this IServiceCollection services)
         {
             services.AddScoped<UserService>();
-            services.AddTransient<ITokenCryptographer, TokenCryptographerImpl>();
+            services.AddTransient<ICryptographer, CryptographerImpl>();
             services.AddScoped<SelfInfoService>();
             services.AddScoped<SaleService>();
             services.AddTransient<IPasswordHasher, PasswordHasherImpl>();
             services.AddTransient<GeolocationRepository>();
             services.AddTransient<InventoryTagSearcher, InventoryTagSearcherImpl>();
+            services.AddTransient<ApiTokenProvider, ApiTokenProviderImpl>();
             return services;
         }
 

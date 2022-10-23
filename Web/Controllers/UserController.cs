@@ -92,7 +92,7 @@ namespace Web.Controllers
             if (HttpContext == null)
                 return;
 
-            var claims = new List<Claim>() { new Claim(RENTINHEND_API_TOKEN_CLAIM, $"{user.Token.AccessTokenHash}"), new Claim(ClaimsIdentity.DefaultNameClaimType, $"{user.Login}") };
+            var claims = new List<Claim>() { new Claim(CLAIM_PASSWORD, $"{user.Password}"), new Claim(ClaimsIdentity.DefaultNameClaimType, $"{user.Login}") };
             var identity = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             
             var claimPrincipal = new ClaimsPrincipal(identity);

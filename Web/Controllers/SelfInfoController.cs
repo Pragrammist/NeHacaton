@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Services;
+using Web.Cryptographer;
 using static Web.Constants.ClaimConstants;
+using System.Security.Claims;
 
 namespace Web.Controllers
 {
@@ -9,9 +11,13 @@ namespace Web.Controllers
     {
 
         SelfInfoService _selfInfoService;
-        public SelfInfoController(SelfInfoService selfInfoService)
+        ApiTokenProvider _apiToken;
+        ICryptographer _cryptographer;
+        public SelfInfoController(SelfInfoService selfInfoService, ApiTokenProvider apiToken, ICryptographer cryptographer)
         {
             _selfInfoService = selfInfoService;
+            _apiToken = apiToken;
+            _cryptographer = cryptographer;
         }
 
         [Authorize]
@@ -23,21 +29,28 @@ namespace Web.Controllers
         [Authorize]
         public async Task<IActionResult> RentSelfInfo()
         {
-            var res = await _selfInfoService.GetUserRentSelfInfo(Token);
+            var res = await _selfInfoService.GetUserRentSelfInfo(await Token());
 
-            return PartialView(res); 
+            return PartialView(res);
         }
 
         [Authorize]
         public async Task<IActionResult> ProfileSelfInfo()
         {
-            var res = await _selfInfoService.GetUserProfileSelfInfo(Token);
+            var res = await _selfInfoService.GetUserProfileSelfInfo(await Token());
 
-            return PartialView(res); 
+            return PartialView(res);
         }
 
 
 
-        string Token => User.Claims.First(t => t.ValueType == RENTINHEND_API_TOKEN_CLAIM).Value;
+        async Task<string> Token()
+        {
+            var encryptPassword = User.Claims.First(t => t.ValueType == CLAIM_PASSWORD).Value;
+            var login = User.Claims.First(t => t.ValueType == ClaimsIdentity.DefaultNameClaimType).Value;
+            var password = _cryptographer.Decrypt(encryptPassword);
+            var token = await _apiToken.GetToken(password, login);
+            return token;
+        }
     }
 }

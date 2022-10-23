@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using Web.Dtos;
 using Web.Geolocation;
-using Web.HasingToken;
+using Web.Cryptographer;
 using Web.PasswordHasher;
 
 namespace Web.Services
@@ -16,18 +16,18 @@ namespace Web.Services
         readonly IMapper _mapper;
 
         readonly UserContext _userContext;
-        readonly ITokenCryptographer _tokenCryptographer;
+        readonly ICryptographer _passwordCryptographer;
         readonly IPasswordHasher _passwordHasher;
         readonly GeolocationRepository _geolocation;
         readonly HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto> _loginHIRA;
-        public UserService(HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto> loginHIRA, IMapper mapper, UserContext userContext, ITokenCryptographer tokenCryptographer, 
+        public UserService(HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto> loginHIRA, IMapper mapper, UserContext userContext, ICryptographer passwordCryptographer, 
             IPasswordHasher passwordHasher, GeolocationRepository geolocation)
         {
             _geolocation = geolocation;
             _mapper = mapper;
             _loginHIRA = loginHIRA;
             _userContext = userContext;
-            _tokenCryptographer = tokenCryptographer;
+            _passwordCryptographer = passwordCryptographer;
             _passwordHasher = passwordHasher;
         }
         /// <summary>
@@ -56,9 +56,7 @@ namespace Web.Services
         {
             var user = _mapper.Map<User>(regUser);
 
-            user.Token = await GetUserToken(regUser);
-
-            user.Password = _passwordHasher.Hash(regUser.Password);
+            user.Password = _passwordCryptographer.Encrypt(regUser.Password);
 
             user.City = await GetLocationCity(regUser);
 
@@ -70,24 +68,12 @@ namespace Web.Services
             return (await _geolocation.GetUserLocationByLatLon(user.Lat, user.Lon)).City;
         }
 
-        async Task<Token> GetUserToken(InputUserRegistrationDto inputUser)
-        {
-            var HIRALogin = _mapper.Map<InputHIRALoginUserDto>(inputUser);
-
-            var HIRAToken = await _loginHIRA.Login(HIRALogin);
-
-            var token = _mapper.Map<Token>(HIRAToken);
-
-            token.AccessTokenHash = _tokenCryptographer.Encrypt(HIRAToken.AccessToken);
-
-            return token;
-        }
         #endregion
 
 
         public async Task<OutputUserDto> LoginUser(InputLoginUserDto inputUserLoginDto)
         {
-            var user = await _userContext.Users.Include(u => u.Token).FirstAsync(
+            var user = await _userContext.Users.FirstAsync(
                 u => 
                 u.Email == inputUserLoginDto.Login ||
                 u.Login == inputUserLoginDto.Login ||

@@ -5,7 +5,7 @@ using DataBase.Entities;
 using HendInRentApi;
 using Web.Dtos;
 using Web.Dtos.Sales.Inventory;
-using Web.HasingToken;
+using Web.Cryptographer;
 using Web.Helprers.AutoMapperProfiles;
 using Web.Models;
 using Web.Models.Inventory;
@@ -34,15 +34,12 @@ namespace Web.Helprers
             cfg.CreateMap<InputUserRegistrationDto, InputHIRALoginUserDto>();  //why is reg becoming login?
             //when users registrate here they login in RentInHend.
 
-            cfg.CreateMap<OutputHIRAAuthTokenDto, Token>().ForMember(t => t.AccessTokenHash, cfg => cfg.Ignore());
             //token from api to db token
 
             cfg.CreateMap<InputUserRegistrationDto, User>().ForMember(t => t.Password, cfg => cfg.Ignore());
             //from dto model in UserService to user entity
 
             cfg.CreateMap<UserLoginModel, InputLoginUserDto>();
-
-            cfg.CreateMap<Token, OutputTokenDto>();
 
             cfg.CreateMap<User, OutputUserDto>();
 

@@ -1,6 +1,7 @@
 ﻿using DataBase;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Web.Cryptographer;
 using Web.PasswordHasher;
 
 namespace Web.Models.ModelValidators
@@ -8,12 +9,12 @@ namespace Web.Models.ModelValidators
     public class UserLoginModelValidator : AbstractValidator<UserLoginModel>
     {
         UserContext _userContext;
-        IPasswordHasher _passwordHasher;
+        ICryptographer _cryptographer;
 
-        public UserLoginModelValidator(UserContext userContext, IPasswordHasher passwordHasher)
+        public UserLoginModelValidator(UserContext userContext, ICryptographer cryptographer)
         {
             _userContext = userContext;
-            _passwordHasher = passwordHasher;
+            _cryptographer = cryptographer;
 
             RuleFor(u => u.Password).NotNull();
             RuleFor(u => u.Login).NotNull();
@@ -29,7 +30,7 @@ namespace Web.Models.ModelValidators
             (u.Login == model.Login 
             || u.Email == model.Login 
             || u.Telephone == model.Login) 
-            && u.Password == _passwordHasher.Hash(model.Password));
+            && u.Password == _cryptographer.Encrypt(model.Password));
 
             if (user is null)
                 validationContext.AddFailure("user", "user not found");

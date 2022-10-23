@@ -4,9 +4,7 @@ using HendInRentApi;
 using static HendInRentApi.RentInHendApiConstants;
 using AutoMapper;
 using DataBase;
-using Microsoft.EntityFrameworkCore;
-using Web.HasingToken;
-using System.Linq;
+using Web.Cryptographer;
 using Web.Search.Inventory;
 using HendInRentApi.Dto.Inventory;
 
@@ -17,18 +15,21 @@ namespace Web.Services
         HIRARepository<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto> _inventoryRepo;
         IMapper _mapper;
         UserContext _userContext;
-        ITokenCryptographer _cryptographer;
+        ICryptographer _cryptographer;
         InventoryTagSearcher _searcher;
+        ApiTokenProvider _apiTokenProvider;
         public SaleService(HIRARepository<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto> inventoryRepo,
             IMapper mapper, 
-            UserContext userContext, ITokenCryptographer cryptographer, 
-            InventoryTagSearcher searcher)
+            UserContext userContext, ICryptographer cryptographer, 
+            InventoryTagSearcher searcher,
+            ApiTokenProvider apiTokenProvider)
         {
             _inventoryRepo = inventoryRepo;
             _mapper = mapper;
             _userContext = userContext;
             _cryptographer = cryptographer;
             _searcher = searcher;
+            _apiTokenProvider = apiTokenProvider;
         }
 
 
@@ -42,44 +43,34 @@ namespace Web.Services
             return res;
         }
 
-        public async Task<IEnumerable<OutputInventoriesResultDto>> GetInventories(InputSearchInventoryDto? input = null)
+        public async IAsyncEnumerable<OutputInventoriesResultDto> GetInventories(InputSearchInventoryDto? input = null)
         {
-            var inventories = new LinkedList<OutputInventoriesResultDto>();
             var HIRAInput = _mapper.Map<InputHIRAInventoryDto>(input);
 
-            foreach (var token in DecryptedTokens())
+            await foreach (var token in GetTokensByLogin())
             {
-                await FillInventoryList(input, inventories, HIRAInput, token);
+                var res = await GetOutputInventoriesResult(input, HIRAInput, token);
+                if (res != null)
+                    yield return res;   
             }
-
-            return inventories;            
         }
 
 
 
         #region help methods for GetInventories
-        async Task FillInventoryList(InputSearchInventoryDto? input, LinkedList<OutputInventoriesResultDto> list, InputHIRAInventoryDto? HIRAInput, string token)
+        async Task<OutputInventoriesResultDto?> GetOutputInventoriesResult(InputSearchInventoryDto? input, InputHIRAInventoryDto? HIRAInput, string token)
         {
-            try
+            var HIRAInventoriesResult = await _inventoryRepo.MakePostJsonTypeRequest(POST_INVENTORY_ITEMS, token, HIRAInput);
+            OutputInventoriesResultDto? inventories = null;
+            if (HIRAInventoriesResult.Array != null && HIRAInventoriesResult.Array.Count > 0)
             {
-                var HIRAInventoriesResult = await _inventoryRepo.MakePostJsonTypeRequest(POST_INVENTORY_ITEMS, token, HIRAInput);
-                AddInventoriesResultToList(list, HIRAInventoriesResult, input?.Tags);
+                inventories = _mapper.Map<OutputInventoriesResultDto>(HIRAInventoriesResult);
+                SelectInventoriesByTags(input?.Tags, inventories);
+                return inventories;
             }
-            catch
-            {
-
-            }
+            return inventories;
         }
 
-        void AddInventoriesResultToList(LinkedList<OutputInventoriesResultDto> list, OutputHIRAInventoriesResultDto HIRAInventories, string[]? tags)
-        {
-            if (HIRAInventories.Array != null && HIRAInventories.Array.Count > 0)
-            {
-                var inventories = _mapper.Map<OutputInventoriesResultDto>(HIRAInventories);
-                SelectInventoriesByTags(tags, inventories);
-                list.AddLast(inventories);
-            }
-        }
 
         void SelectInventoriesByTags(string[]? tags, OutputInventoriesResultDto inventories)
         {
@@ -87,7 +78,17 @@ namespace Web.Services
                 inventories.Array = _searcher.TagsIsContained(tags, inventories.Array).ToList();
         }
 
-        IEnumerable<string> DecryptedTokens() => _userContext.Tokens.Select(t => _cryptographer.Decrypt(t.AccessTokenHash));
+        async IAsyncEnumerable<string> GetTokensByLogin()
+        {
+            foreach (var u in _userContext.Users)
+            {
+                var encrpyptedPass = u.Password;
+                var p = _cryptographer.Decrypt(encrpyptedPass);
+                var l = u.Login;
+                var token = await _apiTokenProvider.GetToken(p, l);
+                yield return token;
+            }   
+        }
         #endregion
 
 
