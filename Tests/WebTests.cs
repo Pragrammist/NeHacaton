@@ -34,8 +34,10 @@ namespace Tests
             _authRentInHend = _serviceProvider.GetRequiredService<HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto>>(); 
         }
 
+
+
         [Test]
-        public async Task TestUserRegistration()
+        public async Task UserRegistrationController()
         {
             var user = GetRegistreUserFromJsonFile<UserRegistrationModel>();
 
@@ -49,7 +51,7 @@ namespace Tests
         }
 
         [Test]
-        public async Task TestUserLogin()
+        public async Task UserLoginController()
         {
             var controller = _serviceProvider.GetRequiredService<UserController>();
 
@@ -64,50 +66,56 @@ namespace Tests
 
        
         [Test]
-        public async Task TestGeolocationApi()
+        public async Task GeolocationApiService()
         {
             var api = _serviceProvider.GetRequiredService<GeolocationRepository>();
 
             var city = await api.GetUserLocationByLatLon(55.878, 37.653);
+
             Assert.Pass(city.City);
         }
 
         [Test]
-        public void TestJsonUser()
+        public void TestJsonUserFromJsonFiles()
         {
             var userLogin = GetLoginUserFromJsonFile<UserLoginModel>();
+
             var userReg = GetRegistreUserFromJsonFile<UserRegistrationModel>();
 
             Assert.Pass("login:\n{0}\nregistration:\n{1}\n",Serialize(userLogin), Serialize(userReg));
         }
         [Test]
-        public async Task TestProfileService()
+        public async Task ProfileSelfInfoService()
         {
             var profileServise = _serviceProvider.GetRequiredService<SelfInfoService>();
+
             var token = await GetRentInHendTokenForTesting(_authRentInHend);
 
             var res = await profileServise.GetUserProfileSelfInfo(token);
 
-            var strRes = Serialize(res);
-
-            Assert.Pass("profile:\n{0}", strRes);
+            Assert.Pass("profile:\n{0}", Serialize(res));
         }
 
         [Test]
-        public async Task RentSelfInfoServiceTest()
+        public async Task RentSelfInfoService()
         {
             var serv = _serviceProvider.GetRequiredService<SelfInfoService>();
+
             var token = await GetRentInHendTokenForTesting(_authRentInHend);
+
             var res = await serv.GetUserRentSelfInfo(token);
 
             Assert.Pass("rent:\n{0}", Serialize(res));
         }
         [Test]
-        public async Task RentSelfInfoServiceTestViewJustOneObject()
+        public async Task RentSelfInfoServiceFirst()
         {
             var serv = _serviceProvider.GetRequiredService<SelfInfoService>();
+
             var token = await GetRentInHendTokenForTesting(_authRentInHend);
+
             var resService = await serv.GetUserRentSelfInfo(token);
+
             var res = resService.Array.FirstOrDefault();
 
             Assert.Pass("rent:\n{0}", Serialize(res));
@@ -115,44 +123,53 @@ namespace Tests
 
 
         [Test]
-        public async Task SaleServiceGetInventoryTest()
+        public async Task InventorySaleService()
         {
             var serv = _serviceProvider.GetRequiredService<SaleService>();
+
             var token = await GetRentInHendTokenForTesting(_authRentInHend);
+
             var res = await serv.GetInventory(token);
+
             Assert.Pass("rent:\n{0}", Serialize(res));
         }
         [Test]
-        public void DecryptTest()
+        public void Cryptographer()
         {
             var serv = _serviceProvider.GetRequiredService<ICryptographer>();
+
             var token = "eqwe";
+
             var encrToken = serv.Encrypt(token);
+
             var decrToken = serv.Decrypt(encrToken);
+
             Assert.That(token == decrToken);
         }
 
         [Test]
-        public async Task SaleServiceGetInventories()
+        public async Task InventoriesSaleService()
         {
             var serv = _serviceProvider.GetRequiredService<SaleService>();
 
             var envent = serv.GetInventories(new Web.Dtos.Sales.Inventory.InputSearchInventoryDto {  });
 
-            
             await foreach (var env in envent)
             {
                 Assert.Pass(Serialize(env));
             }
         }
         [Test]
-        public void HasherTest()
+        public void PasswordHasher()
         {
             var password = "EQWEQWE";
+
             var hasher = _serviceProvider.GetRequiredService<IPasswordHasher>();
+
             var hash = hasher.Hash(password);
 
             hash.Should().NotBeNull();
+
             Assert.Pass("password:\n{0}\nhash:\n{1}", password, hash);
         }
 
@@ -167,11 +184,15 @@ namespace Tests
         }
 
         [Test]
-        public async Task SaleControllerTest()
+        public async Task InventoriesSaleController()
         {
             var contr = _serviceProvider.GetRequiredService<SalesController>();
 
-            var res = (await contr.GetInventories(new Web.Models.Inventory.InventorySearchModel { Search = null, Tags = new string[] {"лыжи" } })).As<JsonResult>();
+            var res = (await contr.GetInventories(
+                new Web.Models.Inventory.
+                InventorySearchModel { Search = null, Tags = new string[] {"лыжи" } }))
+                .As<JsonResult>();
+
             res.Should().NotBeNull();
             Assert.Pass(Serialize(res.Value));
         }

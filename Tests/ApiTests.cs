@@ -11,7 +11,7 @@ namespace Tests
     public class ApiTests
     {
         AuthRentInHendApi AuthApi => new AuthRentInHendApi();
-        BaseRepository UniversalApi => new BaseRepository();
+        BaseRepository BaseApi => new BaseRepository();
         InputHIRALoginUserDto UserToLogin => GetLoginUserFromJsonFile<InputHIRALoginUserDto>();
 
 
@@ -21,74 +21,64 @@ namespace Tests
         }       
 
         [Test]
-        public async Task AuthTest()
+        public async Task Auth()
         {
             var res = await AuthApi.Login(UserToLogin);
 
             res.Should().NotBeNull().And.Match<OutputHIRAAuthTokenDto>(u => u.AccessToken != null);
-            var str = Serialize(res);
-            Assert.Pass("user:\n{0}", str);
+
+            Assert.Pass("user:\n{0}", Serialize(res));
         }
 
         [Test]
-        public async Task InventoryTest()
+        public async Task Inventory()
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
             var inputDto = new InputHIRAInventoryDto {Search = "лыжи" };
 
+            var invent = await BaseApi.MakePostJsonTypeRequest
+                <OutputHIRAInventoriesResultDto, InputHIRAInventoryDto>(POST_INVENTORY_ITEMS, authToken.AccessToken, inputDto);
 
-            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto>(POST_INVENTORY_ITEMS, authToken.AccessToken, inputDto);
-
-            //var invent = await InventoryApi.PostInvetoryItems(authToken.AccessToken, inputDto);
-
-            var str = Serialize(invent);
-            Assert.Pass("response: {0}", str);
+            Assert.Pass("response: {0}", Serialize(invent));
         }
 
         [Test]
-        public async Task UniverseApiTest()
+        public async Task Universe()
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
-            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto>
+            var invent = await BaseApi.MakePostJsonTypeRequest<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto>
                 (POST_INVENTORY_ITEMS, authToken.AccessToken, new InputHIRAInventoryDto {Search = "очки" });
 
-            var str = Serialize(invent);
-
-            Assert.Pass("response: {0}", str);
+            Assert.Pass("response: {0}", Serialize(invent));
         }
 
         [Test]
-        public async Task NonCorrectDataTest()
+        public async Task NonCorrectType()
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
-            var invent = await UniversalApi.MakePostJsonTypeRequest<OutputHIRAAuthTokenDto, InputHIRAInventoryDto>
+            var invent = await BaseApi.MakePostJsonTypeRequest<OutputHIRAAuthTokenDto, InputHIRAInventoryDto>
                 (POST_INVENTORY_ITEMS, authToken.AccessToken, new InputHIRAInventoryDto { Search = "очки" });
 
-            var str = Serialize(invent);
-
-            Assert.Pass("response: {0}", str);
+            Assert.Pass("response: {0}", Serialize(invent));
         }
         [Test]
-        public async Task ProfileDataApiTest()
+        public async Task ProfileData()
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
-            var profile = await UniversalApi.MakePostJsonTypeRequest<OutputHIRAProfileSelfInfoResultDto, object>(POST_PROFILE, authToken.AccessToken, null);
+            var profile = await BaseApi.MakePostJsonTypeRequest<OutputHIRAProfileSelfInfoResultDto, object>(POST_PROFILE, authToken.AccessToken, null);
 
-            var str = Serialize(profile);
-
-            Assert.Pass("response:\n{0}", str);
+            Assert.Pass("response:\n{0}", Serialize(profile));
         }
         [Test]
-        public async Task RentDataTest()
+        public async Task RentData()
         {
             var authToken = await AuthApi.Login(UserToLogin);
-            var input = new InputHIRARentSearchDto();
-
-            var data = await UniversalApi.MakePostJsonTypeRequest<OutputHIRARentsResultDto, object>(POST_RENT, authToken.AccessToken, null);
+            
+            var data = await BaseApi.MakePostJsonTypeRequest<OutputHIRARentsResultDto, object>(POST_RENT, authToken.AccessToken, null);
 
             Assert.Pass("res:\n{0}",Serialize(data));
         }
