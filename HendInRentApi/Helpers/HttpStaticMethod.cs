@@ -7,22 +7,20 @@ namespace HendInRentApi
 {
     public static class HttpStaticMethod
     {
-        //method nuzhen dlya dobavleniya tokena v zaprosi. takzhe nekotorih drugih nastroek
         public static void AddHeadersWithoutBearer(this HttpClient client)
         {
-            client.DefaultRequestHeaders.Add("X-CSRF-TOKEN", "pnsXw4CP4HIdF2eoWuPPCStqmPdKhWHLlJzoQMFJ"); // eto ya prosto udivel v api, poetomu prosto dobavil
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json")); //for json
-            client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json"); //for json hotya eto ne rabotoent no est
+            client.DefaultRequestHeaders.Add("X-CSRF-TOKEN", "pnsXw4CP4HIdF2eoWuPPCStqmPdKhWHLlJzoQMFJ"); 
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json")); 
         }
 
         public static void AddHeaders(this HttpClient client, string bearer_token)
         {
             client.AddHeadersWithoutBearer();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearer_token);// dobavlenia tokena
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearer_token);
         }
 
 
-        public static HttpClient GetClientWithHeaders(string bearer_token) // eto prosto obvertka dlya verhnego method
+        public static HttpClient GetClientWithHeaders(string bearer_token)
         {
             HttpClient client = new HttpClient();
             client.AddHeaders(bearer_token);
@@ -30,20 +28,19 @@ namespace HendInRentApi
         }
 
 
-        //dlya otobrazenia oshibok
+        
         public static async Task StatusIsOKOrThrowException(this HttpResponseMessage response, string authUri)
         {
             if (!response.IsSuccessStatusCode)
             {
                 var messageJobj = await response.Content.ReadAsJObject(); 
-                throw new HttpRequestException($"Status code is {(int)response.StatusCode}" + //perenos dly krasoti
-                $"({response.StatusCode})\nQuery: {authUri}\nmessage:\n{messageJobj}"); //vivod oshibki
+                throw new HttpRequestException($"Status code is {(int)response.StatusCode}" + 
+                $"({response.StatusCode})\nQuery: {authUri}\nmessage:\n{messageJobj}"); 
 
             }
         }
 
-        public static async Task<JObject> ReadAsJObject(this HttpContent content) //nuzjen chotbi soderjimoe prevrachat v json object dlya
-        //otobrojenia v testi or oshibok
+        public static async Task<JObject> ReadAsJObject(this HttpContent content) 
         {
             var readStirng = await content.ReadAsStringAsync();
             var jsonObject = JObject.Parse(readStirng);
@@ -69,7 +66,7 @@ namespace HendInRentApi
             }
             catch(Exception ex)
             {
-                throw new InvalidOperationException(ex.Message + $"\nwith content:\n{stringContent}");
+                throw new InvalidOperationException($"with content:\n{stringContent}\n", ex);
             }
             finally
             {
