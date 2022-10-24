@@ -6,13 +6,19 @@ namespace HendInRentApi
 {
     public class AuthRentInHendApi : BaseMethodsApi, HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto>
     {
-        private static string auth_uri = API_URL + POST_AUTH_LOGIN; 
-        
+        static string path = API_URL + POST_AUTH_LOGIN;
         public async Task<OutputHIRAAuthTokenDto> Login(InputHIRALoginUserDto user) 
         {
             HttpClient client = GetClientWithoutBearer();
             
-            return await MakeJsonTypeRequest<OutputHIRAAuthTokenDto, InputHIRALoginUserDto>(auth_uri, user, client.PostAsJsonAsyncByNewtonsoft);
+
+            var response = await client.PostAsJsonAsync(path, user);
+
+            await response.StatusIsOKOrThrowException(path);
+
+            var result = await response.Content.ReadJsonByNewtonsoft<OutputHIRAAuthTokenDto>() ?? throw new NullReferenceException();
+
+            return result;
         }
     }
 }

@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace HendInRentApi
 {
@@ -12,6 +13,7 @@ namespace HendInRentApi
         {
             client.DefaultRequestHeaders.Add("X-CSRF-TOKEN", "pnsXw4CP4HIdF2eoWuPPCStqmPdKhWHLlJzoQMFJ");
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            
         }
 
         public static void AddBearer(this HttpClient client, string bearer_token)
@@ -80,16 +82,15 @@ namespace HendInRentApi
             }
         }
 
-        static async Task<HttpResponseMessage> RequestAsJsonAsyncByNewtonsoft<TArg>(string path, TArg arg, Func<string, HttpContent,CancellationToken ,Task<HttpResponseMessage>> AsyncMethod,
+        static async Task<HttpResponseMessage> RequestAsJsonAsync<TArg>(string path, TArg arg, Func<string, HttpContent, CancellationToken, Task<HttpResponseMessage>> AsyncMethod,
             JsonSerializerSettings? settings = null, CancellationToken cancellationToken = default)
         {
-            var jsonSerializer = JsonSerializer.Create(settings ?? NullValueHandlingIgnoreSetting);
-            var textWriter = new StringWriter();
             try
             {
-                jsonSerializer.Serialize(textWriter, arg);
-                var content = new StringContent(textWriter.ToString());
-
+                settings = settings ?? NullValueHandlingIgnoreSetting;
+                var serializer = JsonSerializer.Create(settings);
+                var json = JObject.FromObject(arg, serializer).ToString();
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
                 return await AsyncMethod(path, content, cancellationToken);
             }
             catch (Exception ex)
@@ -98,16 +99,16 @@ namespace HendInRentApi
             }
             finally
             {
-                await textWriter.DisposeAsync();
+
             }
         }
 
-        public static async Task<HttpResponseMessage> PostAsJsonAsyncByNewtonsoft<TArg>(this HttpClient client, string path, TArg arg, JsonSerializerSettings? settings = null,
-            CancellationToken cancellationToken = default) => await RequestAsJsonAsyncByNewtonsoft(path, arg, client.PostAsync, settings, cancellationToken);
-       
-        public static async Task<HttpResponseMessage> PutAsJsonAsyncByNewtonsoft<TArg>(this HttpClient client, string path, TArg arg, JsonSerializerSettings? settings = null,
-            CancellationToken cancellationToken = default) => await RequestAsJsonAsyncByNewtonsoft(path, arg, client.PutAsync, settings, cancellationToken);
-        
+        public static async Task<HttpResponseMessage> PostAsJsonAsyncNewtonsoft<TArg>(this HttpClient client, string path, TArg arg, JsonSerializerSettings? settings = null,
+            CancellationToken cancellationToken = default) => await RequestAsJsonAsync(path, arg, client.PostAsync, settings, cancellationToken);
+
+        public static async Task<HttpResponseMessage> PutAsJsonAsyncNewtonsoft<TArg>(this HttpClient client, string path, TArg arg, JsonSerializerSettings? settings = null,
+            CancellationToken cancellationToken = default) => await RequestAsJsonAsync(path, arg, client.PutAsync, settings, cancellationToken);
+
         private static JsonSerializerSettings NullValueHandlingIgnoreSetting => new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
     }
 }

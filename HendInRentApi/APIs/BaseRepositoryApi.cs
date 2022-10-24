@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Json;
-using static HendInRentApi.RentInHendApiConstants;
+﻿using static HendInRentApi.RentInHendApiConstants;
 using static HendInRentApi.HttpStaticMethod;
 using Newtonsoft.Json;
 
@@ -7,7 +6,6 @@ namespace HendInRentApi
 {
     public class BaseMethodsApi
     {
-
         protected async Task<TResult> MakeJsonTypeRequest<TResult, TArg>(string relativePath, TArg arg,
            Func<string, TArg, JsonSerializerSettings?,CancellationToken , Task<HttpResponseMessage>> AsyncMethod)
         {
@@ -26,13 +24,14 @@ namespace HendInRentApi
         {
             var client = GetClientWithBearer(token);
 
-            return await MakeJsonTypeRequest<TResult, TArg>(relativePath, arg, client.PostAsJsonAsyncByNewtonsoft);
+            return await MakeJsonTypeRequest<TResult, TArg>(relativePath, arg, client.PostAsJsonAsyncNewtonsoft);
         }
         public virtual async Task<TResult> MakePutJsonTypeRequest<TResult, TArg>(string relativePath, string token, TArg arg)
         {
             var client = GetClientWithBearer(token);
+            
 
-            return await MakeJsonTypeRequest<TResult, TArg>(relativePath, arg, client.PutAsJsonAsyncByNewtonsoft);
+            return await MakeJsonTypeRequest<TResult, TArg>(relativePath, arg, client.PutAsJsonAsyncNewtonsoft);
         }
     }
 }
