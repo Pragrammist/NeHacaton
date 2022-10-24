@@ -13,6 +13,7 @@ using static Tests.Helper;
 using Web.PasswordHasher;
 using Web.Search.Inventory;
 using Web.Cryptographer;
+using System.Net.Http.Json;
 
 namespace Tests
 {
@@ -34,7 +35,13 @@ namespace Tests
             _authRentInHend = _serviceProvider.GetRequiredService<HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto>>(); 
         }
 
+        [Test]
+        public async Task Request()
+        {
+            var client = _factory.CreateClient();
+            var res = await client.PostAsJsonAsync("/User/LoginUser/", GetLoginUserFromJsonFile<object>());
 
+        }
 
         [Test]
         public async Task UserRegistrationController()

@@ -47,7 +47,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LoginUser(UserLoginModel userLoginModel)
+        public async Task<IActionResult> LoginUser([FromBody]UserLoginModel userLoginModel)
         {
             var valRes = await _userLoginValidator.ValidateAsync(userLoginModel);
 

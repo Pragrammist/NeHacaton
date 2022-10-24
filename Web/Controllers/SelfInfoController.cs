@@ -26,7 +26,6 @@ namespace Web.Controllers
 
             return Json(res);
         }
-
         [Authorize]
         public async Task<IActionResult> ProfileSelfInfo()
         {

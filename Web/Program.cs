@@ -1,3 +1,4 @@
+using AspNetCore.RouteAnalyzer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Net.Http.Headers;
 using Web.Helprers;
@@ -12,7 +13,7 @@ namespace Web
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
             // Add services to the container.
-            builder.Services.AddControllersWithViews().AddControllersAsServices();
+            builder.Services.AddControllers().AddControllersAsServices();
             builder.Services.AddHttpClient(GEOLOCATION_HTTPCLIENT_NAME, client =>
             {
                 var geolocationApiKey = config.GetSection("Tokens")["GeolocationApi"];
@@ -20,6 +21,7 @@ namespace Web
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", geolocationApiKey);
             });
             builder.Services
+                .AddRouteAnalyzer()
                 .AddRentInHendApiServices()
                 .AddModelVlidators()
                 .AddNativeServices()
@@ -39,7 +41,6 @@ namespace Web
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -54,6 +55,9 @@ namespace Web
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=User}/{action=Login}/{id?}");
+
+            app.MapGet("/routes", (IEnumerable<EndpointDataSource> endpointSources) => string.Join("\n", endpointSources.SelectMany(source => source.Endpoints)));
+
 
             app.Run();
         }
