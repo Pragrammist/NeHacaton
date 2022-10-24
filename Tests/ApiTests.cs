@@ -11,7 +11,7 @@ namespace Tests
     public class ApiTests
     {
         AuthRentInHendApi AuthApi => new AuthRentInHendApi();
-        BaseRepositoryApi BaseApi => new BaseRepositoryApi();
+        BaseMethodsApi BaseApi => new BaseMethodsApi();
         InputHIRALoginUserDto UserToLogin => GetLoginUserFromJsonFile<InputHIRALoginUserDto>();
 
 
@@ -78,7 +78,7 @@ namespace Tests
         {
             var authToken = await AuthApi.Login(UserToLogin);
             
-            var data = await BaseApi.MakePostJsonTypeRequest<OutputHIRARentsResultDto, object>(POST_RENT, authToken.AccessToken, null);
+            var data = await BaseApi.MakePostJsonTypeRequest<OutputHIRARentsResultDto, object>(POST_RENT, authToken.AccessToken, new InputHIRARentSearchDto {Search = "Ботинки" });
 
             Assert.Pass("res:\n{0}",Serialize(data));
         }
