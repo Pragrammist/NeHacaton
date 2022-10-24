@@ -35,6 +35,8 @@ namespace Web.Services
 
         public async Task<OutputInventoriesResultDto> GetInventory(string token, InputSearchInventoryDto? input = null)
         {
+            input = input ?? new InputSearchInventoryDto { };
+
             var HERAInput = _mapper.Map<InputHIRAInventoryDto>(input);
 
             var apiResult = await _inventoryRepo.MakePostJsonTypeRequest(POST_INVENTORY_ITEMS, token, HERAInput);

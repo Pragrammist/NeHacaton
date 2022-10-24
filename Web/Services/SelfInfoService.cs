@@ -22,6 +22,9 @@ namespace Web.Services
         }
         public async Task<OutputRentResultDto> GetUserRentSelfInfo(string token, InputRentSearchDto? inputRentSerchDto = null)
         {
+            inputRentSerchDto = inputRentSerchDto ?? new InputRentSearchDto { };
+
+
             var HEARInput = _mapper.Map<InputHIRARentSearchDto>(inputRentSerchDto);
             var apiRes = await _rentRepo.MakePostJsonTypeRequest(POST_RENT,token, HEARInput);
             var res = _mapper.Map<OutputRentResultDto>(apiRes);

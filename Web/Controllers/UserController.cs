@@ -29,20 +29,7 @@ namespace Web.Controllers
             _userLoginValidator = userLoginValidator;
         }
 
-
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        public IActionResult RegistrateUser()
-        {
-            return View();
-        }
-
-
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegistrateUser([FromBody]UserRegistrationModel userRegModel)
         {
             var validationRes = await _userRegistrationModelValidator.ValidateAsync(userRegModel);
@@ -60,7 +47,6 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> LoginUser(UserLoginModel userLoginModel)
         {
             var valRes = await _userLoginValidator.ValidateAsync(userLoginModel);

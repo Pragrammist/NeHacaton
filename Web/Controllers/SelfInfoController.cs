@@ -19,19 +19,12 @@ namespace Web.Controllers
             _apiToken = apiToken;
             _cryptographer = cryptographer;
         }
-
-        [Authorize]
-        public IActionResult GetSelfInfo()
-        {
-            return View(); //all info
-        }
-
         [Authorize]
         public async Task<IActionResult> RentSelfInfo()
         {
             var res = await _selfInfoService.GetUserRentSelfInfo(await Token());
 
-            return PartialView(res);
+            return Json(res);
         }
 
         [Authorize]
@@ -39,11 +32,8 @@ namespace Web.Controllers
         {
             var res = await _selfInfoService.GetUserProfileSelfInfo(await Token());
 
-            return PartialView(res);
+            return Json(res);
         }
-
-
-
         async Task<string> Token()
         {
             var encryptPassword = User.Claims.First(t => t.ValueType == CLAIM_PASSWORD).Value;

@@ -35,7 +35,7 @@ namespace Tests
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
-            var inputDto = new InputHIRAInventoryDto {Search = "Элитные лыжи" };
+            var inputDto = new InputHIRAInventoryDto {Search = "ботинки" };
 
             var invent = await BaseApi.MakePostJsonTypeRequest
                 <OutputHIRAInventoriesResultDto, InputHIRAInventoryDto>(POST_INVENTORY_ITEMS, authToken.AccessToken, inputDto);
@@ -69,7 +69,7 @@ namespace Tests
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
-            var profile = await BaseApi.MakePostJsonTypeRequest<OutputHIRAProfileSelfInfoResultDto, InputHIRARentSearchDto>(POST_PROFILE, authToken.AccessToken, new InputHIRARentSearchDto {Search = "Ботинки" });
+            var profile = await BaseApi.MakePostJsonTypeRequest<OutputHIRAProfileSelfInfoResultDto, InputHIRARentSearchDto>(POST_PROFILE, authToken.AccessToken, new InputHIRARentSearchDto {});
 
             Assert.Pass("response:\n{0}", Serialize(profile));
         }
@@ -78,7 +78,7 @@ namespace Tests
         {
             var authToken = await AuthApi.Login(UserToLogin);
             
-            var data = await BaseApi.MakePostJsonTypeRequest<OutputHIRARentsResultDto, InputHIRARentSearchDto>(POST_RENT, authToken.AccessToken, new InputHIRARentSearchDto {Search = "ботинки"});
+            var data = await BaseApi.MakePostJsonTypeRequest<OutputHIRARentsResultDto, InputHIRARentSearchDto>(POST_RENT, authToken.AccessToken, new InputHIRARentSearchDto {Search = "очки" });
 
             Assert.Pass("res:\n{0}",Serialize(data));
         }
