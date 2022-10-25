@@ -57,8 +57,8 @@ namespace Web
                 name: "default",
                 pattern: "{controller=User}/{action=Login}/{id?}");
 
-            app.MapGet("/routes", (IEnumerable<EndpointDataSource> endpointSources) => string.Join("\n", endpointSources.SelectMany(source => source.Endpoints)));
             
+
             app.Run();
         }
     }
