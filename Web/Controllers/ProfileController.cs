@@ -33,10 +33,21 @@ namespace Web.Controllers
 
             return Json(res);
         }
+
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> City(string city)
+        {
+            var user = await _selfInfoService.ChangeCity(city, Login);
+            return Json(user);
+        }
+
+        string Login => User.FindFirstValue(ClaimsIdentity.DefaultNameClaimType) ?? throw new NullReferenceException("Cookies doesn't have login.");
+
         async Task<string> Token()
         {
             var encryptPassword = User.FindFirstValue(CLAIM_PASSWORD) ?? throw new NullReferenceException("Cookies doesn't have password.");
-            var login = User.FindFirstValue(ClaimsIdentity.DefaultNameClaimType) ?? throw new NullReferenceException("Cookies doesn't have login.");
+            var login = Login;
             var password = _cryptographer.Decrypt(encryptPassword);
             var token = await _apiToken.GetToken(password, login);
             return token;
