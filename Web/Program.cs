@@ -13,7 +13,7 @@ namespace Web
         {
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
-            builder.Services.AddCors();
+            builder.Services.AddCors(t => t.AddDefaultPolicy(b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
             builder.Services.AddControllers();
             
             builder.Services.AddHttpClient(GEOLOCATION_HTTPCLIENT_NAME, client =>
