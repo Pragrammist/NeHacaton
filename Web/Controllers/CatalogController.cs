@@ -8,7 +8,7 @@ using Web.Services;
 
 namespace Web.Controllers
 {
-    [EnableCors("_allowRentInHend")]
+    [DisableCors()]
     public class CatalogController : Controller
     {
         SaleService _saleService;
@@ -22,8 +22,8 @@ namespace Web.Controllers
         public async Task<IActionResult> Inventories([FromBody]InventorySearchModel? search = null)
         {
             var inputData = _mapper.Map<InputSearchInventoryDto>(search);
-            var invents = await _saleService.GetInventories(inputData).ToListAsync();
-            return Json(invents);
+            var inventories = await _saleService.GetInventories(inputData).ToListAsync();
+            return Json(inventories);
         }
     }
 }
