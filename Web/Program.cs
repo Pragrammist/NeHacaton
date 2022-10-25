@@ -30,7 +30,6 @@ namespace Web
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", geolocationApiKey);
             });
             builder.Services
-                .AddRouteAnalyzer()
                 .AddRentInHendApiServices()
                 .AddModelVlidators()
                 .AddNativeServices()
