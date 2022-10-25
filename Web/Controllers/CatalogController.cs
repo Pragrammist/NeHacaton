@@ -18,6 +18,7 @@ namespace Web.Controllers
             _mapper = mapper;
             _saleService = saleService;
         }
+        [EnableCors]
         [HttpPost]
         public async Task<IActionResult> Inventories([FromBody]InventorySearchModel? search = null)
         {
