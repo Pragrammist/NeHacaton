@@ -25,6 +25,7 @@ namespace Web
                 .AddRentInHendApiServices()
                 .AddModelVlidators()
                 .AddNativeServices()
+                .AddCors()
                 .AddApiRepositrories()
                 .AddDbContexts(config)
                 .ConfigAutoMapper()
@@ -48,7 +49,7 @@ namespace Web
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseCors(builder => builder.AllowAnyOrigin());
+            app.UseCors(options => options.AllowAnyOrigin());
 
             app.UseAuthentication();    
             app.UseAuthorization();
