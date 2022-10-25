@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Cors;
 
 namespace Web.Controllers
 {
-    [EnableCors("_allowRentInHend")]
+    [DisableCors()]
     public class ProfileController : Controller
     {
         SelfInfoService _selfInfoService;

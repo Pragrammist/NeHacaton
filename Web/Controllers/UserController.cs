@@ -12,7 +12,7 @@ using static Web.Constants.ClaimConstants;
 
 namespace Web.Controllers
 {
-    [EnableCors("_allowRentInHend")]
+    [DisableCors()]
     public class UserController : Controller
     {
         IValidator<UserRegistrationModel> _userRegistrationModelValidator;
