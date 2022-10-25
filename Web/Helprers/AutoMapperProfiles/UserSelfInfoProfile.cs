@@ -10,8 +10,8 @@ namespace Web.Helprers.AutoMapperProfiles
         public UserSelfInfoProfile()
         {
             CreateMap<ApiProfile.OutputHIRAPermissionSelfInfoDto, WebProfile.OutputPermissionSelfInfoDto>();
-            CreateMap<ApiProfile.OutputHIRAProfileSelfIonfoDto, WebProfile.OutputProfileSelfIonfoDto>();
-            CreateMap<ApiProfile.OutputHIRAProfileSelfInfoResultDto, WebProfile.OutputSelfInfoProfileResultDto>();
+            CreateMap<ApiProfile.OutputHIRAProfileSelfIonfoDto, WebProfile.OutputProfileDto>();
+            CreateMap<ApiProfile.OutputHIRAProfileSelfInfoResultDto, WebProfile.OutputProfileResultDto>();
         }
     }
 }

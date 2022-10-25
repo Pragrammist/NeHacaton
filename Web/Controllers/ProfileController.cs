@@ -5,6 +5,7 @@ using Web.Cryptographer;
 using static Web.Constants.ClaimConstants;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Cors;
+using Web.Dtos.UserSelfInfoDto.Profile;
 
 namespace Web.Controllers
 {
@@ -30,10 +31,12 @@ namespace Web.Controllers
         public async Task<IActionResult> Info()
         {
             var res = await _selfInfoService.GetUserProfile(await Token(), Login);
-
-
+            res.Array = MakeJustOneProfile(res);
             return Json(res);
         }
+        List<OutputProfileDto> MakeJustOneProfile(OutputProfileResultDto rent) => rent.Array.Take(1).ToList();
+
+
 
         [Authorize]
         [HttpPut]

@@ -4,7 +4,6 @@ namespace Web.Dtos.UserSelfInfoDto.Rent
 {
     public class OutputValueDto
     {
-        public int Id { get; set; }
         public string Period { get; set; } = null!;
         public string Value { get; set; } = null!;
         public string Morethen { get; set; } = null!;

@@ -13,24 +13,18 @@ namespace Web.Dtos.UserSelfInfoDto.Rent
         public int FineTime { get; set; }
         public int FineBroken { get; set; }
         public string? Comment { get; set; }
-        public int DepositId { get; set; }
         public int SumReal { get; set; }
         public int SumDiscount { get; set; }
-        public int HumanId { get; set; }
         public int OrderNumber { get; set; }
         public int OrderNumberText { get; set; }
         public int NeedCalcBreaking { get; set; }
         public int NeedCalcRentDelay { get; set; }
-        public int OpenPointId { get; set; }
-        public int ClosePointId { get; set; }
-        public int RentStateId { get; set; }
         public int SumRental { get; set; }
         public int SumProduct { get; set; }
         public int SumAdditionalService { get; set; }
         public int SumTotal { get; set; }
         public int SumDeposit { get; set; }
         public bool IsUnderstaffed { get; set; }
-        public int GoogleEventId { get; set; }
         public string Title { get; set; } = null!;
         public OutputRentStateDto RentState { get; set; } = null!;
         public List<OutputInventoryDto> Inventories { get; set; } = new List<OutputInventoryDto>();

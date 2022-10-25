@@ -28,7 +28,7 @@ namespace Web.Services
             _rentRepo = rentRepo;
             _userContext = userContext;
         }
-        public async Task<OutputRentResultDto> GetUserRent(string token, InputRentSearchDto? inputRentSerchDto = null)
+        public async Task<IEnumerable<OutputRentDto>> GetUserRent(string token, InputRentSearchDto? inputRentSerchDto = null)
         {
             inputRentSerchDto = inputRentSerchDto ?? new InputRentSearchDto { };
 
@@ -36,13 +36,13 @@ namespace Web.Services
             var HEARInput = _mapper.Map<InputHIRARentSearchDto>(inputRentSerchDto);
             var apiRes = await _rentRepo.MakePostJsonTypeRequest(POST_RENT,token, HEARInput);
             var res = _mapper.Map<OutputRentResultDto>(apiRes);
-            return res;
+            return res.Array;
         }
 
-        public async Task<OutputSelfInfoProfileResultDto> GetUserProfile(string token, string login)
+        public async Task<OutputProfileResultDto> GetUserProfile(string token, string login)
         {
             var selfInfoApiResult = await _profileRepo.MakePostJsonTypeRequest(POST_PROFILE, token);
-            var res = _mapper.Map<OutputSelfInfoProfileResultDto>(selfInfoApiResult);
+            var res = _mapper.Map<OutputProfileResultDto>(selfInfoApiResult);
             res.User = await GetUserDtoBy(login);
 
             return res;

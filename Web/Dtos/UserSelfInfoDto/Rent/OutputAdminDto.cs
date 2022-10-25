@@ -9,12 +9,9 @@ namespace Web.Dtos.UserSelfInfoDto.Rent
 {
     public class OutputAdminDto
     {
-        public int Id { get; set; }
-        public string Guid { get; set; } = null!;
         public string Surname { get; set; } = null!;
         public string Name { get; set; } = null!;
         public string? Patro { get; set; }
-        public int UserId { get; set; }
         public int Male { get; set; }
         public DateTime? Birthday { get; set; }
         public string ShortFio { get; set; } = null!;

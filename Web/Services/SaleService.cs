@@ -49,7 +49,7 @@ namespace Web.Services
             var res = _mapper.Map<OutputInventoriesResultDto>(apiResult);
             return res;
         }
-        //OutputInventoryDto
+
         public async IAsyncEnumerable<OutputInventoryDto> GetInventories(InputSearchInventoryDto? input = null)
         {
             var HIRAInput = _mapper.Map<InputHIRAInventoryDto>(input);

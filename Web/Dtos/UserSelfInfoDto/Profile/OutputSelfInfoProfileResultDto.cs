@@ -1,8 +1,8 @@
 ﻿namespace Web.Dtos.UserSelfInfoDto.Profile
 {
-    public class OutputSelfInfoProfileResultDto
+    public class OutputProfileResultDto
     {
-        public List<OutputProfileSelfIonfoDto> Array { get; set; } = new List<OutputProfileSelfIonfoDto>();
+        public List<OutputProfileDto> Array { get; set; } = new List<OutputProfileDto>();
 
         public OutputUserDto User { get; set; } = null!;
     }
