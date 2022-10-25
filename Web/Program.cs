@@ -48,6 +48,7 @@ namespace Web
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseCors(builder => builder.AllowAnyOrigin());
 
             app.UseAuthentication();    
             app.UseAuthorization();
@@ -57,7 +58,7 @@ namespace Web
                 pattern: "{controller=User}/{action=Login}/{id?}");
 
             app.MapGet("/routes", (IEnumerable<EndpointDataSource> endpointSources) => string.Join("\n", endpointSources.SelectMany(source => source.Endpoints)));
-            app.UseCors(builder => builder.AllowAnyOrigin());
+            
             app.Run();
         }
     }
