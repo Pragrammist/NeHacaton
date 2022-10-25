@@ -7,17 +7,17 @@ using Web.Services;
 
 namespace Web.Controllers
 {
-    public class SalesController : Controller
+    public class CatalogController : Controller
     {
         SaleService _saleService;
         IMapper _mapper;
-        public SalesController(SaleService saleService, IMapper mapper)
+        public CatalogController(SaleService saleService, IMapper mapper)
         {
             _mapper = mapper;
             _saleService = saleService;
         }
-        [HttpGet]
-        public async Task<IActionResult> GetInventories([FromBody]InventorySearchModel? search = null)
+        [HttpPost]
+        public async Task<IActionResult> Inventories([FromBody]InventorySearchModel? search = null)
         {
             var inputData = _mapper.Map<InputSearchInventoryDto>(search);
             var invents = await _saleService.GetInventories(inputData).ToListAsync();

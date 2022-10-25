@@ -30,7 +30,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegistrateUser([FromBody]UserRegistrationModel userRegModel)
+        public async Task<IActionResult> Register([FromBody]UserRegistrationModel userRegModel)
         {
             var validationRes = await _userRegistrationModelValidator.ValidateAsync(userRegModel);
 
@@ -47,7 +47,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LoginUser([FromBody]UserLoginModel userLoginModel)
+        public async Task<IActionResult> Login([FromBody]UserLoginModel userLoginModel)
         {
             var valRes = await _userLoginValidator.ValidateAsync(userLoginModel);
 

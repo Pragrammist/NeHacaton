@@ -7,27 +7,27 @@ using System.Security.Claims;
 
 namespace Web.Controllers
 {
-    public class SelfInfoController : Controller
+    public class ProfileController : Controller
     {
 
         SelfInfoService _selfInfoService;
         ApiTokenProvider _apiToken;
         ICryptographer _cryptographer;
-        public SelfInfoController(SelfInfoService selfInfoService, ApiTokenProvider apiToken, ICryptographer cryptographer)
+        public ProfileController(SelfInfoService selfInfoService, ApiTokenProvider apiToken, ICryptographer cryptographer)
         {
             _selfInfoService = selfInfoService;
             _apiToken = apiToken;
             _cryptographer = cryptographer;
         }
         [Authorize]
-        public async Task<IActionResult> RentSelfInfo()
+        public async Task<IActionResult> Rent()
         {
             var res = await _selfInfoService.GetUserRentSelfInfo(await Token());
 
             return Json(res);
         }
         [Authorize]
-        public async Task<IActionResult> ProfileSelfInfo()
+        public async Task<IActionResult> Info()
         {
             var res = await _selfInfoService.GetUserProfileSelfInfo(await Token());
 

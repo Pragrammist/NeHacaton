@@ -193,7 +193,7 @@ namespace Tests
         [Test]
         public async Task InventoriesSaleController()
         {
-            var contr = _serviceProvider.GetRequiredService<SalesController>();
+            var contr = _serviceProvider.GetRequiredService<CatalogController>();
 
             var res = (await contr.GetInventories(
                 new Web.Models.Inventory.
