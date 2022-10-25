@@ -25,7 +25,6 @@ namespace Web
                 .AddRentInHendApiServices()
                 .AddModelVlidators()
                 .AddNativeServices()
-                .AddCors()
                 .AddApiRepositrories()
                 .AddDbContexts(config)
                 .ConfigAutoMapper()
@@ -34,8 +33,9 @@ namespace Web
                     options.LoginPath = new PathString("/User/Login");
                     options.LogoutPath = new PathString("/User/Logout");
                 });
+            builder.Services.AddCors();
 
-            
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
