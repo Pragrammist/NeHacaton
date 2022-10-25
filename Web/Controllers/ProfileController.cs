@@ -35,8 +35,8 @@ namespace Web.Controllers
         }
         async Task<string> Token()
         {
-            var encryptPassword = User.Claims.First(t => t.ValueType == CLAIM_PASSWORD).Value;
-            var login = User.Claims.First(t => t.ValueType == ClaimsIdentity.DefaultNameClaimType).Value;
+            var encryptPassword = User.FindFirstValue(CLAIM_PASSWORD) ?? throw new NullReferenceException("Cookies doesn't have password.");
+            var login = User.FindFirstValue(ClaimsIdentity.DefaultNameClaimType) ?? throw new NullReferenceException("Cookies doesn't have login.");
             var password = _cryptographer.Decrypt(encryptPassword);
             var token = await _apiToken.GetToken(password, login);
             return token;
