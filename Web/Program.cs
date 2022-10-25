@@ -10,11 +10,16 @@ namespace Web
     {
         public static void Main(string[] args)
         {
+            var allowRentInHend = "_allowRentInHend";
+
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
             // Add services to the container.
             builder.Services.AddControllers().AddControllersAsServices();
-            builder.Services.AddCors();
+            builder.Services.AddCors(policy =>
+            {
+                policy.AddPolicy(allowRentInHend, policy => policy.AllowAnyOrigin());
+            });
             builder.Services.AddHttpClient(GEOLOCATION_HTTPCLIENT_NAME, client =>
             {
                 var geolocationApiKey = config.GetSection("Tokens")["GeolocationApi"];
@@ -50,7 +55,7 @@ namespace Web
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseCors(options => options.AllowAnyOrigin());
+            app.UseCors(allowRentInHend);
 
             app.UseAuthentication();    
             app.UseAuthorization();
