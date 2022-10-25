@@ -18,9 +18,7 @@ namespace Web
                 options.AddDefaultPolicy(
                 builder =>
                 {
-                    builder.AllowAnyOrigin();
-                    builder.AllowAnyHeader();
-                    builder.AllowAnyMethod();
+                    builder.AllowAnyOrigin().WithOrigins("http://localhost:8081").AllowAnyHeader().AllowAnyMethod();
                 });
             });
             builder.Services.AddControllers();
@@ -60,10 +58,12 @@ namespace Web
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseCors();
 
             app.UseAuthentication();    
             app.UseAuthorization();
+
+            app.UseCors(b => b.AllowAnyOrigin().WithOrigins("http://localhost:8081").AllowAnyHeader().AllowAnyMethod());
+
 
             app.UseEndpoints(endpoints =>
             {
