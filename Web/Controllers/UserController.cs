@@ -12,7 +12,7 @@ using static Web.Constants.ClaimConstants;
 
 namespace Web.Controllers
 {
-    [DisableCors()]
+    [EnableCors]
     public class UserController : Controller
     {
         IValidator<UserRegistrationModel> _userRegistrationModelValidator;

@@ -8,7 +8,7 @@ using Web.Services;
 
 namespace Web.Controllers
 {
-    [DisableCors()]
+    [EnableCors]
     public class CatalogController : Controller
     {
         SaleService _saleService;

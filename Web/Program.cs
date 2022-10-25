@@ -1,5 +1,6 @@
 using AspNetCore.RouteAnalyzer;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using Web.Helprers;
 using static Web.Constants.GeolocationConstants;
@@ -14,9 +15,16 @@ namespace Web
 
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
-            builder.Services.AddCors(policy =>
+            builder.Services.AddCors(options =>
             {
-                policy.AddPolicy(allowRentInHend, policy => policy.AllowAnyOrigin());
+                options.AddDefaultPolicy(
+                builder =>
+                {
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                    builder.AllowCredentials();
+                });
             });
             builder.Services.AddControllers();
             
@@ -55,7 +63,7 @@ namespace Web
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseCors(allowRentInHend);
+            app.UseCors();
 
             app.UseAuthentication();    
             app.UseAuthorization();
@@ -66,9 +74,6 @@ namespace Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
-
-
             app.Run();
         }
     }
