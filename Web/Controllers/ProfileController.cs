@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Cors;
 
 namespace Web.Controllers
 {
-    [EnableCors]
     public class ProfileController : Controller
     {
         SelfInfoService _selfInfoService;

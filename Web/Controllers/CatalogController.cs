@@ -8,7 +8,6 @@ using Web.Services;
 
 namespace Web.Controllers
 {
-    [EnableCors]
     public class CatalogController : Controller
     {
         SaleService _saleService;
@@ -18,7 +17,6 @@ namespace Web.Controllers
             _mapper = mapper;
             _saleService = saleService;
         }
-        [EnableCors]
         [HttpPost]
         public async Task<IActionResult> Inventories([FromBody]InventorySearchModel? search = null)
         {

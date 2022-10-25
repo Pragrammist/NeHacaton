@@ -1,9 +1,9 @@
-using AspNetCore.RouteAnalyzer;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using Web.Helprers;
 using static Web.Constants.GeolocationConstants;
+
+
 
 namespace Web
 {
@@ -13,14 +13,7 @@ namespace Web
         {
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
-            builder.Services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                builder =>
-                {
-                    builder.AllowAnyOrigin().WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
-                });
-            });
+            builder.Services.AddCors();
             builder.Services.AddControllers();
             
             builder.Services.AddHttpClient(GEOLOCATION_HTTPCLIENT_NAME, client =>
@@ -58,10 +51,12 @@ namespace Web
 
             app.UseRouting();
 
+            app.UseCors(b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
             app.UseAuthentication();    
             app.UseAuthorization();
 
-            app.UseCors(b => b.AllowAnyOrigin().WithOrigins("*").AllowAnyHeader().AllowAnyMethod());
+            
 
 
             app.UseEndpoints(endpoints =>
