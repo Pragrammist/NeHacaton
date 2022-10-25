@@ -22,14 +22,15 @@ namespace Web.Controllers
         [Authorize]
         public async Task<IActionResult> Rent()
         {
-            var res = await _selfInfoService.GetUserRentSelfInfo(await Token());
+            var res = await _selfInfoService.GetUserRent(await Token());
 
             return Json(res);
         }
         [Authorize]
         public async Task<IActionResult> Info()
         {
-            var res = await _selfInfoService.GetUserProfileSelfInfo(await Token());
+            var res = await _selfInfoService.GetUserProfile(await Token(), Login);
+
 
             return Json(res);
         }
@@ -52,5 +53,6 @@ namespace Web.Controllers
             var token = await _apiToken.GetToken(password, login);
             return token;
         }
+        
     }
 }

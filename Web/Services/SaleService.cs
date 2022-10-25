@@ -64,8 +64,6 @@ namespace Web.Services
                         yield return inventory;
                     }
                 }
-
-
             }
         }
 

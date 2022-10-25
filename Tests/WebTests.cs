@@ -98,7 +98,7 @@ namespace Tests
 
             var token = await GetRentInHendTokenForTesting(_authRentInHend);
 
-            var res = await profileServise.GetUserProfileSelfInfo(token);
+            var res = await profileServise.GetUserProfile(token);
 
             Assert.Pass("profile:\n{0}", Serialize(res));
         }
@@ -110,7 +110,7 @@ namespace Tests
 
             var token = await GetRentInHendTokenForTesting(_authRentInHend);
 
-            var res = await serv.GetUserRentSelfInfo(token);
+            var res = await serv.GetUserRent(token);
 
             Assert.Pass("rent:\n{0}", Serialize(res));
         }
@@ -121,7 +121,7 @@ namespace Tests
 
             var token = await GetRentInHendTokenForTesting(_authRentInHend);
 
-            var resService = await serv.GetUserRentSelfInfo(token);
+            var resService = await serv.GetUserRent(token);
 
             var res = resService.Array.FirstOrDefault();
 
