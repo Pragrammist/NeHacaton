@@ -14,6 +14,7 @@ namespace Web
             var config = builder.Configuration;
             // Add services to the container.
             builder.Services.AddControllers().AddControllersAsServices();
+            builder.Services.AddCors();
             builder.Services.AddHttpClient(GEOLOCATION_HTTPCLIENT_NAME, client =>
             {
                 var geolocationApiKey = config.GetSection("Tokens")["GeolocationApi"];
@@ -33,7 +34,7 @@ namespace Web
                     options.LoginPath = new PathString("/User/Login");
                     options.LogoutPath = new PathString("/User/Logout");
                 });
-            builder.Services.AddCors();
+            
 
 
             var app = builder.Build();
