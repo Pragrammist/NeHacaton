@@ -13,7 +13,6 @@ namespace Web.Dtos.Sales.Inventory
         public string? Website { get; set; }
         public string? Phone { get; set; }
         public string? PlaceText { get; set; }
-        public int PlaceId { get; set; }
     }
 
 

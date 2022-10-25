@@ -49,26 +49,49 @@ namespace Web.Services
             var res = _mapper.Map<OutputInventoriesResultDto>(apiResult);
             return res;
         }
-
-        public async IAsyncEnumerable<OutputInventoriesResultDto> GetInventories(InputSearchInventoryDto? input = null)
+        //OutputInventoryDto
+        public async IAsyncEnumerable<OutputInventoryDto> GetInventories(InputSearchInventoryDto? input = null)
         {
             var HIRAInput = _mapper.Map<InputHIRAInventoryDto>(input);
 
             await foreach (var u in _userContext.Users)
             {
-                if (await CheckUserCity(u, input?.Lat, input?.Lon))
-                    continue;
+                var result = await CheckUserAndGetOutputInventoriesResult(u, input, HIRAInput);
+                if(result != null)
+                {
+                    foreach (var inventory in result.Array)
+                    {
+                        yield return inventory;
+                    }
+                }
 
-                var token = await GetToken(u);
-                var res = await GetOutputInventoriesResult(input, HIRAInput, token);
-                if (res != null)
-                    yield return res;   
+
             }
         }
 
 
 
         #region help methods for GetInventories
+        async Task<OutputInventoriesResultDto?> CheckUserAndGetOutputInventoriesResult(User user, InputSearchInventoryDto? input, InputHIRAInventoryDto HIRAInput)
+        {
+            if (!await CheckUserCity(user, input?.Lat, input?.Lon))
+                return null;
+
+            var token = await GetToken(user);
+            var res = await GetOutputInventoriesResult(input, HIRAInput, token);
+            return res;
+        }
+
+
+        IEnumerable<OutputInventoryDto> OutputInventoryArray(OutputInventoriesResultDto inputResult)
+        {
+            foreach (var inventory in inputResult.Array)
+            {
+                yield return inventory;
+            }
+        }
+
+
         async Task<OutputInventoriesResultDto?> GetOutputInventoriesResult(InputSearchInventoryDto? input, InputHIRAInventoryDto? HIRAInput, string token)
         {
             var HIRAInventoriesResult = await _inventoryRepo.MakePostJsonTypeRequest(POST_INVENTORY_ITEMS, token, HIRAInput);
@@ -85,7 +108,7 @@ namespace Web.Services
 
         void SelectInventoriesByTags(string[]? tags, OutputInventoriesResultDto inventories)
         {
-            if (tags != null)
+            if (tags != null && tags.Length == 0)
                 inventories.Array = _searcher.TagsIsContained(tags, inventories.Array).ToList();
         }
 

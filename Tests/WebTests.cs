@@ -50,7 +50,7 @@ namespace Tests
 
             var controller = _serviceProvider.GetRequiredService<UserController>();
 
-            var res = await controller.RegistrateUser(user);
+            var res = await controller.Register(user);
 
             var jsonResult = res.As<JsonResult>();
 
@@ -64,7 +64,7 @@ namespace Tests
 
             var user = GetLoginUserFromJsonFile<UserLoginModel>();
 
-            var res = await controller.LoginUser(user);
+            var res = await controller.Login(user);
 
             var jsonRes = res.As<JsonResult>();
 
@@ -195,7 +195,7 @@ namespace Tests
         {
             var contr = _serviceProvider.GetRequiredService<CatalogController>();
 
-            var res = (await contr.GetInventories(
+            var res = (await contr.Inventories(
                 new Web.Models.Inventory.
                 InventorySearchModel { Search = null, Tags = new string[] {"лыжи" } }))
                 .As<JsonResult>();

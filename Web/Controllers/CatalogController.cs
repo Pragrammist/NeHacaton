@@ -21,7 +21,7 @@ namespace Web.Controllers
         public async Task<IActionResult> Inventories([FromBody]InventorySearchModel? search = null)
         {
             var inputData = _mapper.Map<InputSearchInventoryDto>(search);
-            var inventories = await _saleService.GetInventories(inputData).ToListAsync();
+            var inventories = await _saleService.GetInventories(inputData).ToArrayAsync();
             return Json(inventories);
         }
     }

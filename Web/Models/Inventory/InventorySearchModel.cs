@@ -7,7 +7,7 @@ namespace Web.Models.Inventory
     {
         public string? Search { get; set; }
 
-        public string[]? Tags { get; set; }
+        public string[]? Tags { get; set; } = null;
 
         public double? Lat { get; set; }
 

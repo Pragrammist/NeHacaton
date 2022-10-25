@@ -4,20 +4,15 @@ namespace Web.Dtos.Sales.Inventory
 {
     public class OutputInventoryDto
     {
-        public int Id { get; set; }
         public DateTime UpdatedAt { get; set; }
         public string Title { get; set; } = null!;
         public string? Description { get; set; }
-        public int StateId { get; set; }
-        public int PointId { get; set; }
         public string? Artule { get; set; }
-        public int CategoryResourceId { get; set; }
         public int RentNumber { get; set; }
         public int Hidden { get; set; }
         public int Another { get; set; }
         public int AmountRentSum { get; set; }
         public string? AmountRentTime { get; set; }
-        public int ParentId { get; set; }
         public int ChildrenCount { get; set; }
         public int AmountRentCount { get; set; }
         public int ExpenseSum { get; set; }
