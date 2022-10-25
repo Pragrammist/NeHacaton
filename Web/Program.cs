@@ -14,12 +14,12 @@ namespace Web
 
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
-            // Add services to the container.
-            builder.Services.AddControllers().AddControllersAsServices();
             builder.Services.AddCors(policy =>
             {
                 policy.AddPolicy(allowRentInHend, policy => policy.AllowAnyOrigin());
             });
+            builder.Services.AddControllers();
+            
             builder.Services.AddHttpClient(GEOLOCATION_HTTPCLIENT_NAME, client =>
             {
                 var geolocationApiKey = config.GetSection("Tokens")["GeolocationApi"];
