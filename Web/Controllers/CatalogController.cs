@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Web.Dtos.Sales.Inventory;
 using Web.Models.Inventory;
@@ -7,6 +8,7 @@ using Web.Services;
 
 namespace Web.Controllers
 {
+    [EnableCors("_allowRentInHend")]
     public class CatalogController : Controller
     {
         SaleService _saleService;

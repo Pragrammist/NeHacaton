@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Web.Dtos;
@@ -11,6 +12,7 @@ using static Web.Constants.ClaimConstants;
 
 namespace Web.Controllers
 {
+    [EnableCors("_allowRentInHend")]
     public class UserController : Controller
     {
         IValidator<UserRegistrationModel> _userRegistrationModelValidator;

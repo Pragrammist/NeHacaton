@@ -4,9 +4,11 @@ using Web.Services;
 using Web.Cryptographer;
 using static Web.Constants.ClaimConstants;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Cors;
 
 namespace Web.Controllers
 {
+    [EnableCors("_allowRentInHend")]
     public class ProfileController : Controller
     {
         SelfInfoService _selfInfoService;
