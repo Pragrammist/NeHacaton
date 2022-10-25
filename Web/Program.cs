@@ -34,7 +34,7 @@ namespace Web
                     options.LogoutPath = new PathString("/User/Logout");
                 });
 
-           
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -57,8 +57,7 @@ namespace Web
                 pattern: "{controller=User}/{action=Login}/{id?}");
 
             app.MapGet("/routes", (IEnumerable<EndpointDataSource> endpointSources) => string.Join("\n", endpointSources.SelectMany(source => source.Endpoints)));
-
-
+            app.UseCors(builder => builder.AllowAnyOrigin());
             app.Run();
         }
     }

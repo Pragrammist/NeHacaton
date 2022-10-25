@@ -9,7 +9,6 @@ namespace Web.Controllers
 {
     public class ProfileController : Controller
     {
-
         SelfInfoService _selfInfoService;
         ApiTokenProvider _apiToken;
         ICryptographer _cryptographer;
