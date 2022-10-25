@@ -11,8 +11,6 @@ namespace Web
     {
         public static void Main(string[] args)
         {
-            var allowRentInHend = "_allowRentInHend";
-
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
             builder.Services.AddCors(options =>
@@ -23,7 +21,6 @@ namespace Web
                     builder.AllowAnyOrigin();
                     builder.AllowAnyHeader();
                     builder.AllowAnyMethod();
-                    builder.AllowCredentials();
                 });
             });
             builder.Services.AddControllers();
