@@ -31,9 +31,9 @@ namespace Web.Services
         }
         public async Task<IEnumerable<OutputRentDto>> GetUserRent(string token, InputRentSearchDto? inputRentSerchDto = null)
         {
-            inputRentSerchDto = inputRentSerchDto ?? new InputRentSearchDto { };
-
-
+            inputRentSerchDto = inputRentSerchDto ?? new InputRentSearchDto { }; // если в апи засунуть null объект то будет искоючение
+            
+            
             var HEARInput = _mapper.Map<InputHIRARentSearchDto>(inputRentSerchDto);
             var apiRes = await _rentRepo.MakePostJsonTypeRequest(POST_RENT,token, HEARInput);
             var res = _mapper.Map<OutputRentResultDto>(apiRes);
@@ -65,5 +65,6 @@ namespace Web.Services
             return _mapper.Map<OutputUserDto>(userEnt);
         }
         async Task<User> FindUserByLogin(string login) => await _userContext.Users.FirstAsync(u => u.Email == login || u.Telephone == login || u.Login == login);
+        //TODO Ext method for dbset
     }
 }
