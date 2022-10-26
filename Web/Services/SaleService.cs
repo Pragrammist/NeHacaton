@@ -56,11 +56,13 @@ namespace Web.Services
 
         async Task<IEnumerable<User>> GetUsersFromCity(InputSearchInventoryDto? input) //TODO RENAME User ent
         {
-            string? city = input?.City ?? await GetUserCity(input?.Lat, input?.Lon); 
-            return _userContext.Users.Where(u => city == null || u.City == city);
+            string? city = input?.City ?? await GetUserCity(input?.Lat, input?.Lon);
+            return _userContext.Users.Where(u => city == null || u.City.ToLower() == city.ToLower());
         }
         async Task<string?> GetUserCity(double? lat, double? lon)
         {
+            //TODO In cookies write lat and lon from client and get city in midleware
+            //TODO Caching
             if (lat == null || lon == null)
                 return null;
             return (await _geolocationRepo.GetUserLocationByLatLon(lat.Value, lon.Value)).City;
