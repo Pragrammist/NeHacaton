@@ -95,10 +95,10 @@ namespace Tests
         public async Task ProfileSelfInfoService()
         {
             var profileServise = _serviceProvider.GetRequiredService<SelfInfoService>();
-
+            var userLogin = GetLoginUserFromJsonFile<UserLoginModel>();
             var token = await GetRentInHendTokenForTesting(_authRentInHend);
 
-            var res = await profileServise.GetUserProfile(token);
+            var res = await profileServise.GetUserProfile(token, userLogin.Login);
 
             Assert.Pass("profile:\n{0}", Serialize(res));
         }
@@ -123,7 +123,7 @@ namespace Tests
 
             var resService = await serv.GetUserRent(token);
 
-            var res = resService.Array.FirstOrDefault();
+            var res = resService.FirstOrDefault();
 
             Assert.Pass("rent:\n{0}", Serialize(res));
         }

@@ -50,7 +50,7 @@ namespace Web.Services
             return res;
         }
 
-        public async IAsyncEnumerable<OutputInventoryDto> GetInventories(InputSearchInventoryDto? input = null)
+        public async IAsyncEnumerable<Dtos.Sales.Inventory.OutputInventoryDto> GetInventories(InputSearchInventoryDto? input = null)
         {
             var HIRAInput = _mapper.Map<InputHIRAInventoryDto>(input);
 
@@ -81,7 +81,7 @@ namespace Web.Services
         }
 
 
-        IEnumerable<OutputInventoryDto> OutputInventoryArray(OutputInventoriesResultDto inputResult)
+        IEnumerable<Dtos.Sales.Inventory.OutputInventoryDto> OutputInventoryArray(OutputInventoriesResultDto inputResult)
         {
             foreach (var inventory in inputResult.Array)
             {

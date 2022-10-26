@@ -35,7 +35,7 @@ namespace Tests
         {
             var authToken = await AuthApi.Login(UserToLogin);
 
-            var inputDto = new InputHIRAInventoryDto {Search = "ботинки" };
+            var inputDto = new InputHIRAInventoryDto {};
 
             var invent = await BaseApi.MakePostJsonTypeRequest
                 <OutputHIRAInventoriesResultDto, InputHIRAInventoryDto>(POST_INVENTORY_ITEMS, authToken.AccessToken, inputDto);
