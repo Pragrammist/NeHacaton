@@ -3,10 +3,11 @@ using Web.Dtos.Sales.Inventory;
 
 namespace Web.Search.Inventory
 {
-
+    //для поиска по категориям
     public class InventoryTagSearcherImpl : InventoryTagSearcher
     {
-        bool PrivateTagsAreContained(string[]? tags, string? text) // that method created to use inner class
+        bool PrivateTagsAreContained(string[]? tags, string? text) 
+        // чтобы избежать в будущем проблемы этот код вынесен в прайват, т.к. публичный метод и прайват могут изменяться по-разному
         {
             if (tags != null && text == null)
                 return false;
@@ -23,7 +24,11 @@ namespace Web.Search.Inventory
         {
             return PrivateTagsAreContained(tags, text);
         }
-
+        //Вообще по идеи здесь должно использоваться апи, но т.к. в апи нет категорий, 
+        //то вся надежда на то что юзер напишет теги для категорий в описании
+        // и что ключевые слова будут содержаться в свойствах инвенторя
+        // TODO попростиь людей допилить апи, или спросить как это работает
+        // а так это временная реализация
         public IEnumerable<OutputInventoryDto> SelectInventoriesByTags(string[]? tags, IEnumerable<OutputInventoryDto> inventories) => 
             inventories.Where(i => PrivateTagsAreContained(tags, i.Description)
                 || PrivateTagsAreContained(tags, i.Title)
