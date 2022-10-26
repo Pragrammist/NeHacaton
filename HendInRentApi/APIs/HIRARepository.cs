@@ -8,10 +8,10 @@ namespace HendInRentApi
 {
 
     /// <summary>
-    /// HIRA - Hend In Rent Api. So it repository for api. you could get token from auth class or interface.
+    /// HIRA - пристаквка означает что тип связан с работай апи
     /// </summary>
-    /// <typeparam name="TResult">serializable type as type of result, that you read from body request</typeparam>
-    /// <typeparam name="TArg">serializable type that you use when write arg in body request as input arg for api</typeparam>
+    /// <typeparam name="TResult"></typeparam>
+    /// <typeparam name="TArg"></typeparam>
     public interface HIRARepository<TResult, TArg>
     {
         Task<TResult> MakePostJsonTypeRequest(string relativePath, string token, TArg? arg);
