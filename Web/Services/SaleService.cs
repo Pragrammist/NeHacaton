@@ -38,10 +38,10 @@ namespace Web.Services
             _geolocationRepo = geolocationRepo;
         }
 
-
+         //TODO Caching
         public async IAsyncEnumerable<OutputInventoryDto> GetInventories(InputSearchInventoryDto? input = null)
         {
-            foreach (var user in await GetUsersFromCity(input))
+            foreach (var user in await GetUsersFromCity(input)) // юзеры с дб
             {
                 foreach (var inventory in await GetOutputInventories(input, user))
                 {
@@ -53,7 +53,7 @@ namespace Web.Services
 
 
         #region help methods for GetInventories
-
+        
         async Task<IEnumerable<User>> GetUsersFromCity(InputSearchInventoryDto? input) //TODO RENAME User ent
         {
             string? city = input?.City ?? await GetUserCity(input?.Lat, input?.Lon);
@@ -62,17 +62,17 @@ namespace Web.Services
         async Task<string?> GetUserCity(double? lat, double? lon)
         {
             //TODO In cookies write lat and lon from client and get city in midleware
-            //TODO Caching
             if (lat == null || lon == null)
                 return null;
             return (await _geolocationRepo.GetUserLocationByLatLon(lat.Value, lon.Value)).City;
         }
-        async Task<string> GetToken(User user)
+        //TODO GetToken token from incrypted pass in service
+        async Task<string> GetToken(User user) // юзер с дб
         {
-            var encrpyptedPass = user.Password;
+            var encrpyptedPass = user.Password; 
             var p = _cryptographer.Decrypt(encrpyptedPass);
             var l = user.Login;
-            var token = await _apiTokenProvider.GetToken(p, l);
+            var token = await _apiTokenProvider.GetToken(p, l); //токен береться из AuthApi по логину и паролю
             return token;
         }
         async Task<IEnumerable<OutputInventoryDto>> GetOutputInventories(InputSearchInventoryDto? input, User user)

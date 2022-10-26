@@ -27,17 +27,17 @@ namespace Web.Helprers
             cfg.AddProfile<UserSelfInfoProfile>();
             cfg.AddProfile<RentSelfInfoProfile>();
             cfg.AddProfile<InventoryProfile>();
-            cfg.CreateMap<UserRegistrationModel, InputUserRegistrationDto>(); //model is validated, registration dto isn't.
-            //It's just to pass UserService Reg method
+            cfg.CreateMap<UserRegistrationModel, InputUserRegistrationDto>(); 
 
 
-            cfg.CreateMap<InputUserRegistrationDto, InputHIRALoginUserDto>();  //why is reg becoming login?
-            //when users registrate here they login in RentInHend.
+            cfg.CreateMap<InputUserRegistrationDto, InputHIRALoginUserDto>();  
+            //почему регистрация превращается, в логин. Первый объект для регистрации у нас
+            //второй для того чтобы авторизоваться в Rent In Hand
 
-            //token from api to db token
-
-            cfg.CreateMap<InputUserRegistrationDto, User>().ForMember(t => t.Password, cfg => cfg.Ignore());
-            //from dto model in UserService to user entity
+            
+            cfg.CreateMap<InputUserRegistrationDto, User>().ForMember(t => t.Password, cfg => cfg.Ignore()); 
+            //т.к. пароль хешируется, то он игнорирутеся здесь
+            
 
             cfg.CreateMap<UserLoginModel, InputLoginUserDto>();
 
