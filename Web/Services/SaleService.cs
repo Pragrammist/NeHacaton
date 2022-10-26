@@ -48,6 +48,8 @@ namespace Web.Services
                 foreach (var inventory in inventories) 
                  // я бы с радостью как-то убрал бы этот цикл в метод
                  // но для того, чтобы сделать вывод с помщью yield return, нужна эта вложенность
+                 // поэтому все тело перенесено в FilerByCityAndGetOutputInventories
+                 // чтобы код более или менее чистым был
                 {
                     yield return inventory;
                 }
