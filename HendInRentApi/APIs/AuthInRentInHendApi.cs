@@ -2,6 +2,7 @@
 using static HendInRentApi.RentInHendApiConstants;
 using static HendInRentApi.HttpStaticMethod;
 
+// далее лучше читать BaseRepo
 namespace HendInRentApi
 {
     public class AuthRentInHendApi : BaseMethodsApi, HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto>
