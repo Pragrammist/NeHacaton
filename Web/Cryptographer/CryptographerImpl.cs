@@ -3,6 +3,7 @@ using System.Text;
 
 namespace Web.Cryptographer
 {
+    //Код взят из инета, поэтому не знаю как это работает
     public class CryptographerImpl : ICryptographer
     {
         readonly string _key;
