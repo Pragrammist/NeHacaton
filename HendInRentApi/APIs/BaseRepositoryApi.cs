@@ -1,13 +1,15 @@
 ﻿using static HendInRentApi.RentInHendApiConstants;
 using static HendInRentApi.HttpStaticMethod;
 using Newtonsoft.Json;
-
+// далее читать GenericRepo
 namespace HendInRentApi
 {
-    public class BaseMethodsApi
+    public class BaseMethodsApi // этот класс нужен чтобы инкапсулировать логику отправки запросов, 
+    // который используется в GenericRepo
     {
         protected async Task<TResult> MakeJsonTypeRequest<TResult, TArg>(string relativePath, TArg arg,
            Func<string, TArg, JsonSerializerSettings?,CancellationToken , Task<HttpResponseMessage>> AsyncMethod)
+            // здесь используется также операция отправки запроса, которая передается в аргументы, чтобы меньше писать код
         {
             var path = API_URL + relativePath;
 
