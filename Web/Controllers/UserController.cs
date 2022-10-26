@@ -2,13 +2,14 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Cors;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Web.Dtos;
 using Web.Models;
 using Web.Services;
 using static Web.Constants.ClaimConstants;
+using System.ComponentModel.DataAnnotations;
 
 namespace Web.Controllers
 {
@@ -34,9 +35,9 @@ namespace Web.Controllers
         public async Task<IActionResult> Register([FromBody]UserRegistrationModel userRegModel)
         {
             var validationRes = await _userRegistrationModelValidator.ValidateAsync(userRegModel);
-
-            if (!validationRes.IsValid) //todo make normal val message
-                return /*Json(validationRes.Errors);*/ BadRequest("Валидация не пройдена");
+            
+            if (!validationRes.IsValid)
+                return GetValidationStatusCode(validationRes);
 
             var inputUser = _mapper.Map<InputUserRegistrationDto>(userRegModel);
 
@@ -45,6 +46,18 @@ namespace Web.Controllers
             await SignInAsync(user);
 
             return Json(user);
+        }
+
+        IActionResult GetValidationStatusCode(FluentValidation.Results.ValidationResult validationRes)
+        {
+            if (validationRes.Errors.Any(u => u.ErrorCode == "404"))
+            {
+                return NotFound();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]

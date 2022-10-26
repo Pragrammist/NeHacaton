@@ -1,5 +1,6 @@
 ﻿using DataBase;
 using FluentValidation;
+using FluentValidation.Results;
 using HendInRentApi;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,13 +15,13 @@ namespace Web.Models.ModelValidators
             var notRegistratedValidator = new UserIsNotRegistratedInMarketplace(userContext);
             RuleFor(u => u).NotNull().ChildRules(validator => 
             {
-                validator.RuleFor(t => t.Password).NotNull().NotEmpty().WithErrorCode("422").WithMessage("cannot be null"); 
-                validator.RuleFor(t => t.Login).NotNull().NotEmpty().WithErrorCode("422").WithMessage("cannot be null");
-                validator.RuleFor(t => t.Lat).InclusiveBetween(-180, 180);
-                validator.RuleFor(t => t.Lon).InclusiveBetween(-180, 180);
-                validator.RuleFor(t => t.Email).NotNull().NotEmpty().WithErrorCode("422").WithMessage("cannot be null");
-                validator.RuleFor(t => t.Telephone).NotNull().NotEmpty().WithErrorCode("422").WithMessage("cannot be null");
-            }).WithMessage("user cannot be null").WithName("user").WithErrorCode("422");
+                validator.RuleFor(t => t.Password).NotNull().NotEmpty().WithErrorCode("404").WithMessage("cannot be null"); 
+                validator.RuleFor(t => t.Login).NotNull().NotEmpty().WithErrorCode("404").WithMessage("cannot be null");
+                validator.RuleFor(t => t.Lat).InclusiveBetween(-180, 180).WithErrorCode("404");
+                validator.RuleFor(t => t.Lon).InclusiveBetween(-180, 180).WithErrorCode("404");
+                validator.RuleFor(t => t.Email).NotNull().NotEmpty().WithErrorCode("404").WithMessage("cannot be null");
+                validator.RuleFor(t => t.Telephone).NotNull().NotEmpty().WithErrorCode("404").WithMessage("cannot be null");
+            }).WithMessage("user cannot be null").WithName("user").WithErrorCode("404");
 
 
             RuleFor(u => u)
@@ -58,15 +59,18 @@ namespace Web.Models.ModelValidators
                 var loginMessage = await CheckLogin(model);
 
                 if (!string.IsNullOrEmpty(emailMessage))
-                    context.AddFailure(model.Email, emailMessage);
+                    context.AddFailure(GetFailure(nameof(model.Email), emailMessage, "404"));
 
                 if (!string.IsNullOrEmpty(telephoneMessage))
-                    context.AddFailure(model.Telephone, telephoneMessage);
+                    context.AddFailure(GetFailure(nameof(model.Telephone), telephoneMessage, "404"));
 
                 if (!string.IsNullOrEmpty(loginMessage))
-                    context.AddFailure(model.Login, loginMessage);
+                    context.AddFailure(GetFailure(nameof(model.Login), loginMessage, "404"));
 
             }
+
+            ValidationFailure GetFailure(string propName, string message, string code) 
+                => new ValidationFailure {PropertyName = propName, ErrorMessage = message, ErrorCode = code };
 
             #region field checks
             async Task<string> CheckField(string password, string login)
@@ -113,22 +117,26 @@ namespace Web.Models.ModelValidators
                 var loginNotExists = await LoginNotExists(model);
 
                 if (!loginNotExists)
-                    context.AddFailure(model.Login, "login already exists");
+                    context.AddFailure(GetFailure(nameof(model.Login), "login already exists", "400"));
 
                 var emailNotExists = await EmailNotExists(model);
 
                 if (!emailNotExists)
-                    context.AddFailure(model.Email, "email already exists");
+                    context.AddFailure(GetFailure(nameof(model.Email), "email already exists", "400"));
 
                 var telephoneNotExists = await TelephoneNotExists(model);
 
                 if (!telephoneNotExists)
-                    context.AddFailure(model.Telephone, "telephone already exists");
+                    context.AddFailure(GetFailure(nameof(model.Telephone), "telephone already exists", "400"));
             }
 
 
 
             #region existing fields checking
+
+            ValidationFailure GetFailure(string propName, string message, string code)
+                => new ValidationFailure { PropertyName = propName, ErrorMessage = message, ErrorCode = code };
+
             async Task<bool> EmailNotExists(UserRegistrationModel model)
             {
                 var user = await _userContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);

@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Web.Dtos;
 using Web.Geolocation;
 using Web.Cryptographer;
+using HendInRentApi.Dto.SelfInfo.Profile;
+using HendInRentApi;
+using static HendInRentApi.RentInHendApiConstants;
 
 namespace Web.Services
 {
@@ -14,16 +17,22 @@ namespace Web.Services
         readonly UserContext _userContext;
         readonly ICryptographer _passwordCryptographer;
         readonly GeolocationRepository _geolocation;
+        readonly HIRARepository<OutputHIRAProfileSelfInfoResultDto> _profileRepo;
+        readonly ApiTokenProvider _tokenProvider;
         public UserService(
             IMapper mapper, 
             UserContext userContext, 
             ICryptographer passwordCryptographer, 
-            GeolocationRepository geolocation)
+            GeolocationRepository geolocation,
+            HIRARepository<OutputHIRAProfileSelfInfoResultDto> profileRepo,
+            ApiTokenProvider tokenProvider)
         {
             _geolocation = geolocation;
             _mapper = mapper;
             _userContext = userContext;
             _passwordCryptographer = passwordCryptographer;
+            _profileRepo = profileRepo;
+            _tokenProvider = tokenProvider;
         }
         /// <summary>
         /// //regUser must be already validate
@@ -32,17 +41,23 @@ namespace Web.Services
         /// <returns></returns>
         public async Task<OutputUserDto> RegistrateUser(InputUserRegistrationDto inputUser)
         {
-            var user = await CreateUserEntity(inputUser);
+            var user = await CreateUserEntity(inputUser); //todo someservice maybe
 
             _userContext.Add(user);
 
             await _userContext.SaveChangesAsync();
 
-            var outPutUser = _mapper.Map<OutputUserDto>(user);
+            var outputUser = await GetUserDto(user, inputUser.Password, inputUser.Login);
 
-            return outPutUser;
+            return outputUser;
         }
 
+        async Task<OutputUserDto> GetUserDto(User user, string password, string login)
+        {
+            var outPutUser = _mapper.Map<OutputUserDto>(user);
+            outPutUser.Fio = await GetFio(password, login);
+            return outPutUser;
+        }
 
 
         #region help methods for reg
@@ -63,6 +78,14 @@ namespace Web.Services
             return (await _geolocation.GetUserLocationByLatLon(user.Lat, user.Lon)).City;
         }
 
+        async Task<string> GetFio(string password, string login)
+        {
+            var token = await _tokenProvider.GetToken(password, login);
+
+            var profile = (await _profileRepo.MakePostJsonTypeRequest(POST_PROFILE, token)).Array.First();
+
+            return profile.Fio;
+        }
         #endregion
 
 
@@ -75,9 +98,9 @@ namespace Web.Services
                 u.Telephone == inputUserLoginDto.Login
             );
 
-            var outPutUser = _mapper.Map<OutputUserDto>(user);
+            var outputUser = await GetUserDto(user, inputUserLoginDto.Password, inputUserLoginDto.Login);
 
-            return outPutUser;
+            return outputUser;
         }
     }
 }

@@ -45,6 +45,7 @@ namespace Web.Services
             var selfInfoApiResult = await _profileRepo.MakePostJsonTypeRequest(POST_PROFILE, token);
             var res = _mapper.Map<OutputProfileResultDto>(selfInfoApiResult);
             res.User = await GetUserDtoBy(login);
+            res.User.Fio = res.Array.First().Fio;
 
             return res;
         }
