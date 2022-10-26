@@ -7,9 +7,13 @@ namespace Web.Geolocation
 {
     public class GeolocationRepository
     {
+        //todo interface
         string GetCityFromJson(JObject res)
         {
-            return res["suggestions"][0]["data"]["city"].ToString();
+            return res["suggestions"][0]["data"]["city"].ToString(); 
+            // апи возращает много чего и чтобы не делать кучу объектов, чтобы получить город используется linq
+            // поэтому это лучше не трогать, и это вынесено в отдельный метод
+            // работает на честном слове
         }
 
         IHttpClientFactory _clientFactory;
