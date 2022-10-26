@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using static System.Net.Mime.MediaTypeNames;
-
+// далее лучше апи начать читать /HendInRentApi/APIs/AuthInRentInHendApi.cs
 namespace HendInRentApi
 {
     public static class HttpStaticMethod
