@@ -35,8 +35,8 @@ namespace Web.Controllers
         {
             var validationRes = await _userRegistrationModelValidator.ValidateAsync(userRegModel);
 
-            if (!validationRes.IsValid)
-                return Json(validationRes.Errors);
+            if (!validationRes.IsValid) //todo make normal val message
+                return /*Json(validationRes.Errors);*/ BadRequest("Валидация не пройдена");
 
             var inputUser = _mapper.Map<InputUserRegistrationDto>(userRegModel);
 
@@ -53,7 +53,7 @@ namespace Web.Controllers
             var valRes = await _userLoginValidator.ValidateAsync(userLoginModel);
 
             if (!valRes.IsValid)
-                return Json(valRes.Errors);
+                return NotFound("Такого пользователя нет");
 
             var inputUser = _mapper.Map<InputLoginUserDto>(userLoginModel);
 
