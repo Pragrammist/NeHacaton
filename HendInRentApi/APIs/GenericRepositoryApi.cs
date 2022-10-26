@@ -1,5 +1,6 @@
 ﻿namespace HendInRentApi
 {
+     // далее интерфесы лучше читать
      // запросы с телом
     public class GenericRepositoryApi<TResult, TArg> : BaseMethodsApi, HIRARepository<TResult, TArg>
     {
