@@ -8,6 +8,7 @@ using Web.Search.Inventory;
 using HendInRentApi.Dto.Inventory;
 using DataBase.Entities;
 using Web.Geolocation;
+using System.Linq;
 
 namespace Web.Services
 {
@@ -40,16 +41,9 @@ namespace Web.Services
 
         public async IAsyncEnumerable<OutputInventoryDto> GetInventories(InputSearchInventoryDto? input = null)
         {
-            var HIRAInput = _mapper.Map<InputHIRAInventoryDto>(input);
-
-            await foreach (var u in _userContext.Users)
+            foreach (var user in await GetUsersFromCity(input))
             {
-                var inventories = await FilerByCityAndGetOutputInventories(u, input, HIRAInput);
-                foreach (var inventory in inventories) 
-                 // я бы с радостью как-то убрал бы этот цикл в метод
-                 // но для того, чтобы сделать вывод с помщью yield return, нужна эта вложенность
-                 // поэтому все тело перенесено в FilerByCityAndGetOutputInventories
-                 // чтобы код более или менее чистым был
+                foreach (var inventory in await GetOutputInventories(input, user))
                 {
                     yield return inventory;
                 }
@@ -59,44 +53,18 @@ namespace Web.Services
 
 
         #region help methods for GetInventories
-        // метод просто переносит логику из цикла foreach в GetInventories,
-        async Task<IEnumerable<OutputInventoryDto>> FilerByCityAndGetOutputInventories(User user, InputSearchInventoryDto? input, InputHIRAInventoryDto HIRAInput)
-        {
-            if (!await FilterByCity(user, input?.Lat, input?.Lon))
-                return new OutputInventoryDto[] { }; // выводиться пустой массив а не null, чтобы не сломать foreach
 
-            var token = await GetToken(user);
-            var res = await GetOutputInventories(input, HIRAInput, token);
-            return res;
-        }
-
-        async Task<IEnumerable<OutputInventoryDto>> GetOutputInventories(InputSearchInventoryDto? input, InputHIRAInventoryDto? HIRAInput, string token)
+        async Task<IEnumerable<User>> GetUsersFromCity(InputSearchInventoryDto? input) //TODO RENAME User ent
         {
-            var HIRAInventoriesResult = await _inventoryRepo.MakePostJsonTypeRequest(POST_INVENTORY_ITEMS, token, HIRAInput); // запрос и ответ от апи
-            if (HIRAInventoriesResult.Array != null && HIRAInventoriesResult.Array.Count > 0) // чтобы не передать пустой массив метод для поиска тегов
-            {
-                var inventoriesResultDto = _mapper.Map<OutputInventoriesResultDto>(HIRAInventoriesResult);
-                return _searcher.SelectInventoriesByTags(input?.Tags, inventoriesResultDto.Array);  
-            }
-            return new OutputInventoryDto[] { };
+            string? city = input?.City ?? await GetUserCity(input?.Lat, input?.Lon); 
+            return _userContext.Users.Where(u => city == null || u.City == city);
         }
-        async Task<bool> FilterByCity(User user, double? lat, double? lon) 
-        // ну фильтр - громко сказано, просто дает true или fakse 
-        // при сравнивании города из user(это арендодатель) и координатов пользователя решивший посмотреть каталог
-        // TODO сделать запоминание города хранилище
-        // TODO переменовать класс User
+        async Task<string?> GetUserCity(double? lat, double? lon)
         {
             if (lat == null || lon == null)
-                return true;
-
-            var city = (await _geolocationRepo.GetUserLocationByLatLon(lat.Value, lon.Value)).City;
-
-            if(user.City == city)
-                return true;
-
-            return false;
+                return null;
+            return (await _geolocationRepo.GetUserLocationByLatLon(lat.Value, lon.Value)).City;
         }
-
         async Task<string> GetToken(User user)
         {
             var encrpyptedPass = user.Password;
@@ -104,6 +72,18 @@ namespace Web.Services
             var l = user.Login;
             var token = await _apiTokenProvider.GetToken(p, l);
             return token;
+        }
+        async Task<IEnumerable<OutputInventoryDto>> GetOutputInventories(InputSearchInventoryDto? input, User user)
+        {
+            var HIRAInput = _mapper.Map<InputHIRAInventoryDto>(input);
+            var token = await GetToken(user);
+            var HIRAInventoriesResult = await _inventoryRepo.MakePostJsonTypeRequest(POST_INVENTORY_ITEMS, token, HIRAInput); // запрос и ответ от апи
+            if (HIRAInventoriesResult.Array != null && HIRAInventoriesResult.Array.Count > 0) // чтобы не передать пустой массив метод для поиска тегов
+            {
+                var inventoriesResultDto = _mapper.Map<OutputInventoriesResultDto>(HIRAInventoriesResult);
+                return _searcher.SelectInventoriesByTags(input?.Tags, inventoriesResultDto.Array);  
+            }
+            return Enumerable.Empty<OutputInventoryDto>();
         }
         #endregion
 

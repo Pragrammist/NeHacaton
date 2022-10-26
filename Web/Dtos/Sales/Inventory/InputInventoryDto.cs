@@ -5,7 +5,8 @@ namespace Web.Dtos.Sales.Inventory
     public class InputSearchInventoryDto
     {
         public string? Search { get; set; }
-        public string[]? Tags { get; set; } = null;
+        public string[]? Tags { get; set; }
+        public string? City { get; set; }
         public double? Lat { get; set; }
         public double? Lon { get; set; }
         public string? Title { get; set; }
