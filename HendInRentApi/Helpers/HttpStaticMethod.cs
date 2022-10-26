@@ -110,7 +110,7 @@ namespace HendInRentApi
 
         public static async Task<HttpResponseMessage> PostAsJsonAsyncNewtonsoft<TArg>(this HttpClient client, string path, TArg arg, JsonSerializerSettings? settings = null,
             CancellationToken cancellationToken = default) => await RequestAsJsonAsync(path, arg, client.PostAsync /*операция запроса*/, settings, cancellationToken);
-         // снова-метод адаптер, который просто использует метод для формирования данных для запроса 
+         // снова-метод адаптер, который просто использует метод для формирования(кототорый вызывается) данных для запроса 
          // и метод отправки запроса(POST), который передается в аргументы
         public static async Task<HttpResponseMessage> PutAsJsonAsyncNewtonsoft<TArg>(this HttpClient client, string path, TArg arg, JsonSerializerSettings? settings = null,
             CancellationToken cancellationToken = default) => await RequestAsJsonAsync(path, arg, client.PutAsync/*операция запроса*/, settings, cancellationToken);
