@@ -3,7 +3,6 @@ using HendInRentApi;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Web.Dtos.UserSelfInfoDto.Rent;
 using Web;
 using Web.Controllers;
 using Web.Geolocation;
@@ -124,19 +123,6 @@ namespace Tests
             var resService = await serv.GetUserRent(token);
 
             var res = resService.FirstOrDefault();
-
-            Assert.Pass("rent:\n{0}", Serialize(res));
-        }
-
-
-        [Test]
-        public async Task InventorySaleService()
-        {
-            var serv = _serviceProvider.GetRequiredService<SaleService>();
-
-            var token = await GetRentInHendTokenForTesting(_authRentInHend);
-
-            var res = await serv.GetInventory(token);
 
             Assert.Pass("rent:\n{0}", Serialize(res));
         }

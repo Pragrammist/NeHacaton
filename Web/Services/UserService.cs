@@ -1,34 +1,29 @@
 ﻿using AutoMapper;
 using DataBase;
 using DataBase.Entities;
-using HendInRentApi;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
 using Web.Dtos;
 using Web.Geolocation;
 using Web.Cryptographer;
-using Web.PasswordHasher;
 
 namespace Web.Services
 {
     public class UserService
     {
         readonly IMapper _mapper;
-
         readonly UserContext _userContext;
         readonly ICryptographer _passwordCryptographer;
-        readonly IPasswordHasher _passwordHasher;
         readonly GeolocationRepository _geolocation;
-        readonly HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto> _loginHIRA;
-        public UserService(HIRALogin<OutputHIRAAuthTokenDto, InputHIRALoginUserDto> loginHIRA, IMapper mapper, UserContext userContext, ICryptographer passwordCryptographer, 
-            IPasswordHasher passwordHasher, GeolocationRepository geolocation)
+        public UserService(
+            IMapper mapper, 
+            UserContext userContext, 
+            ICryptographer passwordCryptographer, 
+            GeolocationRepository geolocation)
         {
             _geolocation = geolocation;
             _mapper = mapper;
-            _loginHIRA = loginHIRA;
             _userContext = userContext;
             _passwordCryptographer = passwordCryptographer;
-            _passwordHasher = passwordHasher;
         }
         /// <summary>
         /// //regUser must be already validate

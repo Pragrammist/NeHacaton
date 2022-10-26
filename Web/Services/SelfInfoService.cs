@@ -14,11 +14,12 @@ namespace Web.Services
 {
     public class SelfInfoService
     {
-        HIRARepository<OutputHIRAProfileSelfInfoResultDto> _profileRepo;
-        HIRARepository<OutputHIRARentsResultDto, InputHIRARentSearchDto> _rentRepo;
-        IMapper _mapper;
-        UserContext _userContext;
-        public SelfInfoService(IMapper mapper, 
+        readonly HIRARepository<OutputHIRAProfileSelfInfoResultDto> _profileRepo;
+        readonly HIRARepository<OutputHIRARentsResultDto, InputHIRARentSearchDto> _rentRepo;
+        readonly IMapper _mapper;
+        readonly UserContext _userContext;
+        public SelfInfoService(
+            IMapper mapper, 
             HIRARepository<OutputHIRAProfileSelfInfoResultDto> profileRepo, 
             HIRARepository<OutputHIRARentsResultDto, InputHIRARentSearchDto> rentRepo,
             UserContext userContext)
