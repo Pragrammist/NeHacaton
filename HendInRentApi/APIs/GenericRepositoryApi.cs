@@ -1,6 +1,6 @@
 ﻿namespace HendInRentApi
 {
-
+     // запросы с телом
     public class GenericRepositoryApi<TResult, TArg> : BaseMethodsApi, HIRARepository<TResult, TArg>
     {
         public async Task<TResult> MakePostJsonTypeRequest(string relativePath, string token, TArg? arg)
@@ -12,7 +12,7 @@
             return await base.MakePutJsonTypeRequest<TResult, TArg>(relativePath, token, arg);
         }
     }
-
+    //без тела
     public class GenericRepositoryApi<TResult> : BaseMethodsApi, HIRARepository<TResult>
     {
         public async Task<TResult> MakePostJsonTypeRequest(string relativePath, string token)
