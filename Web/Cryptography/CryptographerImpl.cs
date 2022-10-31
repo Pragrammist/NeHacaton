@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Web.Cryptographer
+namespace Web.Cryptography
 {
     //Код взят из инета, поэтому не знаю как это работает
     public class CryptographerImpl : ICryptographer

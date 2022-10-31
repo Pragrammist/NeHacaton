@@ -5,7 +5,7 @@ using Web.Models.ModelValidators;
 using Web.Services;
 using DataBase;
 using Microsoft.EntityFrameworkCore;
-using Web.Cryptographer;
+using Web.Cryptography;
 using Web.PasswordHasher;
 using Web.Geolocation;
 using Web.Search.Inventory;

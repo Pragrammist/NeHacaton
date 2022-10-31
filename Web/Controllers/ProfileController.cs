@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Services;
-using Web.Cryptographer;
+using Web.Cryptography;
 using static Web.Constants.ClaimConstants;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Cors;
@@ -48,14 +48,10 @@ namespace Web.Controllers
 
         string Login => User.FindFirstValue(ClaimsIdentity.DefaultNameClaimType) ?? throw new NullReferenceException("Cookies doesn't have login.");
 
-        async Task<string> Token()
-        {
-            var encryptPassword = User.FindFirstValue(CLAIM_PASSWORD) ?? throw new NullReferenceException("Cookies doesn't have password.");
-            var login = Login;
-            var password = _cryptographer.Decrypt(encryptPassword);
-            var token = await _apiToken.GetToken(password, login);
-            return token;
-        }
+        string Password => User.FindFirstValue(CLAIM_PASSWORD) ?? throw new NullReferenceException("Cookies doesn't have password.");
+
+        async Task<string> Token() => await _apiToken.GetTokenFrom(Password, Login);
+        
         
     }
 }

@@ -5,7 +5,7 @@ using DataBase.Entities;
 using HendInRentApi;
 using Web.Dtos;
 using Web.Dtos.Sales.Inventory;
-using Web.Cryptographer;
+using Web.Cryptography;
 using Web.Helprers.AutoMapperProfiles;
 using Web.Models;
 using Web.Models.Inventory;

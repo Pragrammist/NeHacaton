@@ -4,7 +4,7 @@ using DataBase.Entities;
 using Microsoft.EntityFrameworkCore;
 using Web.Dtos;
 using Web.Geolocation;
-using Web.Cryptographer;
+using Web.Cryptography;
 using HendInRentApi.Dto.SelfInfo.Profile;
 using HendInRentApi;
 using static HendInRentApi.RentInHendApiConstants;

@@ -3,12 +3,11 @@ using HendInRentApi;
 using static HendInRentApi.RentInHendApiConstants;
 using AutoMapper;
 using DataBase;
-using Web.Cryptographer;
+using Web.Cryptography;
 using Web.Search.Inventory;
 using HendInRentApi.Dto.Inventory;
 using DataBase.Entities;
 using Web.Geolocation;
-using System.Linq;
 
 namespace Web.Services
 {
@@ -38,7 +37,7 @@ namespace Web.Services
             _geolocationRepo = geolocationRepo;
         }
 
-         //TODO Caching
+        //TODO Caching
         public async IAsyncEnumerable<OutputInventoryDto> GetInventories(InputSearchInventoryDto? input = null)
         {
             foreach (var user in await GetUsersFromCity(input)) // юзеры с дб
@@ -66,16 +65,22 @@ namespace Web.Services
                 return null;
             return (await _geolocationRepo.GetUserLocationByLatLon(lat.Value, lon.Value)).City;
         }
-        //TODO GetToken token from incrypted pass in service
-        async Task<string> GetToken(User user) // юзер с дб
-        {
-            var encrpyptedPass = user.Password; 
-            var p = _cryptographer.Decrypt(encrpyptedPass);
-            var l = user.Login;
-            var token = await _apiTokenProvider.GetToken(p, l); //токен береться из AuthApi по логину и паролю
-            return token;
-        }
+        // юзер с дб
+        async Task<string> GetToken(User user)  => await _apiTokenProvider.GetTokenFrom(user.Password, user.Login);//токен береться из AuthApi по логину и паролю
+        
         async Task<IEnumerable<OutputInventoryDto>> GetOutputInventories(InputSearchInventoryDto? input, User user)
+        {
+            try
+            {
+                return await GetOutputInventoriesInnerCode(input, user);
+            }
+            catch
+            {
+
+            }
+            return Enumerable.Empty<OutputInventoryDto>();
+        }
+        async Task<IEnumerable<OutputInventoryDto>> GetOutputInventoriesInnerCode(InputSearchInventoryDto? input, User user)
         {
             var HIRAInput = _mapper.Map<InputHIRAInventoryDto>(input);
             var token = await GetToken(user);
@@ -83,7 +88,7 @@ namespace Web.Services
             if (HIRAInventoriesResult.Array != null && HIRAInventoriesResult.Array.Count > 0) // чтобы не передать пустой массив метод для поиска тегов
             {
                 var inventoriesResultDto = _mapper.Map<OutputInventoriesResultDto>(HIRAInventoriesResult);
-                return _searcher.SelectInventoriesByTags(input?.Tags, inventoriesResultDto.Array);  
+                return _searcher.SelectInventoriesByTags(input?.Tags, inventoriesResultDto.Array);
             }
             return Enumerable.Empty<OutputInventoryDto>();
         }

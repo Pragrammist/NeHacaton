@@ -1,4 +1,4 @@
-﻿namespace Web.Cryptographer
+﻿namespace Web.Cryptography
 {
     public interface ICryptographer
     {

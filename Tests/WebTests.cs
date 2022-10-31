@@ -11,7 +11,7 @@ using Web.Services;
 using static Tests.Helper;
 using Web.PasswordHasher;
 using Web.Search.Inventory;
-using Web.Cryptographer;
+using Web.Cryptography;
 using System.Net.Http.Json;
 
 namespace Tests

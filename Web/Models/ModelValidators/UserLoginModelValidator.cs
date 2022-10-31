@@ -1,7 +1,7 @@
 ﻿using DataBase;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Web.Cryptographer;
+using Web.Cryptography;
 using Web.PasswordHasher;
 
 namespace Web.Models.ModelValidators
