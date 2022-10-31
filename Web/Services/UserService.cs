@@ -68,16 +68,13 @@ namespace Web.Services
 
             user.Password = _passwordCryptographer.Encrypt(regUser.Password);
 
-            user.City = await GetLocationCity(regUser);
+            user.City = user.City ?? await GetLocationCity(regUser);
 
             return user;
         }
 
-        async Task<string> GetLocationCity(InputUserRegistrationDto user)
-        {
-            return (await _geolocation.GetUserLocationByLatLon(user.Lat, user.Lon)).City;
-        }
-
+        async Task<string> GetLocationCity(InputUserRegistrationDto user) => (await _geolocation.GetUserLocationByLatLon(user.Lat, user.Lon)).City;
+        
         async Task<string> GetFio(string password, string login)
         {
             var token = await _tokenProvider.GetToken(password, login);

@@ -16,14 +16,13 @@ namespace Web.Services
         readonly HIRARepository<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto> _inventoryRepo;
         readonly IMapper _mapper;
         readonly UserContext _userContext;
-        readonly ICryptographer _cryptographer;
         readonly InventoryTagSearcher _searcher;
         readonly ApiTokenProvider _apiTokenProvider;
         readonly GeolocationRepository _geolocationRepo;
         public SaleService(
             HIRARepository<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto> inventoryRepo,
             IMapper mapper, 
-            UserContext userContext, ICryptographer cryptographer, 
+            UserContext userContext, 
             InventoryTagSearcher searcher,
             ApiTokenProvider apiTokenProvider,
             GeolocationRepository geolocationRepo)
@@ -31,7 +30,6 @@ namespace Web.Services
             _inventoryRepo = inventoryRepo;
             _mapper = mapper;
             _userContext = userContext;
-            _cryptographer = cryptographer;
             _searcher = searcher;
             _apiTokenProvider = apiTokenProvider;
             _geolocationRepo = geolocationRepo;
@@ -53,14 +51,13 @@ namespace Web.Services
 
         #region help methods for GetInventories
         
-        async Task<IEnumerable<User>> GetUsersFromCity(InputSearchInventoryDto? input) //TODO RENAME User ent
+        async Task<IEnumerable<User>> GetUsersFromCity(InputSearchInventoryDto? input)
         {
             string? city = input?.City ?? await GetUserCity(input?.Lat, input?.Lon);
             return _userContext.Users.Where(u => city == null || u.City.ToLower() == city.ToLower());
         }
         async Task<string?> GetUserCity(double? lat, double? lon)
         {
-            //TODO In cookies write lat and lon from client and get city in midleware
             if (lat == null || lon == null)
                 return null;
             return (await _geolocationRepo.GetUserLocationByLatLon(lat.Value, lon.Value)).City;
@@ -72,15 +69,14 @@ namespace Web.Services
         {
             try
             {
-                return await GetOutputInventoriesInnerCode(input, user);
+                return await TryGetOutputInventories(input, user);
             }
             catch
             {
-
             }
             return Enumerable.Empty<OutputInventoryDto>();
         }
-        async Task<IEnumerable<OutputInventoryDto>> GetOutputInventoriesInnerCode(InputSearchInventoryDto? input, User user)
+        async Task<IEnumerable<OutputInventoryDto>> TryGetOutputInventories(InputSearchInventoryDto? input, User user)
         {
             var HIRAInput = _mapper.Map<InputHIRAInventoryDto>(input);
             var token = await GetToken(user);

@@ -43,6 +43,7 @@ namespace Web.Controllers
         public async Task<IActionResult> City(string city)
         {
             var user = await _selfInfoService.ChangeCity(city, Login);
+            ChangeCityInCookies(city);
             return Json(user);
         }
 
@@ -52,6 +53,6 @@ namespace Web.Controllers
 
         async Task<string> Token() => await _apiToken.GetTokenFrom(Password, Login);
         
-        
+        void ChangeCityInCookies(string city) => HttpContext.Response.Cookies.Append("city", city);
     }
 }

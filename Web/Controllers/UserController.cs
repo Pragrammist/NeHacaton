@@ -39,7 +39,7 @@ namespace Web.Controllers
             if (!validationRes.IsValid)
                 return GetValidationStatusCode(validationRes);
 
-            var inputUser = _mapper.Map<InputUserRegistrationDto>(userRegModel);
+            var inputUser = GetRegUser(userRegModel);
 
             var user = await _userService.RegistrateUser(inputUser);
 
@@ -47,7 +47,18 @@ namespace Web.Controllers
 
             return Json(user);
         }
-
+        InputUserRegistrationDto GetRegUser(UserRegistrationModel userRegModel)
+        {
+            var inputUser = _mapper.Map<InputUserRegistrationDto>(userRegModel);
+            inputUser.City = GetCity();
+            return inputUser;
+        }
+        string? GetCity()
+        {
+            string? city;
+            HttpContext.Request.Cookies.TryGetValue("city", out city);
+            return city;
+        }
         IActionResult GetValidationStatusCode(FluentValidation.Results.ValidationResult validationRes)
         {
             if (validationRes.Errors.Any(u => u.ErrorCode == "404"))

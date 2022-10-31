@@ -21,8 +21,17 @@ namespace Web.Controllers
         public async Task<IActionResult> Inventories([FromBody]InventorySearchModel? search = null)
         {
             var inputData = _mapper.Map<InputSearchInventoryDto>(search);
+            inputData.City = GetCity();
             var inventories = await _saleService.GetInventories(inputData).ToArrayAsync();
             return Json(inventories);
+        }
+
+        string? GetCity()
+        {
+            string? city;
+            HttpContext.Request.Cookies.TryGetValue("city", out city);
+            city = city ?? HttpContext.Items["city"]?.ToString();
+            return city;
         }
     }
 }

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Net.Http.Headers;
 using Web.Helprers;
 using static Web.Constants.GeolocationConstants;
-
+using Web.Filters;
 
 
 namespace Web
@@ -14,7 +14,10 @@ namespace Web
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
             builder.Services.AddCors(t => t.AddDefaultPolicy(b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(opt =>
+            {
+                opt.Filters.Add<GeolocationFilter>();
+            });
             
             builder.Services.AddHttpClient(GEOLOCATION_HTTPCLIENT_NAME, client =>
             {
@@ -39,19 +42,14 @@ namespace Web
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseCors(b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-
             app.UseAuthentication();    
             app.UseAuthorization();
-
-            
-
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

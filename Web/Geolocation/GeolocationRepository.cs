@@ -5,7 +5,7 @@ using static Web.Constants.GeolocationConstants;
 
 namespace Web.Geolocation
 {
-    public class GeolocationRepository
+    public class GeolocationRepository 
     {
         //todo interface
         string GetCityFromJson(JObject res)
