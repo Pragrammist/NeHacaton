@@ -9,7 +9,7 @@ using Web.Dtos;
 using Web.Models;
 using Web.Services;
 using static Web.Constants.ClaimConstants;
-using System.ComponentModel.DataAnnotations;
+using static Web.Helprers.ControllerExtensions;
 
 namespace Web.Controllers
 {
@@ -47,29 +47,7 @@ namespace Web.Controllers
 
             return Json(user);
         }
-        InputUserRegistrationDto GetRegUser(UserRegistrationModel userRegModel)
-        {
-            var inputUser = _mapper.Map<InputUserRegistrationDto>(userRegModel);
-            inputUser.City = GetCity();
-            return inputUser;
-        }
-        string? GetCity()
-        {
-            string? city;
-            HttpContext.Request.Cookies.TryGetValue("city", out city);
-            return city;
-        }
-        IActionResult GetValidationStatusCode(FluentValidation.Results.ValidationResult validationRes)
-        {
-            if (validationRes.Errors.Any(u => u.ErrorCode == "404"))
-            {
-                return NotFound();
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
+        
 
         [HttpPost]
         public async Task<IActionResult> Login([FromBody]UserLoginModel userLoginModel)
@@ -86,16 +64,34 @@ namespace Web.Controllers
             await SignInAsync(user);
             
             return Json(user);
-
+            
         }
 
-        
-
+        [HttpPost]
         public async Task<IActionResult> SignOutUser()
         {
             await SignOutAsync();
 
             return SignOut();
+        }
+
+        #region helper method
+        InputUserRegistrationDto GetRegUser(UserRegistrationModel userRegModel)
+        {
+            var inputUser = _mapper.Map<InputUserRegistrationDto>(userRegModel);
+            inputUser.City = this.GetCityFromHttpContext();
+            return inputUser;
+        }
+        IActionResult GetValidationStatusCode(FluentValidation.Results.ValidationResult validationRes)
+        {
+            if (validationRes.Errors.Any(u => u.ErrorCode == "404"))
+            {
+                return NotFound();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         async Task SignInAsync(OutputUserDto user)
@@ -119,6 +115,6 @@ namespace Web.Controllers
 
             await HttpContext.SignOutAsync();
         }
-
+        #endregion
     }
 }

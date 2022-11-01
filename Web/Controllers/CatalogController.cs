@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Web.Dtos.Sales.Inventory;
 using Web.Models.Inventory;
 using Web.Services;
-
+using static Web.Helprers.ControllerExtensions;
 
 namespace Web.Controllers
 {
@@ -20,18 +20,16 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Inventories([FromBody]InventorySearchModel? search = null)
         {
-            var inputData = _mapper.Map<InputSearchInventoryDto>(search);
-            inputData.City = GetCity();
+            var inputData = GetInputSearchInvetory(search);
             var inventories = await _saleService.GetInventories(inputData).ToArrayAsync();
             return Json(inventories);
         }
 
-        string? GetCity()
+        InputSearchInventoryDto GetInputSearchInvetory(InventorySearchModel? search)
         {
-            string? city;
-            HttpContext.Request.Cookies.TryGetValue("city", out city);
-            city = city ?? HttpContext.Items["city"]?.ToString();
-            return city;
+            var inputData = _mapper.Map<InputSearchInventoryDto>(search);
+            inputData.City = this.GetCityFromHttpContext();
+            return inputData;
         }
     }
 }

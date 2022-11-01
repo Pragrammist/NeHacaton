@@ -35,41 +35,28 @@ namespace Tests
         }
 
         [Test]
-        public async Task Request()
+        public async Task UserLogin()
         {
             var client = _factory.CreateClient();
-            var res = await client.PostAsJsonAsync("/User/LoginUser/", GetLoginUserFromJsonFile<object>());
 
+
+            var res = await client.PostAsJsonAsync("/User/Login/", GetLoginUserFromJsonFile<object>());
+            var obj = await res.Content.ReadAsStringAsync();
+
+
+            Assert.Pass(obj.ToString());
         }
 
         [Test]
-        public async Task UserRegistrationController()
+        public async Task UserRegister()
         {
-            var user = GetRegistreUserFromJsonFile<UserRegistrationModel>();
-
-            var controller = _serviceProvider.GetRequiredService<UserController>();
-
-            var res = await controller.Register(user);
-
-            var jsonResult = res.As<JsonResult>();
-
-            Assert.Pass("json is\n{0}", Serialize(jsonResult.Value));
+            var client = _factory.CreateClient();
+            var res = await client.PostAsJsonAsync("/User/Register/", GetRegisterUserFromJsonFile<object>());
+            var obj = await res.Content.ReadAsStringAsync();
+            Assert.Pass(obj.ToString());
         }
 
-        [Test]
-        public async Task UserLoginController()
-        {
-            var controller = _serviceProvider.GetRequiredService<UserController>();
-
-            var user = GetLoginUserFromJsonFile<UserLoginModel>();
-
-            var res = await controller.Login(user);
-
-            var jsonRes = res.As<JsonResult>();
-
-            Assert.Pass(Serialize(jsonRes.Value));
-        }
-
+       
        
         [Test]
         public async Task GeolocationApiService()
@@ -86,7 +73,7 @@ namespace Tests
         {
             var userLogin = GetLoginUserFromJsonFile<UserLoginModel>();
 
-            var userReg = GetRegistreUserFromJsonFile<UserRegistrationModel>();
+            var userReg = GetRegisterUserFromJsonFile<UserRegistrationModel>();
 
             Assert.Pass("login:\n{0}\nregistration:\n{1}\n",Serialize(userLogin), Serialize(userReg));
         }
@@ -177,17 +164,12 @@ namespace Tests
         }
 
         [Test]
-        public async Task InventoriesSaleController()
+        public async Task CatalogInventories()
         {
-            var contr = _serviceProvider.GetRequiredService<CatalogController>();
-
-            var res = (await contr.Inventories(
-                new Web.Models.Inventory.
-                InventorySearchModel { Search = null, Tags = new string[] {"лыжи" } }))
-                .As<JsonResult>();
-
-            res.Should().NotBeNull();
-            Assert.Pass(Serialize(res.Value));
+            var client = _factory.CreateClient();
+            var res = await client.PostAsJsonAsync("/Catalog/Inventories/", new {});
+            var obj = await res.Content.ReadAsStringAsync();
+            Assert.Pass(obj.ToString());
         }
     }
 }

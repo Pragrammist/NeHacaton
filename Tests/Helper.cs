@@ -27,7 +27,7 @@ namespace Tests
             return res;
         }
 
-        public static T GetRegistreUserFromJsonFile<T>()
+        public static T GetRegisterUserFromJsonFile<T>()
         {
             var json = File.ReadAllText(REGISTRATE_USER_JSON_PATH);
             var res = JsonSerializer.Deserialize<T>(json) ?? throw new NullReferenceException("serializer of user got null");

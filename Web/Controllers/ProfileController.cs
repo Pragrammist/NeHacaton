@@ -13,13 +13,13 @@ namespace Web.Controllers
     {
         SelfInfoService _selfInfoService;
         ApiTokenProvider _apiToken;
-        ICryptographer _cryptographer;
-        public ProfileController(SelfInfoService selfInfoService, ApiTokenProvider apiToken, ICryptographer cryptographer)
+
+        public ProfileController(SelfInfoService selfInfoService, ApiTokenProvider apiToken)
         {
             _selfInfoService = selfInfoService;
             _apiToken = apiToken;
-            _cryptographer = cryptographer;
         }
+
         [Authorize]
         public async Task<IActionResult> Rent()
         {
@@ -27,16 +27,13 @@ namespace Web.Controllers
 
             return Json(res);
         }
+
         [Authorize]
         public async Task<IActionResult> Info()
         {
-            var res = await _selfInfoService.GetUserProfile(await Token(), Login);
-            res.Array = MakeJustOneProfile(res);
+            var res = await ProccesResult();
             return Json(res);
         }
-        List<OutputProfileDto> MakeJustOneProfile(OutputProfileResultDto rent) => rent.Array.Take(1).ToList();
-
-
 
         [Authorize]
         [HttpPut]
@@ -47,6 +44,16 @@ namespace Web.Controllers
             return Json(user);
         }
 
+
+        #region helpers methods
+        async Task<OutputProfileResultDto> ProccesResult()
+        {
+            var res = await _selfInfoService.GetUserProfile(await Token(), Login);
+            res.Array = FirstProfile(res);
+            return res;
+        }
+        List<OutputProfileDto> FirstProfile(OutputProfileResultDto rent) => rent.Array.Take(1).ToList();
+
         string Login => User.FindFirstValue(ClaimsIdentity.DefaultNameClaimType) ?? throw new NullReferenceException("Cookies doesn't have login.");
 
         string Password => User.FindFirstValue(CLAIM_PASSWORD) ?? throw new NullReferenceException("Cookies doesn't have password.");
@@ -54,5 +61,6 @@ namespace Web.Controllers
         async Task<string> Token() => await _apiToken.GetTokenFrom(Password, Login);
         
         void ChangeCityInCookies(string city) => HttpContext.Response.Cookies.Append("city", city);
+        #endregion
     }
 }
