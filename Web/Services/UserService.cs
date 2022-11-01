@@ -8,6 +8,7 @@ using Web.Cryptography;
 using HendInRentApi.Dto.SelfInfo.Profile;
 using HendInRentApi;
 using static HendInRentApi.RentInHendApiConstants;
+using DataBase.Extensions;
 
 namespace Web.Services
 {
@@ -88,12 +89,7 @@ namespace Web.Services
 
         public async Task<OutputUserDto> LoginUser(InputLoginUserDto inputUserLoginDto)
         {
-            var user = await _userContext.Users.FirstAsync(
-                u => 
-                u.Email == inputUserLoginDto.Login ||
-                u.Login == inputUserLoginDto.Login ||
-                u.Telephone == inputUserLoginDto.Login
-            );
+            var user = await _userContext.Users.FindUserByAsync(inputUserLoginDto.Login);
 
             var outputUser = await GetUserDto(user, inputUserLoginDto.Password, inputUserLoginDto.Login);
 

@@ -2,7 +2,7 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Web.Cryptography;
-using Web.PasswordHasher;
+using DataBase.Extensions;
 
 namespace Web.Models.ModelValidators
 {
@@ -26,11 +26,8 @@ namespace Web.Models.ModelValidators
 
         async Task CheckExistsUserInDb(UserLoginModel model, ValidationContext<UserLoginModel> validationContext, CancellationToken cancellationToken)
         {
-            var user = await _userContext.Users.FirstOrDefaultAsync(u => 
-            (u.Login == model.Login 
-            || u.Email == model.Login 
-            || u.Telephone == model.Login) 
-            && u.Password == _cryptographer.Encrypt(model.Password));
+            var encrPassword = _cryptographer.Encrypt(model.Password);
+            var user = await _userContext.Users.FindUserByAsync(model.Login, encrPassword);
 
             if (user is null)
                 validationContext.AddFailure("user", "user not found");

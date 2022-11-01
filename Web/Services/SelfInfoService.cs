@@ -9,6 +9,7 @@ using DataBase;
 using DataBase.Entities;
 using Microsoft.EntityFrameworkCore;
 using Web.Dtos;
+using DataBase.Extensions;
 
 namespace Web.Services
 {
@@ -52,7 +53,7 @@ namespace Web.Services
 
         public async Task<OutputUserDto> ChangeCity(string city, string login)
         {
-            var entityUser = await FindUserByLogin(login);
+            var entityUser = await FindUserBy(login);
             entityUser.ChangeCity(city);
             await _userContext.SaveChangesAsync();
             var outputUser = _mapper.Map<OutputUserDto>(entityUser);
@@ -62,10 +63,9 @@ namespace Web.Services
 
         async Task<OutputUserDto> GetUserDtoBy(string login)
         {
-            var userEnt = await FindUserByLogin(login);
+            var userEnt = await FindUserBy(login);
             return _mapper.Map<OutputUserDto>(userEnt);
         }
-        async Task<User> FindUserByLogin(string login) => await _userContext.Users.FirstAsync(u => u.Email == login || u.Telephone == login || u.Login == login);
-        //TODO Ext method for dbset
+        async Task<User> FindUserBy(string login) => await _userContext.Users.FindUserByAsync(login);
     }
 }
