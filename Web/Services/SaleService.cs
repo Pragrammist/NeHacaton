@@ -22,6 +22,7 @@ namespace Web.Services
         readonly ApiTokenProvider _apiTokenProvider;
         readonly GeolocationRepository _geolocationRepo;
         Cacher<User> _userCache;
+        Cacher<OutputInventoryDto> _inventoryCacher;
         public SaleService(
             HIRARepository<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto> inventoryRepo,
             IMapper mapper, 
@@ -29,7 +30,8 @@ namespace Web.Services
             InventoryTagSearcher searcher,
             ApiTokenProvider apiTokenProvider,
             GeolocationRepository geolocationRepo,
-            Cacher<User> user)
+            Cacher<User> user,
+            Cacher<OutputInventoryDto> inventoryCacher)
         {
             _inventoryRepo = inventoryRepo;
             _mapper = mapper;
@@ -38,6 +40,7 @@ namespace Web.Services
             _apiTokenProvider = apiTokenProvider;
             _geolocationRepo = geolocationRepo;
             _userCache = user;
+            _inventoryCacher = inventoryCacher;
         }
 
         //TODO Caching
@@ -53,7 +56,6 @@ namespace Web.Services
         }
 
 
-
         #region help methods for GetInventories
 
         async Task<IEnumerable<User>> GetUsersFromCity(InputSearchInventoryDto? input)
@@ -63,11 +65,11 @@ namespace Web.Services
                 await GetUserCity(input?.Lat, input?.Lon) ?? 
                 "москва";
 
-            return await _userCache.CacheAsync(city, () => UserSourceByCityForCache(city));
+            return _userCache.Cache(city, () => SelectByCity(city));
         }
         IEnumerable<User> SelectByCity(string city) => _userContext.Users.Where(u => u.City == city);
 
-        IAsyncEnumerable<User> UserSourceByCityForCache(string city) => SelectByCity(city).ToAsyncEnumerable();
+        
         
 
 
@@ -90,13 +92,26 @@ namespace Web.Services
         {
             try
             {
-                return await TryGetOutputInventories(input, user);
+                if (IsCaching(input))
+                    return await _inventoryCacher.CacheAsync(user.Login, () => CacheSource(input, user));
+                else
+                    return await TryGetOutputInventories(input, user);
             }
             catch
             {
             }
             return Enumerable.Empty<OutputInventoryDto>();
         }
+
+        async IAsyncEnumerable<OutputInventoryDto> CacheSource(InputSearchInventoryDto? input, User user)
+        {
+            foreach (var inventory in await TryGetOutputInventories(input, user))
+            {
+                yield return inventory;
+            }
+        }
+
+
         async Task<IEnumerable<OutputInventoryDto>> TryGetOutputInventories(InputSearchInventoryDto? input, User user)
         {
             var HIRAInput = _mapper.Map<InputHIRAInventoryDto>(input);
@@ -109,6 +124,22 @@ namespace Web.Services
             }
             return Enumerable.Empty<OutputInventoryDto>();
         }
+
+        bool IsCaching(InputSearchInventoryDto? input)
+        {
+            if (input == null || SpecifyFieldsAreNull(input))
+                return true;
+            return false;
+        }
+        bool SpecifyFieldsAreNull(InputSearchInventoryDto input)
+        {
+            if (input.Discounts == null && (input.Tags == null || input.Tags.Length == 0)
+                && input.Limit == null && input.Offset == null && input.RentNumber == null 
+                && input.Search == null && input.StateId == null && input.Title == null)
+                return true;
+            return false;
+        }
+        
         #endregion
 
 

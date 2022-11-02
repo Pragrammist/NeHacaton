@@ -14,6 +14,8 @@ using HendInRentApi.Dto.SelfInfo.Rent;
 using HendInRentApi.Dto.SelfInfo.Profile;
 using Web.Caching;
 using DataBase.Entities;
+using Web.Dtos.Sales.Inventory;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Web.Helprers
 {
@@ -68,7 +70,11 @@ namespace Web.Helprers
 
         public static IServiceCollection AddCachers(this IServiceCollection services)
         {
+            MemoryCacheOptions cacheOptions = new MemoryCacheOptions() { SizeLimit = 1000 };
+
+            services.AddSingleton<IMemoryCache>(new MemoryCache(cacheOptions));
             services.AddTransient<Cacher<User>, UserCacher>();
+            services.AddTransient<Cacher<OutputInventoryDto>, InventoryCacher>();
 
             return services;
         }
