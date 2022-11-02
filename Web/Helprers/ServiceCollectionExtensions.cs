@@ -73,8 +73,8 @@ namespace Web.Helprers
             MemoryCacheOptions cacheOptions = new MemoryCacheOptions() { SizeLimit = 1000 };
 
             services.AddSingleton<IMemoryCache>(new MemoryCache(cacheOptions));
-            services.AddTransient<Cacher<User>, UserCacher>();
-            services.AddTransient<Cacher<OutputInventoryDto>, InventoryCacher>();
+            services.AddTransient<Cacher<User, string>, UserCacher>();
+            services.AddTransient<Cacher<OutputInventoryDto, string>, InventoryCacher>();
 
             return services;
         }

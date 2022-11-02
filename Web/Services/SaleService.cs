@@ -21,8 +21,8 @@ namespace Web.Services
         readonly InventoryTagSearcher _searcher;
         readonly ApiTokenProvider _apiTokenProvider;
         readonly GeolocationRepository _geolocationRepo;
-        Cacher<User> _userCache;
-        Cacher<OutputInventoryDto> _inventoryCacher;
+        Cacher<User, string> _userCache;
+        Cacher<OutputInventoryDto, string> _inventoryCacher;
         public SaleService(
             HIRARepository<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto> inventoryRepo,
             IMapper mapper, 
@@ -30,8 +30,8 @@ namespace Web.Services
             InventoryTagSearcher searcher,
             ApiTokenProvider apiTokenProvider,
             GeolocationRepository geolocationRepo,
-            Cacher<User> user,
-            Cacher<OutputInventoryDto> inventoryCacher)
+            Cacher<User, string> user,
+            Cacher<OutputInventoryDto, string> inventoryCacher)
         {
             _inventoryRepo = inventoryRepo;
             _mapper = mapper;
@@ -135,7 +135,8 @@ namespace Web.Services
         {
             if (input.Discounts == null && (input.Tags == null || input.Tags.Length == 0)
                 && input.Limit == null && input.Offset == null && input.RentNumber == null 
-                && input.Search == null && input.StateId == null && input.Title == null)
+                && input.Search == null && input.StateId == null && input.Title == null 
+                && input.Description == null)
                 return true;
             return false;
         }

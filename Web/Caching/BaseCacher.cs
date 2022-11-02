@@ -2,7 +2,7 @@
 
 namespace Web.Caching
 {
-    public abstract class BaseCacher<TObject> : Cacher<TObject>
+    public abstract class BaseCacher<TObject, TKey> : Cacher<TObject, TKey>
     {
         protected abstract TimeSpan Absolute { get; }
         protected abstract TimeSpan Sliding { get; }
@@ -27,7 +27,7 @@ namespace Web.Caching
 
 
 
-        public virtual IEnumerable<TObject> Cache(object key, Func<IEnumerable<TObject>> dataSource) => _cache.GetOrCreate(
+        public virtual IEnumerable<TObject> Cache(TKey key, Func<IEnumerable<TObject>> dataSource) => _cache.GetOrCreate(
             key,
             factory: (opt) => DefaulFactory(opt, dataSource));
 
@@ -38,7 +38,7 @@ namespace Web.Caching
             async opt => await DefaultFactoryAsync(opt, dataSource));
 
 
-        public async virtual Task<IEnumerable<TObject>> CacheAsync(object key, Func<IAsyncEnumerable<TObject>> dataSource) =>
+        public async virtual Task<IEnumerable<TObject>> CacheAsync(TKey key, Func<IAsyncEnumerable<TObject>> dataSource) =>
             await _cache.GetOrCreateAsync(
             key,
             async opt => await DefaultFactoryAsync(opt, dataSource));
