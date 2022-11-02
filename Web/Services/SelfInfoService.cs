@@ -7,7 +7,6 @@ using static HendInRentApi.RentInHendApiConstants;
 using HendInRentApi.Dto.SelfInfo.Rent;
 using DataBase;
 using DataBase.Entities;
-using Microsoft.EntityFrameworkCore;
 using Web.Dtos;
 using DataBase.Extensions;
 
@@ -53,6 +52,7 @@ namespace Web.Services
 
         public async Task<OutputUserDto> ChangeCity(string city, string login)
         {
+            
             var entityUser = await FindUserBy(login);
             entityUser.ChangeCity(city);
             await _userContext.SaveChangesAsync();

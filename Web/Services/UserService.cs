@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DataBase;
 using DataBase.Entities;
-using Microsoft.EntityFrameworkCore;
 using Web.Dtos;
 using Web.Geolocation;
 using Web.Cryptography;
@@ -53,6 +52,16 @@ namespace Web.Services
             return outputUser;
         }
 
+        public async Task<OutputUserDto> LoginUser(InputLoginUserDto inputUserLoginDto)
+        {
+            var user = await _userContext.Users.FindUserByAsync(inputUserLoginDto.Login);
+
+            var outputUser = await GetUserDto(user, inputUserLoginDto.Password, inputUserLoginDto.Login);
+
+            return outputUser;
+        }
+
+        #region help methods for reg
         async Task<OutputUserDto> GetUserDto(User user, string password, string login)
         {
             var outPutUser = _mapper.Map<OutputUserDto>(user);
@@ -61,7 +70,7 @@ namespace Web.Services
         }
 
 
-        #region help methods for reg
+
         //incapsulate creating user entity
         async Task<User> CreateUserEntity(InputUserRegistrationDto regUser)
         {
@@ -75,7 +84,7 @@ namespace Web.Services
         }
 
         async Task<string> GetLocationCity(InputUserRegistrationDto user) => (await _geolocation.GetUserLocationByLatLon(user.Lat, user.Lon)).City;
-        
+
         async Task<string> GetFio(string password, string login)
         {
             var token = await _tokenProvider.GetToken(password, login);
@@ -85,15 +94,5 @@ namespace Web.Services
             return profile.Fio;
         }
         #endregion
-
-
-        public async Task<OutputUserDto> LoginUser(InputLoginUserDto inputUserLoginDto)
-        {
-            var user = await _userContext.Users.FindUserByAsync(inputUserLoginDto.Login);
-
-            var outputUser = await GetUserDto(user, inputUserLoginDto.Password, inputUserLoginDto.Login);
-
-            return outputUser;
-        }
     }
 }

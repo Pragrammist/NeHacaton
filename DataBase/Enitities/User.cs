@@ -13,7 +13,7 @@
         {
             if (string.IsNullOrEmpty(city))
                 throw new InvalidOperationException("City cannot be null or empty");
-            City = city;
+            City = city.ToLower();
         }
     }    
 }

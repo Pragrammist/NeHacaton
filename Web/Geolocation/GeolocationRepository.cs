@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using System.Net.Http.Headers;
 using Web.Dtos;
 using static Web.Constants.GeolocationConstants;
 
@@ -10,7 +9,7 @@ namespace Web.Geolocation
         //todo interface
         string GetCityFromJson(JObject res)
         {
-            return res["suggestions"][0]["data"]["city"].ToString(); 
+            return res["suggestions"][0]["data"]["city"].ToString().ToLower(); 
             // апи возращает много чего и чтобы не делать кучу объектов, чтобы получить город используется linq
             // поэтому это лучше не трогать, и это вынесено в отдельный метод
             // работает на честном слове

@@ -132,7 +132,7 @@ namespace Tests
         {
             var serv = _serviceProvider.GetRequiredService<SaleService>();
 
-            var envent = serv.GetInventories(new Web.Dtos.Sales.Inventory.InputSearchInventoryDto {Search = ""  });
+            var envent = serv.GetInventories(new Web.Dtos.Sales.Inventory.InputSearchInventoryDto { });
 
             await foreach (var env in envent)
             {

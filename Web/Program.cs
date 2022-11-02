@@ -14,11 +14,12 @@ namespace Web
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
             builder.Services.AddCors(t => t.AddDefaultPolicy(b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
-            builder.Services.AddControllers(opt =>
+            builder.Services.AddControllersWithViews(opt =>
             {
                 opt.Filters.Add<GeolocationFilter>();
             });
             
+
             builder.Services.AddHttpClient(GEOLOCATION_HTTPCLIENT_NAME, client =>
             {
                 var geolocationApiKey = config.GetSection("Tokens")["GeolocationApi"];
@@ -32,13 +33,14 @@ namespace Web
                 .AddApiRepositrories()
                 .AddDbContexts(config)
                 .ConfigAutoMapper()
+                .AddCachers()
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
                 {
                     options.LoginPath = new PathString("/User/Login");
                     options.LogoutPath = new PathString("/User/Logout");
                 });
-            
 
+            builder.Services.AddMemoryCache();
 
             var app = builder.Build();
 

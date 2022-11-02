@@ -8,6 +8,8 @@ using Web.Search.Inventory;
 using HendInRentApi.Dto.Inventory;
 using DataBase.Entities;
 using Web.Geolocation;
+using Web.Caching;
+using Microsoft.EntityFrameworkCore;
 
 namespace Web.Services
 {
@@ -19,13 +21,15 @@ namespace Web.Services
         readonly InventoryTagSearcher _searcher;
         readonly ApiTokenProvider _apiTokenProvider;
         readonly GeolocationRepository _geolocationRepo;
+        Cacher<User> _userCache;
         public SaleService(
             HIRARepository<OutputHIRAInventoriesResultDto, InputHIRAInventoryDto> inventoryRepo,
             IMapper mapper, 
             UserContext userContext, 
             InventoryTagSearcher searcher,
             ApiTokenProvider apiTokenProvider,
-            GeolocationRepository geolocationRepo)
+            GeolocationRepository geolocationRepo,
+            Cacher<User> user)
         {
             _inventoryRepo = inventoryRepo;
             _mapper = mapper;
@@ -33,6 +37,7 @@ namespace Web.Services
             _searcher = searcher;
             _apiTokenProvider = apiTokenProvider;
             _geolocationRepo = geolocationRepo;
+            _userCache = user;
         }
 
         //TODO Caching
@@ -50,17 +55,33 @@ namespace Web.Services
 
 
         #region help methods for GetInventories
-        
+
         async Task<IEnumerable<User>> GetUsersFromCity(InputSearchInventoryDto? input)
         {
-            string? city = input?.City ?? await GetUserCity(input?.Lat, input?.Lon);
-            return _userContext.Users.Where(u => city == null || u.City.ToLower() == city.ToLower());
+            string city = 
+                input?.City ?? 
+                await GetUserCity(input?.Lat, input?.Lon) ?? 
+                "москва";
+
+            return await _userCache.CacheAsync(city, () => UserSourceByCityForCache(city));
         }
+        IEnumerable<User> SelectByCity(string city) => _userContext.Users.Where(u => u.City == city);
+
+        IAsyncEnumerable<User> UserSourceByCityForCache(string city) => SelectByCity(city).ToAsyncEnumerable();
+        
+
+
         async Task<string?> GetUserCity(double? lat, double? lon)
         {
+            string? city = null;
             if (lat == null || lon == null)
-                return null;
-            return (await _geolocationRepo.GetUserLocationByLatLon(lat.Value, lon.Value)).City;
+                return city;
+            try
+            {
+                city = (await _geolocationRepo.GetUserLocationByLatLon(lat.Value, lon.Value)).City;
+            }
+            finally {}
+            return city;
         }
         // юзер с дб
         async Task<string> GetToken(User user)  => await _apiTokenProvider.GetTokenFrom(user.Password, user.Login);//токен береться из AuthApi по логину и паролю

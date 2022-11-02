@@ -12,7 +12,8 @@ using Web.Search.Inventory;
 using HendInRentApi.Dto.Inventory;
 using HendInRentApi.Dto.SelfInfo.Rent;
 using HendInRentApi.Dto.SelfInfo.Profile;
-
+using Web.Caching;
+using DataBase.Entities;
 
 namespace Web.Helprers
 {
@@ -62,6 +63,13 @@ namespace Web.Helprers
                 GenericRepositoryApi<OutputHIRARentsResultDto, InputHIRARentSearchDto>>();
 
             services.AddTransient<HIRARepository<OutputHIRAProfileSelfInfoResultDto>, GenericRepositoryApi<OutputHIRAProfileSelfInfoResultDto>>();
+            return services;
+        }
+
+        public static IServiceCollection AddCachers(this IServiceCollection services)
+        {
+            services.AddTransient<Cacher<User>, UserCacher>();
+
             return services;
         }
     }
