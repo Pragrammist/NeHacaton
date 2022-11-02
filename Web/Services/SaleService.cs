@@ -43,7 +43,6 @@ namespace Web.Services
             _inventoryCacher = inventoryCacher;
         }
 
-        //TODO Caching
         public async IAsyncEnumerable<OutputInventoryDto> GetInventories(InputSearchInventoryDto? input = null)
         {
             foreach (var user in await GetUsersFromCity(input)) // юзеры с дб

@@ -1,6 +1,4 @@
-﻿using DataBase.Entities;
-
-namespace Web.Caching
+﻿namespace Web.Caching
 {
     public interface Cacher<TObject, TKey>
     {
