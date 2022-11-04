@@ -66,6 +66,6 @@ namespace Web.Services
             var userEnt = await FindUserBy(login);
             return _mapper.Map<OutputUserDto>(userEnt);
         }
-        async Task<User> FindUserBy(string login) => await _userContext.Users.FindUserByAsync(login);
+        async Task<User> FindUserBy(string login) => await _userContext.Users.FindUserByAsync(login) ?? throw new InvalidOperationException("User not found");
     }
 }

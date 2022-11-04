@@ -54,7 +54,7 @@ namespace Web.Services
 
         public async Task<OutputUserDto> LoginUser(InputLoginUserDto inputUserLoginDto)
         {
-            var user = await _userContext.Users.FindUserByAsync(inputUserLoginDto.Login);
+            var user = await _userContext.Users.FindUserByAsync(inputUserLoginDto.Login) ?? throw new InvalidOperationException("user not found");
 
             var outputUser = await GetUserDto(user, inputUserLoginDto.Password, inputUserLoginDto.Login);
 

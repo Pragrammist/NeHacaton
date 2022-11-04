@@ -55,7 +55,7 @@ namespace Web.Controllers
             var valRes = await _userLoginValidator.ValidateAsync(userLoginModel);
 
             if (!valRes.IsValid)
-                return NotFound("Такого пользователя нет");
+                return NotFound(valRes.Errors);
 
             var inputUser = _mapper.Map<InputLoginUserDto>(userLoginModel);
 
@@ -86,11 +86,11 @@ namespace Web.Controllers
         {
             if (validationRes.Errors.Any(u => u.ErrorCode == "404"))
             {
-                return NotFound();
+                return NotFound(validationRes.Errors);
             }
             else
             {
-                return BadRequest();
+                return BadRequest(validationRes.Errors);
             }
         }
 
