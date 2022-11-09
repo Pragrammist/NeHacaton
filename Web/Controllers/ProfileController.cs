@@ -42,18 +42,20 @@ namespace Web.Controllers
         [HttpPut]
         public async Task<IActionResult> City(string city)
         {
-            if (!AuthorizeCastilCheck())
-                return BadRequest("no authorize");
+            string token;
+            if (!AuthorizeCastilCheck(out token))
+                return BadRequest($"no authorize {token}");
 
             var user = await _selfInfoService.ChangeCity(city, Login);
             ChangeCityInCookies(city);
             return Json(user);
         }
 
-        bool AuthorizeCastilCheck() //tempory realization
+        bool AuthorizeCastilCheck(out string token) //tempory realization
         {
             const string ASP_AUTH_TOKEN = ".AspNetCore.Cookies";
             var tokenFromHeader = HttpContext.Request.Headers.FirstOrDefault(k => k.Key == ASP_AUTH_TOKEN).Value.ToString();
+            token = tokenFromHeader;
             return !string.IsNullOrEmpty(tokenFromHeader);
         }
 
