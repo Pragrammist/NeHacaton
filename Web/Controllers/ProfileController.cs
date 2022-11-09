@@ -4,8 +4,8 @@ using Web.Services;
 using Web.Cryptography;
 using static Web.Constants.ClaimConstants;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Cors;
 using Web.Dtos.UserSelfInfoDto.Profile;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Web.Controllers
 {
@@ -20,30 +20,43 @@ namespace Web.Controllers
             _apiToken = apiToken;
         }
 
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Rent()
         {
+            if (!AuthorizeCastilCheck())
+                return BadRequest("no authorize");
+
             var res = await _selfInfoService.GetUserRent(await Token());
 
             return Json(res);
         }
 
-        [Authorize]
-        public async Task<IActionResult> Info()
-        {
-            var res = await ProccesResult();
-            return Json(res);
-        }
+        ////[Authorize]
+        //public async Task<IActionResult> Info()
+        //{
+        //    var res = await ProccesResult();
+        //    return Json(res);
+        //}
 
-        [Authorize]
+        //[Authorize]
         [HttpPut]
         public async Task<IActionResult> City(string city)
         {
+            if (!AuthorizeCastilCheck())
+                return BadRequest("no authorize");
+
             var user = await _selfInfoService.ChangeCity(city, Login);
             ChangeCityInCookies(city);
             return Json(user);
         }
 
+        bool AuthorizeCastilCheck() //tempory realization
+        {
+            const string ASP_AUTH_TOKEN = ".AspNetCore.Cookies";
+            var tokenFromHeader = HttpContext.Request.Headers.FirstOrDefault(k => k.Key == ASP_AUTH_TOKEN).Value.ToString();
+            var tokenFromCoockies = HttpContext.Request.Cookies.FirstOrDefault(u => u.Key == ASP_AUTH_TOKEN).Value;
+            return tokenFromHeader == tokenFromCoockies && !string.IsNullOrEmpty(tokenFromCoockies) && !string.IsNullOrEmpty(tokenFromHeader); //check authorize
+        }
 
         #region helpers methods
         async Task<OutputProfileResultDto> ProccesResult()
