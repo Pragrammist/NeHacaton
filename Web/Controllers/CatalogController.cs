@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using Web.Dtos.Sales.Inventory;
 using Web.Models.Inventory;
 using Web.Services;
@@ -19,10 +17,10 @@ namespace Web.Controllers
             _saleService = saleService;
         }
         [HttpPost]
-        public async Task<IActionResult> Inventories([FromBody]InventorySearchModel? search = null)
+        public async Task<IActionResult> Inventories(CancellationToken cancellation, [FromBody]InventorySearchModel? search = null)
         {
             var inputData = GetInputSearchInvetory(search);
-            var inventories = await _saleService.GetInventories(inputData).ToArrayAsync();
+            var inventories = await _saleService.GetInventories(cancellation, inputData).ToArrayAsync();
             return Json(inventories);
         }
 

@@ -12,5 +12,9 @@ namespace Web.Models.Inventory
         public double? Lat { get; set; }
 
         public double? Lon { get; set; }
+
+        public int? MinPrice { get; set; }
+
+        public int? MaxPrice { get; set; }
     }
 }

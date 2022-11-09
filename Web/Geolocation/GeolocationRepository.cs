@@ -22,7 +22,7 @@ namespace Web.Geolocation
             _clientFactory = clientFactory;
         }
 
-        public async Task<OutputLocationDto> GetUserLocationByLatLon(double lat, double lon)
+        public async Task<OutputLocationDto> GetUserLocationByLatLon(double lat, double lon, CancellationToken cancellation = default)
         {
             using (var _client = _clientFactory.CreateClient(GEOLOCATION_HTTPCLIENT_NAME))
             {
