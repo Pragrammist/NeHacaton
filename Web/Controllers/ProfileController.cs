@@ -54,8 +54,7 @@ namespace Web.Controllers
         {
             const string ASP_AUTH_TOKEN = ".AspNetCore.Cookies";
             var tokenFromHeader = HttpContext.Request.Headers.FirstOrDefault(k => k.Key == ASP_AUTH_TOKEN).Value.ToString();
-            var tokenFromCoockies = HttpContext.Request.Cookies.FirstOrDefault(u => u.Key == ASP_AUTH_TOKEN).Value;
-            return tokenFromHeader == tokenFromCoockies && !string.IsNullOrEmpty(tokenFromCoockies) && !string.IsNullOrEmpty(tokenFromHeader); //check authorize
+            return !string.IsNullOrEmpty(tokenFromHeader);
         }
 
         #region helpers methods
