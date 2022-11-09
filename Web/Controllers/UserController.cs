@@ -10,6 +10,7 @@ using Web.Models;
 using Web.Services;
 using static Web.Constants.ClaimConstants;
 using static Web.Helprers.ControllerExtensions;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Web.Controllers
 {
@@ -44,7 +45,7 @@ namespace Web.Controllers
             var user = await _userService.RegistrateUser(inputUser);
 
             await SignInAsync(user);
-
+            
             return Json(user);
         }
         
@@ -63,10 +64,15 @@ namespace Web.Controllers
 
             await SignInAsync(user);
             
-            return Json(user);
-            
+            return Json(user); 
         }
-
+        void SetAspAuthTokenToHeader()
+        {
+            const string ASP_AUTH_TOKEN = ".AspNetCore.Cookies";
+            var cookies = HttpContext.Response.GetTypedHeaders().SetCookie;
+            var cookie = cookies.First(u => u.Name == ASP_AUTH_TOKEN);
+            HttpContext.Response.Headers.Add(ASP_AUTH_TOKEN, cookie.Value.ToString());
+        }
         [HttpPost]
         public async Task<IActionResult> SignOutUser()
         {
@@ -103,9 +109,9 @@ namespace Web.Controllers
             var identity = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             
             var claimPrincipal = new ClaimsPrincipal(identity);
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimPrincipal);
             
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimPrincipal);
+            SetAspAuthTokenToHeader();
         }
 
         async Task SignOutAsync()

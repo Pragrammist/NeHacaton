@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Web.Cryptography;
 using DataBase.Extensions;
+using DataBase.Entities;
 
 namespace Web.Models.ModelValidators
 {
