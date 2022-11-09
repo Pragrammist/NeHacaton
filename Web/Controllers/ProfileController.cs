@@ -20,12 +20,9 @@ namespace Web.Controllers
             _apiToken = apiToken;
         }
 
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Rent()
         {
-            if (!AuthorizeCastilCheck())
-                return BadRequest("no authorize");
-
             var res = await _selfInfoService.GetUserRent(await Token());
 
             return Json(res);
@@ -38,14 +35,10 @@ namespace Web.Controllers
         //    return Json(res);
         //}
 
-        //[Authorize]
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> City(string city)
         {
-            string token;
-            if (!AuthorizeCastilCheck(out token))
-                return BadRequest($"no authorize {token}");
-
             var user = await _selfInfoService.ChangeCity(city, Login);
             ChangeCityInCookies(city);
             return Json(user);
