@@ -49,7 +49,7 @@ namespace Web
 
             app.UseRouting();
 
-            app.UseCors(b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            app.UseCors(b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials());
             app.UseAuthentication();    
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
