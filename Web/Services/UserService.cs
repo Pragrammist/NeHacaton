@@ -65,7 +65,9 @@ namespace Web.Services
         async Task<OutputUserDto> GetUserDto(User user, string password, string login)
         {
             var outPutUser = _mapper.Map<OutputUserDto>(user);
-            outPutUser.Fio = await GetFio(password, login);
+            var profile = await GetHiraProfile(password, login);
+            outPutUser.Fio = profile.Fio;
+            outPutUser.Avatar = profile.Avatar;
             return outPutUser;
         }
 
@@ -85,13 +87,13 @@ namespace Web.Services
 
         async Task<string> GetLocationCity(InputUserRegistrationDto user) => (await _geolocation.GetUserLocationByLatLon(user.Lat, user.Lon)).City;
 
-        async Task<string> GetFio(string password, string login)
+        
+        async Task<OutputHIRAProfileSelfIonfoDto> GetHiraProfile(string password, string login)
         {
             var token = await _tokenProvider.GetToken(password, login);
 
             var profile = (await _profileRepo.MakePostJsonTypeRequest(POST_PROFILE, token)).Array.First();
-
-            return profile.Fio;
+            return profile;
         }
         #endregion
     }

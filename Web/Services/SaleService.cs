@@ -140,6 +140,9 @@ namespace Web.Services
             return !invetoryFalse;
         }
 
+        
+
+
         int GetMinPrice(IEnumerable<OutputInventoryDto> inventories, InputSearchInventoryDto? input)
         {
             var minValue = inventories.Select(i => i.Prices.MinBy(p => p.Values.MinBy(u => u.Value))).Select(u => u?.Values.MinBy(u => u.Value)).Select(v => v?.Value).Min() ?? 0;
