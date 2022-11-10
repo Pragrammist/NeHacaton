@@ -36,8 +36,8 @@ namespace Web
                 .AddCachers()
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
                 {
-                    options.LoginPath = String.Empty;
-                    options.LogoutPath = String.Empty;
+                    options.LoginPath = new PathString("/User/Login");
+                    options.LogoutPath = new PathString("/User/Logout");
                 });
 
             builder.Services.AddMemoryCache();
