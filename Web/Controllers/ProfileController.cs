@@ -22,7 +22,7 @@ namespace Web.Controllers
             _apiToken = apiToken;
         }
 
-        
+
         //[Authorize]
         public async Task<IActionResult> Rent([FromBody]UserLoginModel user)
         {
@@ -33,7 +33,7 @@ namespace Web.Controllers
 
 
 
-        ////[Authorize]
+        //[Authorize]
         //public async Task<IActionResult> Info()
         //{
         //    var res = await ProccesResult();
