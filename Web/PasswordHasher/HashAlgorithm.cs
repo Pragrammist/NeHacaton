@@ -43,5 +43,9 @@ namespace Web.PasswordHasher {
         {
 	        return Hasher(input, key, true);
         }
+		public static string Decrypt(string input, string key)
+		{
+            return Hasher(input, key, false);
+        }
     }
 }

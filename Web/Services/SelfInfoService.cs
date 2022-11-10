@@ -9,6 +9,7 @@ using DataBase;
 using DataBase.Entities;
 using Web.Dtos;
 using DataBase.Extensions;
+using Microsoft.AspNetCore.Identity;
 
 namespace Web.Services
 {
@@ -50,6 +51,8 @@ namespace Web.Services
             return res;
         }
 
+        
+
         public async Task<OutputUserDto> ChangeCity(string city, string login)
         {
             
@@ -60,7 +63,7 @@ namespace Web.Services
             return outputUser;
         }
 
-
+        
         async Task<OutputUserDto> GetUserDtoBy(string login)
         {
             var userEnt = await FindUserBy(login);

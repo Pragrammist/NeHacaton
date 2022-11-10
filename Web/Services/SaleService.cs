@@ -62,11 +62,12 @@ namespace Web.Services
         async Task<IEnumerable<User>> GetUsersFromCity(InputSearchInventoryDto? input, CancellationToken cancellation)
         {
             string city = 
-                input?.City ?? 
+                (input?.City ?? 
                 await GetUserCity(input?.Lat, input?.Lon, cancellation) ?? 
-                "москва";
+                "москва").ToLower();
 
-            return _userCache.Cache(city, () => SelectByCity(city));
+            var res = _userCache.Cache(city, () => SelectByCity(city));
+            return res;
         }
         IEnumerable<User> SelectByCity(string city) => _userContext.Users.Where(u => u.City == city);
 

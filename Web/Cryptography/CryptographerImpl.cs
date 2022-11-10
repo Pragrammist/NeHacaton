@@ -1,5 +1,5 @@
-﻿using System.Security.Cryptography;
-using System.Text;
+﻿using System.Text;
+using Web.PasswordHasher;
 
 namespace Web.Cryptography
 {
@@ -10,72 +10,72 @@ namespace Web.Cryptography
          
         public CryptographerImpl(IConfiguration configuration)
         {       
-            _key = configuration.GetSection("Cryptography")["TokenCryptographyKey"];  
+            _key = configuration.GetSection("Cryptography")["HashKey"];  
         }
 
         
         public string Decrypt(string hashedToken)
         {
-            return DecryptString(_key, hashedToken);
+            return hashedToken; //HashAlgorithm.Decrypt(hashedToken, _key);
         }
 
         public string Encrypt(string token)
         {
-            return EncryptString(_key, token);
+            return token; //HashAlgorithm.Encrypt(token, _key);
         }
 
-        string EncryptString(string key, string plainText)
-        {
-            byte[] iv = new byte[16];
-            byte[] array;
+        //string EncryptString(string key, string plainText)
+        //{
+        //    byte[] iv = new byte[16];
+        //    byte[] array;
 
-            using (Aes aes = Aes.Create())
-            {
-                aes.Key = Encoding.UTF8.GetBytes(key);
-                aes.IV = iv;
+        //    using (Aes aes = Aes.Create())
+        //    {
+        //        aes.Key = Encoding.UTF8.GetBytes(key);
+        //        aes.IV = iv;
 
-                ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+        //        ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
 
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (StreamWriter streamWriter = new StreamWriter((Stream)cryptoStream))
-                        {
-                            streamWriter.Write(plainText);
-                        }
+        //        using (MemoryStream memoryStream = new MemoryStream())
+        //        {
+        //            using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, encryptor, CryptoStreamMode.Write))
+        //            {
+        //                using (StreamWriter streamWriter = new StreamWriter((Stream)cryptoStream))
+        //                {
+        //                    streamWriter.Write(plainText);
+        //                }
 
-                        array = memoryStream.ToArray();
-                    }
-                }
-            }
+        //                array = memoryStream.ToArray();
+        //            }
+        //        }
+        //    }
 
-            return Convert.ToBase64String(array);
-        }
+        //    return Convert.ToBase64String(array);
+        //}
 
-        string DecryptString(string key, string cipherText)
-        {
-            byte[] iv = new byte[16];
-            byte[] buffer = Convert.FromBase64String(cipherText);
+        //string DecryptString(string key, string cipherText)
+        //{
+        //    byte[] iv = new byte[16];
+        //    byte[] buffer = Encoding.UTF8.GetBytes(cipherText);
 
-            using (Aes aes = Aes.Create())
-            {
-                aes.Key = Encoding.UTF8.GetBytes(key);
-                aes.IV = iv;
-                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+        //    using (Aes aes = Aes.Create())
+        //    {
+        //        aes.Key = Encoding.UTF8.GetBytes(key);
+        //        aes.IV = iv;
+        //        ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 
-                using (MemoryStream memoryStream = new MemoryStream(buffer))
-                {
-                    using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, decryptor, CryptoStreamMode.Read))
-                    {
-                        using (StreamReader streamReader = new StreamReader((Stream)cryptoStream))
-                        {
-                            return streamReader.ReadToEnd();
-                        }
-                    }
-                }
-            }
-        }
+        //        using (MemoryStream memoryStream = new MemoryStream(buffer))
+        //        {
+        //            using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, decryptor, CryptoStreamMode.Read))
+        //            {
+        //                using (StreamReader streamReader = new StreamReader((Stream)cryptoStream))
+        //                {
+        //                    return streamReader.ReadToEnd();
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
     }
 }
