@@ -19,7 +19,7 @@ namespace Web.Dtos.UserSelfInfoDto.Rent
         public int SumDiscount { get; set; }
         public int SumTotal { get; set; }
         public int KitNumber { get; set; }
-        //public OutputInnerInventoryDto Inventory { get; set; } = null!; // dont delete could be usefull in future
+        public OutputInnerInventoryDto Inventory { get; set; } = null!;
         public OutputPriceDto Price { get; set; } = null!;
     }
 }
