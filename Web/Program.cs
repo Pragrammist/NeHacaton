@@ -48,8 +48,16 @@ namespace Web
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.Use(async (ctx, next) =>
+            {
+                if (ctx.Request.Method.Equals("options", StringComparison.InvariantCultureIgnoreCase) && ctx.Request.Headers.ContainsKey("Access-Control-Request-Private-Network"))
+                {
+                    ctx.Response.Headers.Add("Access-Control-Allow-Private-Network", "true");
+                }
 
-            app.UseCors(b => b.WithOrigins("http://localhost:3001", "http://51.250.104.108").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+                await next();
+            });
+            app.UseCors(b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();    
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
