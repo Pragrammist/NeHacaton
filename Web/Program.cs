@@ -34,11 +34,7 @@ namespace Web
                 .AddDbContexts(config)
                 .ConfigAutoMapper()
                 .AddCachers()
-                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
-                {
-                    options.LoginPath = new PathString("/User/Login");
-                    options.LogoutPath = new PathString("/User/Logout");
-                });
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
             builder.Services.AddMemoryCache();
 
