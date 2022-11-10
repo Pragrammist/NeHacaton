@@ -27,7 +27,7 @@ namespace Web.Controllers
         InputSearchInventoryDto GetInputSearchInvetory(InventorySearchModel? search)
         {
             var inputData = _mapper.Map<InputSearchInventoryDto>(search);
-            inputData.City = this.GetCityFromHttpContext();
+            inputData.City = inputData.City ?? this.GetCityFromHttpContext();
             return inputData;
         }
     }
