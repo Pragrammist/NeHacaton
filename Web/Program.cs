@@ -49,7 +49,7 @@ namespace Web
 
             app.UseRouting();
 
-            app.UseCors(b => b.WithOrigins("http://localhost:3001").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+            app.UseCors(b => b.WithOrigins("http://localhost:3001", "http://51.250.104.108").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
             app.UseAuthentication();    
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
