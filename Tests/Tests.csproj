@@ -29,4 +29,6 @@
     <ProjectReference Include="..\Web\Web.csproj" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties registreuser_1json__JsonSchema="https://appsemble.app/api.json" /></VisualStudio></ProjectExtensions>
+
 </Project>

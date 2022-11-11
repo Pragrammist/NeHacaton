@@ -42,10 +42,18 @@ namespace Web.Controllers
 
         //[Authorize]
         [HttpPut]
-        public async Task<IActionResult> City([FromBody]UserChangeLoginModel model) 
+        public async Task<IActionResult> City([FromBody]UserChangeCityModel model) 
         {
             var user = await _selfInfoService.ChangeCity(model.City, model.Login);
-            ChangeCityInCookies(model.City);
+            ChangeCityInCookies(user.City);
+            return Json(user);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> CityByCoordinates([FromBody]UserChangeCityByLatLonModel model)
+        {
+            var user = await _selfInfoService.ChangeCity(model.Lat, model.Lon, model.Login);
+            ChangeCityInCookies(user.City);
             return Json(user);
         }
 
